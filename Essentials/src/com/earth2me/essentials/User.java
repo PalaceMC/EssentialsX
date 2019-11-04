@@ -104,9 +104,9 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     private boolean isAuthorizedCheck(final String node) {
 
-        if (base instanceof OfflinePlayer) {
+        /*if (base instanceof OfflinePlayer) {
             return false;
-        }
+        }*/
 
         try {
             return ess.getPermissionsHandler().hasPermission(base, node);
