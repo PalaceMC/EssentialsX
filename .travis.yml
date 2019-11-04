@@ -11,3 +11,6 @@ cache:
 before_install:
   - chmod +x scripts/buildtools.sh
   - scripts/buildtools.sh
+
+script:
+  - echo "skipping tests"
