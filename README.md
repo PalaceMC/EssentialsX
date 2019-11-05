@@ -1,3 +1,8 @@
+# THIS IS A CUSTOM BUILD
+
+> This includes very minor tweaks to the [EssentialsX plugin](https://essentialsx.github.io).
+> Please use the actual plugin instead of this version, unless you know what you are doing and understand the changes made.
+
 [![EssentialsX](https://i.imgur.com/CP4SZpB.png)](https://essentialsx.github.io)
 
 [<img alt="Jenkins" src="https://img.shields.io/badge/-Download_from_Jenkins-D24939.svg?logo=jenkins&style=flat-square&logoColor=white" height=32>](http://ci.ender.zone/job/EssentialsX/)
