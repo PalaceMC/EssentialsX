@@ -18,8 +18,6 @@ script:
 deploy:
   provider: releases
   api_key: $GH_TOKEN
-  file:
-    - EssentialsX-2.17.1.jar
   skip_cleanup: true
   on:
     tags: false
