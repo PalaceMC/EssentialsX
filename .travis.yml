@@ -22,7 +22,7 @@ deploy:
   skip_cleanup: true
   file:
     - EssentialsX/Essentials/target/EssentialsX-2.17.1.1.jar
-  draft: true
+#  draft: true
   on:
     tags: false
     branch: 2.x
