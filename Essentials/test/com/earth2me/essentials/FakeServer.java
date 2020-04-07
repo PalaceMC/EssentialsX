@@ -13,6 +13,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -592,6 +593,96 @@ public class FakeServer implements Server {
                 }
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Override
+            public void incrementStatistic(Statistic statistic) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void decrementStatistic(Statistic statistic) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public int getStatistic(Statistic statistic) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void incrementStatistic(Statistic statistic, int amount) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void decrementStatistic(Statistic statistic, int amount) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setStatistic(Statistic statistic, int newValue) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void incrementStatistic(Statistic statistic, Material material) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void decrementStatistic(Statistic statistic, Material material) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public int getStatistic(Statistic statistic, Material material) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void incrementStatistic(Statistic statistic, Material material, int amount) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void decrementStatistic(Statistic statistic, Material material, int amount) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setStatistic(Statistic statistic, Material material, int newValue) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void incrementStatistic(Statistic statistic, EntityType entityType) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void decrementStatistic(Statistic statistic, EntityType entityType) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public int getStatistic(Statistic statistic, EntityType entityType) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void incrementStatistic(Statistic statistic, EntityType entityType, int amount) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void decrementStatistic(Statistic statistic, EntityType entityType, int amount) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void setStatistic(Statistic statistic, EntityType entityType, int newValue) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         };
     }
 
@@ -798,6 +889,16 @@ public class FakeServer implements Server {
     }
 
     @Override
+    public int getTicksPerWaterSpawns() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getTicksPerAmbientSpawns() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public List<Recipe> getRecipesFor(ItemStack is) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -814,6 +915,11 @@ public class FakeServer implements Server {
 
     @Override
     public void resetRecipes() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean removeRecipe(NamespacedKey key) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
