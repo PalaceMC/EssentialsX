@@ -16,3 +16,18 @@
 # Build files
 target/
 jars/
+
+# Holy shit guys why is all this crap in my directory now, I just wanted the CraftBukkit jars lmfao
+apache-maven-3.6.0/
+BuildData/
+Bukkit/
+CraftBukkit/
+PortableGit-2.24.1.2-64-bit/
+Spigot/
+work/
+
+BuildTools.*
+craftbukkit*.jar
+spigot*.jar
+
+# That was nearly 10K files oh my god
