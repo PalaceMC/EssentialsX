@@ -9,6 +9,7 @@ import net.ess3.api.IEssentials;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.EntityEquipment;
@@ -19,6 +20,7 @@ import java.util.*;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class SpawnMob {
 
     private static final Material GOLDEN_HELMET = EnumUtil.getMaterial("GOLDEN_HELMET", "GOLD_HELMET");
@@ -29,7 +31,7 @@ public class SpawnMob {
 
     public static String mobList(final User user) {
         final Set<String> mobList = Mob.getMobList();
-        final Set<String> availableList = new HashSet<String>();
+        final Set<String> availableList = new HashSet<>();
         for (String mob : mobList) {
             if (user.isAuthorized("essentials.spawnmob." + mob.toLowerCase(Locale.ENGLISH))) {
                 availableList.add(mob);
@@ -44,7 +46,7 @@ public class SpawnMob {
     public static List<String> mobParts(final String mobString) {
         String[] mobParts = mobString.split(",");
 
-        List<String> mobs = new ArrayList<String>();
+        List<String> mobs = new ArrayList<>();
 
         for (String mobPart : mobParts) {
             String[] mobDatas = mobPart.split(":");
@@ -56,7 +58,7 @@ public class SpawnMob {
     public static List<String> mobData(final String mobString) {
         String[] mobParts = mobString.split(",");
 
-        List<String> mobData = new ArrayList<String>();
+        List<String> mobData = new ArrayList<>();
 
         for (String mobPart : mobParts) {
             String[] mobDatas = mobPart.split(":");
@@ -77,9 +79,6 @@ public class SpawnMob {
     // This method spawns a mob where the user is looking, owned by user
     public static void spawnmob(final IEssentials ess, final Server server, final User user, final List<String> parts, final List<String> data, int mobCount) throws Exception {
         final Block block = LocationUtil.getTarget(user.getBase()).getBlock();
-        if (block == null) {
-            throw new Exception(tl("unableToSpawnMob"));
-        }
         spawnmob(ess, server, user.getSource(), user, block.getLocation(), parts, data, mobCount);
     }
 
@@ -92,8 +91,8 @@ public class SpawnMob {
     public static void spawnmob(final IEssentials ess, final Server server, final CommandSource sender, final User target, final Location loc, final List<String> parts, final List<String> data, int mobCount) throws Exception {
         final Location sloc = LocationUtil.getSafeDestination(loc);
 
-        for (int i = 0; i < parts.size(); i++) {
-            Mob mob = Mob.fromName(parts.get(i));
+        for (String part : parts) {
+            Mob mob = Mob.fromName(part);
             checkSpawnable(ess, sender, mob);
         }
 
@@ -115,7 +114,7 @@ public class SpawnMob {
         Mob mob = Mob.fromName(parts.get(0)); // Get the first mob
         try {
             for (int i = 0; i < mobCount; i++) {
-                spawnMob(ess, server, sender, target, sloc, parts, data);
+                spawnMob(server, sender, target, sloc, parts, data);
             }
             sender.sendMessage(mobCount * parts.size() + " " + mob.name.toLowerCase(Locale.ENGLISH) + mob.suffix + " " + tl("spawned"));
         } catch (MobException e1) {
@@ -127,7 +126,11 @@ public class SpawnMob {
         }
     }
 
-    private static void spawnMob(final IEssentials ess, final Server server, final CommandSource sender, final User target, final Location sloc, List<String> parts, List<String> data) throws Exception {
+    private static void spawnMob(final Server server, final CommandSource sender, final User target, final Location sloc, List<String> parts, List<String> data) throws Exception {
+
+        World world = sloc.getWorld();
+        if (world == null) return;
+
         Mob mob;
         Entity spawnedMob = null;
         Entity spawnedMount;
@@ -135,7 +138,7 @@ public class SpawnMob {
         for (int i = 0; i < parts.size(); i++) {
             if (i == 0) {
                 mob = Mob.fromName(parts.get(i));
-                spawnedMob = mob.spawn(sloc.getWorld(), server, sloc);
+                spawnedMob = mob.spawn(world, server, sloc);
                 defaultMobData(mob.getType(), spawnedMob);
 
                 if (data.get(i) != null) {
@@ -147,7 +150,7 @@ public class SpawnMob {
             if (next < parts.size()) //If it's the last mob in the list, don't set the mount
             {
                 Mob mMob = Mob.fromName(parts.get(next));
-                spawnedMount = mMob.spawn(sloc.getWorld(), server, sloc);
+                spawnedMount = mMob.spawn(world, server, sloc);
                 defaultMobData(mMob.getType(), spawnedMount);
 
                 if (data.get(next) != null) {
@@ -165,11 +168,6 @@ public class SpawnMob {
         if (mob == null || mob.getType() == null) {
             throw new Exception(tl("invalidMob"));
         }
-
-        if (ess.getSettings().getProtectPreventSpawn(mob.getType().toString().toLowerCase(Locale.ENGLISH))) {
-            throw new Exception(tl("disabledToSpawnMob"));
-        }
-
         if (sender.isPlayer() && !ess.getUser(sender.getPlayer()).isAuthorized("essentials.spawnmob." + mob.name.toLowerCase(Locale.ENGLISH))) {
             throw new Exception(tl("noPermToSpawnMob"));
         }
@@ -191,33 +189,35 @@ public class SpawnMob {
         if (spawned instanceof Zombie || type == EntityType.SKELETON) {
             if (inputData.contains("armor") || inputData.contains("armour")) {
                 final EntityEquipment invent = ((LivingEntity) spawned).getEquipment();
-                if (inputData.contains("noarmor") || inputData.contains("noarmour")) {
-                    invent.clear();
-                } else if (inputData.contains("diamond")) {
-                    invent.setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1));
-                    invent.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
-                    invent.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
-                    invent.setHelmet(new ItemStack(Material.DIAMOND_HELMET, 1));
-                } else if (inputData.contains("gold")) {
-                    invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-                    invent.setLeggings(new ItemStack(GOLDEN_LEGGINGS, 1));
-                    invent.setChestplate(new ItemStack(GOLDEN_CHESTPLATE, 1));
-                    invent.setHelmet(new ItemStack(GOLDEN_HELMET, 1));
-                } else if (inputData.contains("leather")) {
-                    invent.setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
-                    invent.setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
-                    invent.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
-                    invent.setHelmet(new ItemStack(Material.LEATHER_HELMET, 1));
-                } else if (inputData.contains("iron")) {
-                    invent.setBoots(new ItemStack(Material.IRON_BOOTS, 1));
-                    invent.setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
-                    invent.setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
-                    invent.setHelmet(new ItemStack(Material.IRON_HELMET, 1));
+                if (invent != null) {
+                    if (inputData.contains("noarmor") || inputData.contains("noarmour")) {
+                        invent.clear();
+                    } else if (inputData.contains("diamond")) {
+                        invent.setBoots(new ItemStack(Material.DIAMOND_BOOTS, 1));
+                        invent.setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS, 1));
+                        invent.setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE, 1));
+                        invent.setHelmet(new ItemStack(Material.DIAMOND_HELMET, 1));
+                    } else if (inputData.contains("gold")) {
+                        invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
+                        invent.setLeggings(new ItemStack(GOLDEN_LEGGINGS, 1));
+                        invent.setChestplate(new ItemStack(GOLDEN_CHESTPLATE, 1));
+                        invent.setHelmet(new ItemStack(GOLDEN_HELMET, 1));
+                    } else if (inputData.contains("leather")) {
+                        invent.setBoots(new ItemStack(Material.LEATHER_BOOTS, 1));
+                        invent.setLeggings(new ItemStack(Material.LEATHER_LEGGINGS, 1));
+                        invent.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE, 1));
+                        invent.setHelmet(new ItemStack(Material.LEATHER_HELMET, 1));
+                    } else if (inputData.contains("iron")) {
+                        invent.setBoots(new ItemStack(Material.IRON_BOOTS, 1));
+                        invent.setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
+                        invent.setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
+                        invent.setHelmet(new ItemStack(Material.IRON_HELMET, 1));
+                    }
+                    invent.setBootsDropChance(0f);
+                    invent.setLeggingsDropChance(0f);
+                    invent.setChestplateDropChance(0f);
+                    invent.setHelmetDropChance(0f);
                 }
-                invent.setBootsDropChance(0f);
-                invent.setLeggingsDropChance(0f);
-                invent.setChestplateDropChance(0f);
-                invent.setHelmetDropChance(0f);
             }
 
         }
@@ -233,44 +233,40 @@ public class SpawnMob {
     private static void defaultMobData(final EntityType type, final Entity spawned) {
         if (type == EntityType.SKELETON) {
             final EntityEquipment invent = ((LivingEntity) spawned).getEquipment();
-            InventoryWorkaround.setItemInMainHand(invent, new ItemStack(Material.BOW, 1));
-            InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
+            if (invent != null) {
+                InventoryWorkaround.setItemInMainHand(invent, new ItemStack(Material.BOW, 1));
+                InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
 
-            invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-            invent.setBootsDropChance(0.0f);
+                invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
+                invent.setBootsDropChance(0.0f);
+            }
         }
 
         if (type == EntityType.PIG_ZOMBIE) {
             final PigZombie zombie = ((PigZombie) spawned);
-            setVillager(zombie, false);
 
             final EntityEquipment invent = zombie.getEquipment();
-            InventoryWorkaround.setItemInMainHand(invent, new ItemStack(GOLDEN_SWORD, 1));
-            InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
+            if (invent != null) {
+                InventoryWorkaround.setItemInMainHand(invent, new ItemStack(GOLDEN_SWORD, 1));
+                InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
 
-            invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-            invent.setBootsDropChance(0.0f);
+                invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
+                invent.setBootsDropChance(0.0f);
+            }
         }
 
         if (type == EntityType.ZOMBIE) {
             final Zombie zombie = ((Zombie) spawned);
-            setVillager(zombie, false);
 
             final EntityEquipment invent = zombie.getEquipment();
-            invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-            invent.setBootsDropChance(0.0f);
+            if (invent != null) {
+                invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
+                invent.setBootsDropChance(0.0f);
+            }
         }
 
         if (type == EntityType.HORSE) {
             ((Horse) spawned).setJumpStrength(1.2);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void setVillager(Zombie zombie, boolean villager) {
-        try {
-            zombie.setVillager(villager);
-        } catch (Exception ignored) {
         }
     }
 }

@@ -8,6 +8,7 @@ import org.bukkit.Server;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandgod extends EssentialsToggleCommand {
     public Commandgod() {
         super("god", "essentials.god.others");

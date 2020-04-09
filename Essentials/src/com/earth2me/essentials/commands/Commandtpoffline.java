@@ -7,28 +7,32 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandtpoffline extends EssentialsCommand {
-
     public Commandtpoffline() {
         super("tpoffline");
     }
 
     @Override
     public void run(final Server server, final User user, final String label, final String[] args) throws Exception {
-        switch (args.length) {
-            case 0:
-                throw new NotEnoughArgumentsException();
+        if (args.length == 0) {
+            throw new NotEnoughArgumentsException();
+        } else {
+            final User target = getPlayer(server, args, 0, true, true);
+            final Location logout = target.getLogoutLocation();
 
-            default:
-                final User target = getPlayer(server, args, 0, true, true);
-                final Location logout = target.getLogoutLocation();
+            String worldName;
+            if (logout.getWorld() == null)
+                worldName = "null";
+            else
+                worldName = logout.getWorld().getName();
 
-                if (user.getWorld() != logout.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + logout.getWorld().getName())) {
-                    throw new Exception(tl("noPerm", "essentials.worlds." + logout.getWorld().getName()));
-                }
+            if (user.getWorld() != logout.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !user.isAuthorized("essentials.worlds." + worldName)) {
+                throw new Exception(tl("noPerm", "essentials.worlds." + worldName));
+            }
 
-                user.sendMessage(tl("teleporting", logout.getWorld().getName(), logout.getBlockX(), logout.getBlockY(), logout.getBlockZ()));
-                user.getTeleport().now(logout, false, PlayerTeleportEvent.TeleportCause.COMMAND);
+            user.sendMessage(tl("teleporting", worldName, logout.getBlockX(), logout.getBlockY(), logout.getBlockZ()));
+            user.getTeleport().now(logout, false, PlayerTeleportEvent.TeleportCause.COMMAND);
         }
     }
 }

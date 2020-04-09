@@ -81,8 +81,6 @@ public interface IUser {
 
     boolean inGroup(final String group);
 
-    boolean canBuild();
-
     long getTeleportRequestTime();
 
     void enableInvulnerabilityAfterTeleport();
@@ -102,16 +100,14 @@ public interface IUser {
 
     void setVanished(boolean vanish);
 
-    boolean isIgnoreExempt();
-
     void sendMessage(String message);
 
     /*
      * UserData
      */
-    Location getHome(String name) throws Exception;
+    Location getHome(String name);
 
-    Location getHome(Location loc) throws Exception;
+    Location getHome(Location loc);
 
     List<String> getHomes();
 

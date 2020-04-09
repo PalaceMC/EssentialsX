@@ -11,15 +11,13 @@ import java.util.logging.Level;
 
 public class PermissionsHandler implements IPermissionsHandler {
     private transient IPermissionsHandler handler = null;
-    private transient String defaultGroup = "default";
+    private final transient String defaultGroup = "default";
     private final transient Essentials ess;
-    private transient boolean useSuperperms;
 
     private Class<?> lastHandler = null;
 
-    public PermissionsHandler(final Essentials plugin, final boolean useSuperperms) {
+    public PermissionsHandler(final Essentials plugin) {
         this.ess = plugin;
-        this.useSuperperms = useSuperperms;
     }
 
     @Override
@@ -42,11 +40,6 @@ public class PermissionsHandler implements IPermissionsHandler {
         }
         checkPermLag(start, String.format("Getting groups for %s", base.getName()));
         return Collections.unmodifiableList(groups);
-    }
-
-    @Override
-    public boolean canBuild(final Player base, final String group) {
-        return handler.canBuild(base, group);
     }
 
     @Override
@@ -112,11 +105,7 @@ public class PermissionsHandler implements IPermissionsHandler {
             }
         }
         if (handler == null) {
-            if (useSuperperms) {
-                handler = new SuperpermsHandler();
-            } else {
-                handler = new ConfigPermissionsHandler(ess);
-            }
+            handler = new SuperpermsHandler();
         }
 
         // don't spam logs
@@ -139,14 +128,7 @@ public class PermissionsHandler implements IPermissionsHandler {
                         "work until you install Vault.");
             }
             ess.getLogger().info("Using superperms-based permissions.");
-        } else if (handler.getClass() == ConfigPermissionsHandler.class) {
-            ess.getLogger().info("Using config file enhanced permissions.");
-            ess.getLogger().info("Permissions listed in as player-commands will be given to all users.");
         }
-    }
-
-    public void setUseSuperperms(final boolean useSuperperms) {
-        this.useSuperperms = useSuperperms;
     }
 
     public String getName() {

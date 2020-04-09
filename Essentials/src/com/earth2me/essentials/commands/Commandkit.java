@@ -14,7 +14,7 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandkit extends EssentialsCommand {
     public Commandkit() {
         super("kit");
@@ -62,7 +62,7 @@ public class Commandkit extends EssentialsCommand {
         }
         String[] kitList = kitNames.split(",");
 
-        List<Kit> kits = new ArrayList<Kit>();
+        List<Kit> kits = new ArrayList<>();
 
         for (final String kitName : kitList) {
             if (kitName.isEmpty()) {

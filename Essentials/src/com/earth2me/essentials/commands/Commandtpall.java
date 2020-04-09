@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtpall extends EssentialsCommand {
     public Commandtpall() {
         super("tpall");
@@ -38,7 +38,7 @@ public class Commandtpall extends EssentialsCommand {
             if (target == player) {
                 continue;
             }
-            if (sender.equals(target.getBase()) && target.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !target.isAuthorized("essentials.worlds." + target.getWorld().getName())) {
+            if (sender.getPlayer() != null && sender.getPlayer().equals(target.getBase()) && target.getWorld() != player.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !target.isAuthorized("essentials.worlds." + target.getWorld().getName())) {
                 continue;
             }
             try {

@@ -2,16 +2,14 @@ package com.earth2me.essentials.commands;
 
 import static com.earth2me.essentials.I18n.tl;
 
-import com.earth2me.essentials.I18n;
 import com.earth2me.essentials.User;
 
 import net.ess3.api.IEssentials;
 
 import org.bukkit.Server;
 
-
+@SuppressWarnings("unused")
 public class Commandtpacancel extends EssentialsCommand {
-
     public Commandtpacancel() {
         super("tpacancel");
     }
@@ -23,7 +21,7 @@ public class Commandtpacancel extends EssentialsCommand {
      * @param requester tp requester
      * @return whether tp was cancelled
      */
-    public static boolean cancelTeleportRequest(IEssentials ess, User user, User requester) throws Exception {
+    public static boolean cancelTeleportRequest(IEssentials ess, User user, User requester) {
         if (user.getTeleportRequest() != null) {
             User userRequester = ess.getUser(user.getTeleportRequest());
             if (requester.equals(userRequester)) {

@@ -1,6 +1,6 @@
 package net.ess3.api;
 
-
+@SuppressWarnings("unused")
 public class InvalidNameException extends Exception {
     /**
      * NOTE: This is not implemented yet, just here for future 3.x api support Allow serialization of the

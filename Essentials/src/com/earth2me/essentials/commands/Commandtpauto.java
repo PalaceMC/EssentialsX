@@ -6,7 +6,7 @@ import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtpauto extends EssentialsToggleCommand {
     public Commandtpauto() {
         super("tpauto", "essentials.tpauto.others");

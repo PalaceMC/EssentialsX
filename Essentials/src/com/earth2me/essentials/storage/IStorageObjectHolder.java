@@ -8,7 +8,5 @@ public interface IStorageObjectHolder<T extends StorageObject> {
 
     void acquireWriteLock();
 
-    void close();
-
     void unlock();
 }

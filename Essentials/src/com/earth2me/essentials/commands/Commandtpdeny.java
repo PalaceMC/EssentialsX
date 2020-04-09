@@ -5,7 +5,7 @@ import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtpdeny extends EssentialsCommand {
     public Commandtpdeny() {
         super("tpdeny");

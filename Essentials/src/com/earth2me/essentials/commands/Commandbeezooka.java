@@ -9,14 +9,14 @@ import org.bukkit.entity.Entity;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandbeezooka extends EssentialsCommand {
-
     public Commandbeezooka() {
         super("beezooka");
     }
 
     @Override
-    protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
+    protected void run(final Server server, final User user, final String commandLabel, final String[] args) {
         if (VersionUtil.getServerBukkitVersion().isLowerThan(VersionUtil.v1_15_R01)) {
             user.sendMessage(tl("unsupportedFeature"));
             return;

@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtpaccept extends EssentialsCommand {
     public Commandtpaccept() {
         super("tpaccept");

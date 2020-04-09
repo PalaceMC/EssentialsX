@@ -6,6 +6,7 @@ import org.bukkit.Server;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Commandenderchest extends EssentialsCommand {
     public Commandenderchest() {
         super("enderchest");

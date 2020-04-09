@@ -40,7 +40,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private transient final Teleport teleport;
     private transient long teleportRequestTime;
     private transient long lastOnlineActivity;
-    private transient long lastThrottledAction;
     private transient long lastActivity = System.currentTimeMillis();
     private boolean hidden = false;
     private boolean rightClickJump = false;
@@ -51,7 +50,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private transient long teleportInvulnerabilityTimestamp = 0;
     private String afkMessage;
     private long afkSince;
-    private Map<User, BigDecimal> confirmingPayments = new WeakHashMap<>();
+    private final Map<User, BigDecimal> confirmingPayments = new WeakHashMap<>();
     private String confirmingClearCommand;
 
     public User(final Player base, final IEssentials ess) {
@@ -229,9 +228,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     private void _dispose() {
-        if (!base.isOnline()) {
-            this.base = new OfflinePlayer(getConfigUUID(), ess.getServer());
-        }
         cleanup();
     }
 
@@ -546,7 +542,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
             for (User user : ess.getOnlineUsers()) {
                 if (user.isAuthorized("essentials.kick.notify")) {
-                    user.sendMessage(tl("playerKicked", Console.NAME, getName(), kickReason));
+                    user.sendMessage(tl("playerKicked", "Console", getName(), kickReason));
                 }
             }
         }
@@ -603,14 +599,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             ess.getLogger().log(Level.INFO, "checking if " + base.getName() + " is in group " + group + " - " + result);
         }
         return result;
-    }
-
-    @Override
-    public boolean canBuild() {
-        if (this.getBase().isOp()) {
-            return true;
-        }
-        return ess.getPermissionsHandler().canBuild(base, getGroup());
     }
 
     public long getTeleportRequestTime() {
@@ -711,18 +699,6 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     public void setRightClickJump(boolean rightClickJump) {
         this.rightClickJump = rightClickJump;
-    }
-
-    @Override
-    public boolean isIgnoreExempt() {
-        /* For personal preference reasons, no one is exempt from being ignored. Additionally, mods+ are not allowed to
-         * ignore anyone for any reason.
-         *
-         * Technically, WE (palace) handle ignores, but just to keep Essentials "in the loop," we manually call these
-         * ignore interfaces. Until such time that we replace all functionality in Essentials which uses it's own
-         * ignoring stuff, this has to stay.
-         */
-        return false;
     }
 
     public boolean isRecipeSee() {

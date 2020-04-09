@@ -9,9 +9,10 @@ import org.bukkit.event.HandlerList;
 
 public class TPARequestEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
-    private CommandSource requester;
-    private IUser target;
-    private boolean cancelled = false, requestToTPAHere = false;
+    private final CommandSource requester;
+    private final IUser target;
+    private final boolean requestToTPAHere;
+    private boolean cancelled = false;
 
     public TPARequestEvent(CommandSource requester, IUser target, boolean tpaHere) {
         super();

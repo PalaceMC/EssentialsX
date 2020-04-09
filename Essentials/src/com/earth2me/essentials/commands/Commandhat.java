@@ -14,13 +14,14 @@ import java.util.List;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandhat extends EssentialsCommand {
     public Commandhat() {
         super("hat");
     }
 
     @Override
-    protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
+    protected void run(final Server server, final User user, final String commandLabel, final String[] args) {
         if (args.length > 0 && (args[0].contains("rem") || args[0].contains("off") || args[0].equalsIgnoreCase("0"))) {
             final PlayerInventory inv = user.getBase().getInventory();
             final ItemStack head = inv.getHelmet();
@@ -34,7 +35,7 @@ public class Commandhat extends EssentialsCommand {
             }
         } else {
             final ItemStack hand = user.getItemInHand();
-            if (hand != null && hand.getType() != Material.AIR) {
+            if (hand.getType() != Material.AIR) {
                 if (user.isAuthorized("essentials.hat.prevent-type." + hand.getType().name().toLowerCase())) {
                     user.sendMessage(tl("hatFail"));
                     return;

@@ -1,7 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import org.bukkit.DyeColor;
-
 import com.google.common.collect.Lists;
 import com.earth2me.essentials.MetaItemStack;
 import com.earth2me.essentials.Potions;
@@ -11,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -26,7 +23,7 @@ import static com.earth2me.essentials.I18n.tl;
 
 import net.ess3.nms.refl.ReflUtil;
 
-
+@SuppressWarnings("unused")
 public class Commandpotion extends EssentialsCommand {
     public Commandpotion() {
         super("potion");
@@ -53,28 +50,26 @@ public class Commandpotion extends EssentialsCommand {
         }
         if (holdingPotion) {
             PotionMeta pmeta = (PotionMeta) stack.getItemMeta();
-            if (args.length > 0) {
-                if (args[0].equalsIgnoreCase("clear")) {
-                    pmeta.clearCustomEffects();
+            if (args[0].equalsIgnoreCase("clear")) {
+                pmeta.clearCustomEffects();
+                stack.setItemMeta(pmeta);
+            } else if (args[0].equalsIgnoreCase("apply") && user.isAuthorized("essentials.potion.apply")) {
+                for (PotionEffect effect : pmeta.getCustomEffects()) {
+                    effect.apply(user.getBase());
+                }
+            } else if (args.length < 3) {
+                throw new NotEnoughArgumentsException();
+            } else {
+                final MetaItemStack mStack = new MetaItemStack(stack);
+                for (String arg : args) {
+                    mStack.addPotionMeta(user.getSource(), true, arg, ess);
+                }
+                if (mStack.completePotion()) {
+                    pmeta = (PotionMeta) mStack.getItemStack().getItemMeta();
                     stack.setItemMeta(pmeta);
-                } else if (args[0].equalsIgnoreCase("apply") && user.isAuthorized("essentials.potion.apply")) {
-                    for (PotionEffect effect : pmeta.getCustomEffects()) {
-                        effect.apply(user.getBase());
-                    }
-                } else if (args.length < 3) {
-                    throw new NotEnoughArgumentsException();
                 } else {
-                    final MetaItemStack mStack = new MetaItemStack(stack);
-                    for (String arg : args) {
-                        mStack.addPotionMeta(user.getSource(), true, arg, ess);
-                    }
-                    if (mStack.completePotion()) {
-                        pmeta = (PotionMeta) mStack.getItemStack().getItemMeta();
-                        stack.setItemMeta(pmeta);
-                    } else {
-                        user.sendMessage(tl("invalidPotion"));
-                        throw new NotEnoughArgumentsException();
-                    }
+                    user.sendMessage(tl("invalidPotion"));
+                    throw new NotEnoughArgumentsException();
                 }
             }
 

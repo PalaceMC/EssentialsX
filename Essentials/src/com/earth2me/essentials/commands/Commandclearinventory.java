@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 
+@SuppressWarnings({"deprecation", "unused"})
 public class Commandclearinventory extends EssentialsCommand {
 
     public Commandclearinventory() {
@@ -38,7 +39,7 @@ public class Commandclearinventory extends EssentialsCommand {
 
     private void parseCommand(Server server, CommandSource sender, String commandLabel, String[] args, boolean allowOthers, boolean allowAll)
         throws Exception {
-        Collection<Player> players = new ArrayList<Player>();
+        Collection<Player> players = new ArrayList<>();
         User senderUser = ess.getUser(sender.getPlayer());
         String previousClearCommand = "";
         
@@ -80,7 +81,7 @@ public class Commandclearinventory extends EssentialsCommand {
         }
     }
 
-    protected void clearHandler(CommandSource sender, Player player, String[] args, int offset, boolean showExtended) throws Exception {
+    protected void clearHandler(CommandSource sender, Player player, String[] args, int offset, boolean showExtended) {
         short data = -1;
         int type = -1;
         int amount = -1;
@@ -195,6 +196,6 @@ public class Commandclearinventory extends EssentialsCommand {
     }
 
     private String formatCommand(String commandLabel, String[] args) {
-        return "/" + commandLabel + " " + StringUtil.joinList(" ", (Object[]) args);
+        return "/" + commandLabel + " " + StringUtil.joinList(" ", args);
     }
 }

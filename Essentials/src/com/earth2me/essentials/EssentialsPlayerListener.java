@@ -31,8 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -42,6 +40,7 @@ import java.util.regex.Pattern;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class EssentialsPlayerListener implements Listener {
     private static final Logger LOGGER = Logger.getLogger("Essentials");
     private final transient IEssentials ess;
@@ -123,6 +122,8 @@ public class EssentialsPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerMove(final PlayerMoveEvent event) {
+        if (event.getTo() == null || event.getTo().getWorld() == null) return;
+
         if (event.getFrom().getBlockX() == event.getTo().getBlockX() && event.getFrom().getBlockZ() == event.getTo().getBlockZ() && event.getFrom().getBlockY() == event.getTo().getBlockY()) {
             return;
         }
@@ -166,19 +167,6 @@ public class EssentialsPlayerListener implements Listener {
     public void onPlayerQuit(final PlayerQuitEvent event) {
         final User user = ess.getUser(event.getPlayer());
 
-        if (ess.getSettings().allowSilentJoinQuit() && user.isAuthorized("essentials.silentquit")) {
-            event.setQuitMessage(null);
-        } else if (ess.getSettings().isCustomQuitMessage() && event.getQuitMessage() != null) {
-            final Player player = event.getPlayer();
-            final String msg = ess.getSettings().getCustomQuitMessage()
-                    .replace("{PLAYER}", player.getDisplayName())
-                    .replace("{USERNAME}", player.getName())
-                    .replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size()))
-                    .replace("{UPTIME}", DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
-
-            event.setQuitMessage(msg.isEmpty() ? null : msg);
-        }
-
         user.startTransaction();
         if (ess.getSettings().removeGodOnDisconnect() && user.isGodModeEnabled()) {
             user.setGodModeEnabled(false);
@@ -211,15 +199,10 @@ public class EssentialsPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(final PlayerJoinEvent event) {
-        final String joinMessage = event.getJoinMessage();
-        ess.runTaskAsynchronously(() -> delayedJoin(event.getPlayer(), joinMessage));
-
-        if (ess.getSettings().allowSilentJoinQuit() || ess.getSettings().isCustomJoinMessage()) {
-            event.setJoinMessage(null);
-        }
+        ess.runTaskAsynchronously(() -> delayedJoin(event.getPlayer()));
     }
 
-    public void delayedJoin(final Player player, final String message) {
+    public void delayedJoin(final Player player) {
         if (!player.isOnline()) {
             return;
         }
@@ -268,25 +251,6 @@ public class EssentialsPlayerListener implements Listener {
                     user.getBase().setSleepingIgnored(true);
                 }
 
-                if (ess.getSettings().allowSilentJoinQuit() && (user.isAuthorized("essentials.silentjoin") || user.isAuthorized("essentials.silentjoin.vanish"))) {
-                    if (user.isAuthorized("essentials.silentjoin.vanish")) {
-                        user.setVanished(true);
-                    }
-                } else if (message == null) {
-                    //NOOP
-                } else if (ess.getSettings().isCustomJoinMessage()) {
-                    String msg = ess.getSettings().getCustomJoinMessage()
-                            .replace("{PLAYER}", player.getDisplayName()).replace("{USERNAME}", player.getName())
-                            .replace("{UNIQUE}", NumberFormat.getInstance().format(ess.getUserMap().getUniqueUsers()))
-                            .replace("{ONLINE}", NumberFormat.getInstance().format(ess.getOnlinePlayers().size()))
-                            .replace("{UPTIME}", DateUtil.formatDateDiff(ManagementFactory.getRuntimeMXBean().getStartTime()));
-                    if (!msg.isEmpty()) {
-                        ess.getServer().broadcastMessage(msg);
-                    }
-                } else if (ess.getSettings().allowSilentJoinQuit()) {
-                    ess.getServer().broadcastMessage(message);
-                }
-
                 int motdDelay = ess.getSettings().getMotdDelay() / 50;
                 DelayMotdTask motdTask = new DelayMotdTask(user);
                 if (motdDelay > 0) {
@@ -323,7 +287,7 @@ public class EssentialsPlayerListener implements Listener {
             }
 
             class DelayMotdTask implements Runnable {
-                private User user;
+                private final User user;
 
                 public DelayMotdTask(User user) {
                     this.user = user;
@@ -375,42 +339,34 @@ public class EssentialsPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerLoginBanned(final PlayerLoginEvent event) {
-        switch (event.getResult()) {
-            case KICK_BANNED:
-                BanEntry banEntry = ess.getServer().getBanList(BanList.Type.NAME).getBanEntry(event.getPlayer().getName());
-                if (banEntry != null) {
-                    Date banExpiry = banEntry.getExpiration();
-                    if (banExpiry != null) {
-                        String expiry = DateUtil.formatDateDiff(banExpiry.getTime());
-                        event.setKickMessage(tl("tempbanJoin", expiry, banEntry.getReason()));
-                    } else {
-                        event.setKickMessage(tl("banJoin", banEntry.getReason()));
-                    }
+        if (event.getResult() == Result.KICK_BANNED) {
+            BanEntry banEntry = ess.getServer().getBanList(BanList.Type.NAME).getBanEntry(event.getPlayer().getName());
+            if (banEntry != null) {
+                Date banExpiry = banEntry.getExpiration();
+                if (banExpiry != null) {
+                    String expiry = DateUtil.formatDateDiff(banExpiry.getTime());
+                    event.setKickMessage(tl("tempbanJoin", expiry, banEntry.getReason()));
                 } else {
-                    banEntry = ess.getServer().getBanList(BanList.Type.IP).getBanEntry(event.getAddress().getHostAddress());
-                    if (banEntry != null) {
-                        event.setKickMessage(tl("banIpJoin", banEntry.getReason()));
-                    }
+                    event.setKickMessage(tl("banJoin", banEntry.getReason()));
                 }
-                break;
-            default:
-                break;
+            } else {
+                banEntry = ess.getServer().getBanList(BanList.Type.IP).getBanEntry(event.getAddress().getHostAddress());
+                if (banEntry != null) {
+                    event.setKickMessage(tl("banIpJoin", banEntry.getReason()));
+                }
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerLogin(final PlayerLoginEvent event) {
-        switch (event.getResult()) {
-            case KICK_FULL:
-                final User kfuser = ess.getUser(event.getPlayer());
-                if (kfuser.isAuthorized("essentials.joinfullserver")) {
-                    event.allow();
-                    return;
-                }
-                event.disallow(Result.KICK_FULL, tl("serverFull"));
-                break;
-            default:
-                break;
+        if (event.getResult() == Result.KICK_FULL) {
+            final User kfuser = ess.getUser(event.getPlayer());
+            if (kfuser.isAuthorized("essentials.joinfullserver")) {
+                event.allow();
+                return;
+            }
+            event.disallow(Result.KICK_FULL, tl("serverFull"));
         }
     }
 
@@ -648,12 +604,10 @@ public class EssentialsPlayerListener implements Listener {
         boolean used = false;
         // We need to loop through each command and execute
         for (final String command : commandList) {
-            if (command.contains("{player}")) {
-                continue;
-            } else if (command.startsWith("c:")) {
+            if (command.startsWith("c:")) {
                 used = true;
                 user.getBase().chat(command.substring(2));
-            } else {
+            } else if (!command.contains("{player}")){
                 used = true;
 
                 class PowerToolUseTask implements Runnable {
@@ -686,7 +640,7 @@ public class EssentialsPlayerListener implements Listener {
         if (type == InventoryType.PLAYER) {
             final User user = ess.getUser((Player) event.getWhoClicked());
             final InventoryHolder invHolder = top.getHolder();
-            if (invHolder != null && invHolder instanceof HumanEntity) {
+            if (invHolder instanceof HumanEntity) {
                 final User invOwner = ess.getUser((Player) invHolder);
                 if (user.isInvSee() && (!user.isAuthorized("essentials.invsee.modify") || invOwner.isAuthorized("essentials.invsee.preventmodify") || !invOwner.getBase().isOnline())) {
                     event.setCancelled(true);
@@ -708,7 +662,7 @@ public class EssentialsPlayerListener implements Listener {
         } else if (type == InventoryType.CHEST && top.getSize() == 9) {
             final User user = ess.getUser((Player) event.getWhoClicked());
             final InventoryHolder invHolder = top.getHolder();
-            if (invHolder != null && invHolder instanceof HumanEntity && user.isInvSee()) {
+            if (invHolder instanceof HumanEntity && user.isInvSee()) {
                 event.setCancelled(true);
                 refreshPlayer = user.getBase();
             }
@@ -726,8 +680,7 @@ public class EssentialsPlayerListener implements Listener {
         }
 
         if (refreshPlayer != null) {
-            final Player player = refreshPlayer;
-            ess.scheduleSyncDelayedTask(player::updateInventory, 1);
+            ess.scheduleSyncDelayedTask(refreshPlayer::updateInventory, 1);
         }
     }
 
@@ -753,7 +706,7 @@ public class EssentialsPlayerListener implements Listener {
             }
         } else if (type == InventoryType.CHEST && top.getSize() == 9) {
             final InventoryHolder invHolder = top.getHolder();
-            if (invHolder != null && invHolder instanceof HumanEntity) {
+            if (invHolder instanceof HumanEntity) {
                 final User user = ess.getUser((Player) event.getPlayer());
                 user.setInvSee(false);
                 refreshPlayer = user.getBase();
@@ -761,8 +714,7 @@ public class EssentialsPlayerListener implements Listener {
         }
 
         if (refreshPlayer != null) {
-            final Player player = refreshPlayer;
-            ess.scheduleSyncDelayedTask(player::updateInventory, 1);
+            ess.scheduleSyncDelayedTask(refreshPlayer::updateInventory, 1);
         }
     }
 

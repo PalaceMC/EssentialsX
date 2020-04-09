@@ -8,7 +8,7 @@ import static com.earth2me.essentials.I18n.tl;
 
 import net.ess3.api.events.VanishStatusChangeEvent;
 
-
+@SuppressWarnings("unused")
 public class Commandvanish extends EssentialsToggleCommand {
     public Commandvanish() {
         super("vanish", "essentials.vanish.others");
@@ -25,7 +25,7 @@ public class Commandvanish extends EssentialsToggleCommand {
     }
 
     @Override
-    void togglePlayer(CommandSource sender, User user, Boolean enabled) throws NotEnoughArgumentsException {
+    void togglePlayer(CommandSource sender, User user, Boolean enabled) {
         if (enabled == null) {
             enabled = !user.isVanished();
         }

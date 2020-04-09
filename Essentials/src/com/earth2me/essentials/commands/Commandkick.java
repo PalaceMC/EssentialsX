@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import org.bukkit.Server;
@@ -12,7 +11,7 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandkick extends EssentialsCommand {
     public Commandkick() {
         super("kick");
@@ -40,7 +39,7 @@ public class Commandkick extends EssentialsCommand {
         kickReason = FormatUtil.replaceFormat(kickReason.replace("\\n", "\n").replace("|", "\n"));
 
         target.getBase().kickPlayer(kickReason);
-        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
+        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : "Console";
 
         server.getLogger().log(Level.INFO, tl("playerKicked", senderName, target.getName(), kickReason));
         ess.broadcastMessage("essentials.kick.notify", tl("playerKicked", senderName, target.getName(), kickReason));

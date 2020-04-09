@@ -13,13 +13,14 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class SignEnchant extends EssentialsSign {
     public SignEnchant() {
         super("Enchant");
     }
 
     @Override
-    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignCreate(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final ItemStack stack;
         try {
             stack = sign.getLine(1).equals("*") || sign.getLine(1).equalsIgnoreCase("any") ? null : getItemStack(sign.getLine(1), 1, ess);
@@ -85,22 +86,21 @@ public class SignEnchant extends EssentialsSign {
         }
 
         final ItemStack playerHand = player.getBase().getItemInHand();
-        if (playerHand == null || playerHand.getAmount() != 1 || (playerHand.containsEnchantment(enchantment) && playerHand.getEnchantmentLevel(enchantment) == level)) {
+        if (playerHand.getAmount() != 1 || (playerHand.containsEnchantment(enchantment) && playerHand.getEnchantmentLevel(enchantment) == level)) {
             throw new SignException(tl("missingItems", 1, sign.getLine(1)));
         }
         if (search != null && playerHand.getType() != search.getType()) {
             throw new SignException(tl("missingItems", 1, search.getType().toString().toLowerCase(Locale.ENGLISH).replace('_', ' ')));
         }
 
-        final ItemStack toEnchant = playerHand;
         try {
             if (level == 0) {
-                toEnchant.removeEnchantment(enchantment);
+                playerHand.removeEnchantment(enchantment);
             } else {
                 if (ess.getSettings().allowUnsafeEnchantments() && player.isAuthorized("essentials.signs.enchant.allowunsafe")) {
-                    toEnchant.addUnsafeEnchantment(enchantment, level);
+                    playerHand.addUnsafeEnchantment(enchantment, level);
                 } else {
-                    toEnchant.addEnchantment(enchantment, level);
+                    playerHand.addEnchantment(enchantment, level);
                 }
             }
         } catch (Exception ex) {

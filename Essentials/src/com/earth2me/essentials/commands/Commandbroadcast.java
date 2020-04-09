@@ -7,7 +7,7 @@ import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandbroadcast extends EssentialsCommand {
     public Commandbroadcast() {
         super("broadcast");

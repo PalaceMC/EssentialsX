@@ -6,6 +6,7 @@ import net.ess3.nms.SpawnEggProvider;
 
 import java.util.Collection;
 
+@SuppressWarnings("unused")
 public interface IEssentials extends com.earth2me.essentials.IEssentials {
 
     Collection<String> getVanishedPlayersNew();

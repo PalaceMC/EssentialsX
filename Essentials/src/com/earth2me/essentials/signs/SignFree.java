@@ -21,7 +21,7 @@ public class SignFree extends EssentialsSign {
         try {
             ItemStack item = getItemStack(sign.getLine(1), 1, ess);
             item = getItemMeta(item, sign.getLine(2), ess);
-            item = getItemMeta(item, sign.getLine(3), ess);
+            getItemMeta(item, sign.getLine(3), ess);
         } catch (SignException ex) {
             sign.setLine(1, "§c<item>");
             throw new SignException(ex.getMessage(), ex);

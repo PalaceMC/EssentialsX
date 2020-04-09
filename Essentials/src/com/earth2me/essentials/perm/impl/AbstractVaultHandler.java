@@ -25,7 +25,7 @@ public abstract class AbstractVaultHandler extends SuperpermsHandler {
         perms = permsProvider.getProvider();
         RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
         chat = chatProvider.getProvider();
-        return perms != null && chat != null;
+        return true;
     }
 
     @Override

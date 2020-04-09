@@ -2,7 +2,7 @@ package net.ess3.api.events;
 
 import net.ess3.api.IUser;
 
-
+@SuppressWarnings("unused")
 public class AfkStatusChangeEvent extends StatusChangeEvent {
     private Cause cause;
 

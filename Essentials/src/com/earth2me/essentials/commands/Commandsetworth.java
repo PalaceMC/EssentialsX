@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandsetworth extends EssentialsCommand {
     public Commandsetworth() {
         super("setworth");

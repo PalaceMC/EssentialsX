@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandnuke extends EssentialsCommand {
     public Commandnuke() {
         super("nuke");

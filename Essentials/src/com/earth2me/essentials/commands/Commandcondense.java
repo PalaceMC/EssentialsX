@@ -11,12 +11,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandcondense extends EssentialsCommand {
     public Commandcondense() {
         super("condense");
@@ -33,7 +35,7 @@ public class Commandcondense extends EssentialsCommand {
             is = ess.getItemDb().getMatching(user, args);
         } else {
             for (ItemStack stack : user.getBase().getInventory().getContents()) {
-                if (stack == null || stack.getType() == Material.AIR) {
+                if (stack.getType() == Material.AIR) {
                     continue;
                 }
                 is.add(stack);
@@ -79,7 +81,7 @@ public class Commandcondense extends EssentialsCommand {
             int amount = 0;
 
             for (final ItemStack contents : user.getBase().getInventory().getContents()) {
-                if (contents != null && contents.isSimilar(stack)) {
+                if (contents.isSimilar(stack)) {
                     amount += contents.getAmount();
                 }
             }
@@ -120,7 +122,7 @@ public class Commandcondense extends EssentialsCommand {
         }
         if (!bestRecipes.isEmpty()) {
             if (bestRecipes.size() > 1) {
-                Collections.sort(bestRecipes, SimpleRecipeComparator.INSTANCE);
+                bestRecipes.sort(SimpleRecipeComparator.INSTANCE);
             }
             SimpleRecipe recipe = bestRecipes.get(0);
             condenseList.put(stack, recipe);
@@ -171,7 +173,7 @@ public class Commandcondense extends EssentialsCommand {
     }
 
 
-    private class SimpleRecipe implements Recipe {
+    private static class SimpleRecipe implements Recipe {
         private ItemStack result;
         private ItemStack input;
 
@@ -180,6 +182,7 @@ public class Commandcondense extends EssentialsCommand {
             this.input = input;
         }
 
+        @NotNull
         @Override
         public ItemStack getResult() {
             return result.clone();

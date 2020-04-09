@@ -13,7 +13,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandgamemode extends EssentialsCommand {
     public Commandgamemode() {
         super("gamemode");
@@ -102,21 +102,19 @@ public class Commandgamemode extends EssentialsCommand {
     }
 
     private GameMode matchGameMode(String modeString) throws NotEnoughArgumentsException {
-        GameMode mode = null;
         if (modeString.equalsIgnoreCase("gmc") || modeString.equalsIgnoreCase("egmc") || modeString.contains("creat") || modeString.equalsIgnoreCase("1") || modeString.equalsIgnoreCase("c")) {
-            mode = GameMode.CREATIVE;
+            return GameMode.CREATIVE;
         } else if (modeString.equalsIgnoreCase("gms") || modeString.equalsIgnoreCase("egms") || modeString.contains("survi") || modeString.equalsIgnoreCase("0") || modeString.equalsIgnoreCase("s")) {
-            mode = GameMode.SURVIVAL;
+            return GameMode.SURVIVAL;
         } else if (modeString.equalsIgnoreCase("gma") || modeString.equalsIgnoreCase("egma") || modeString.contains("advent") || modeString.equalsIgnoreCase("2") || modeString.equalsIgnoreCase("a")) {
-            mode = GameMode.ADVENTURE;
+            return GameMode.ADVENTURE;
         } else if (modeString.equalsIgnoreCase("gmt") || modeString.equalsIgnoreCase("egmt") || modeString.contains("toggle") || modeString.contains("cycle") || modeString.equalsIgnoreCase("t")) {
-            mode = null;
+            return null;
         } else if (modeString.equalsIgnoreCase("gmsp") || modeString.equalsIgnoreCase("egmsp") || modeString.contains("spec") || modeString.equalsIgnoreCase("3") || modeString.equalsIgnoreCase("sp")) {
-            mode = GameMode.SPECTATOR;
+            return GameMode.SPECTATOR;
         } else {
             throw new NotEnoughArgumentsException();
         }
-        return mode;
     }
 
     private List<String> STANDARD_OPTIONS = ImmutableList.of("creative", "survival", "adventure", "spectator", "toggle");

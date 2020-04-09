@@ -31,6 +31,7 @@ import org.bukkit.potion.PotionEffectType;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class MetaItemStack {
     private static final Map<String, DyeColor> colorMap = new HashMap<>();
     private static final Map<String, FireworkEffect.Type> fireworkShape = new HashMap<>();
@@ -100,11 +101,6 @@ public class MetaItemStack {
         try {
             ess.getServer().getUnsafe().modifyItemStack(stack.clone(), "{}");
             return true;
-        } catch (NullPointerException npe) {
-            if (ess.getSettings().isDebug()) {
-                ess.getLogger().log(Level.INFO, "Itemstack is invalid", npe);
-            }
-            return false;
         } catch (NoSuchMethodError nsme) {
             return true;
         } catch (Throwable throwable) {
@@ -161,7 +157,7 @@ public class MetaItemStack {
             meta.setDisplayName(displayName);
             stack.setItemMeta(meta);
         } else if (split.length > 1 && (split[0].equalsIgnoreCase("lore") || split[0].equalsIgnoreCase("desc")) && hasMetaPermission(sender, "lore", false, true, ess)) {
-            final List<String> lore = new ArrayList<String>();
+            final List<String> lore = new ArrayList<>();
             for (String line : split[1].split("(?<!\\\\)\\|")) {
                 lore.add(FormatUtil.replaceFormat(line.replace('_', ' ').replace("\\|", "|")));
             }
@@ -169,7 +165,7 @@ public class MetaItemStack {
             meta.setLore(lore);
             stack.setItemMeta(meta);
         } else if (split[0].equalsIgnoreCase("unbreakable") && hasMetaPermission(sender, "unbreakable", false, true, ess)) {
-            boolean value = split.length > 1 ? Boolean.valueOf(split[1]) : true;
+            boolean value = split.length <= 1 || Boolean.parseBoolean(split[1]);
             setUnbreakable(stack, value);
         } else if (split.length > 1 && (split[0].equalsIgnoreCase("player") || split[0].equalsIgnoreCase("owner")) && hasMetaPermission(sender, "head", false, true, ess)) {
             if (MaterialUtil.isPlayerHead(stack.getType(), stack.getDurability())) {
@@ -217,7 +213,7 @@ public class MetaItemStack {
                 addBannerMeta(sender, false, string, ess);
             }
         } else if (split.length > 1 && (split[0].equalsIgnoreCase("color") || split[0].equalsIgnoreCase("colour")) && MaterialUtil.isLeatherArmor(stack.getType())) {
-            final String[] color = split[1].split("(\\||,)");
+            final String[] color = split[1].split("([|,])");
             if (color.length == 1 && (NumberUtil.isInt(color[0]) || color[0].startsWith("#"))) {
                 // Either integer or hexadecimal
                 final LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
@@ -292,7 +288,7 @@ public class MetaItemStack {
                     builder = FireworkEffect.builder();
                 }
 
-                List<Color> primaryColors = new ArrayList<Color>();
+                List<Color> primaryColors = new ArrayList<>();
                 String[] colors = split[1].split(",");
                 for (String color : colors) {
                     if (colorMap.containsKey(color.toUpperCase())) {
@@ -304,7 +300,7 @@ public class MetaItemStack {
                 }
                 builder.withColor(primaryColors);
             } else if (split[0].equalsIgnoreCase("shape") || split[0].equalsIgnoreCase("type") || (allowShortName && (split[0].equalsIgnoreCase("s") || split[0].equalsIgnoreCase("t")))) {
-                FireworkEffect.Type finalEffect = null;
+                FireworkEffect.Type finalEffect;
                 split[1] = (split[1].equalsIgnoreCase("large") ? "BALL_LARGE" : split[1]);
                 if (fireworkShape.containsKey(split[1].toUpperCase())) {
                     finalEffect = fireworkShape.get(split[1].toUpperCase());
@@ -315,7 +311,7 @@ public class MetaItemStack {
                     builder.with(finalEffect);
                 }
             } else if (split[0].equalsIgnoreCase("fade") || (allowShortName && split[0].equalsIgnoreCase("f"))) {
-                List<Color> fadeColors = new ArrayList<Color>();
+                List<Color> fadeColors = new ArrayList<>();
                 String[] colors = split[1].split(",");
                 for (String color : colors) {
                     if (colorMap.containsKey(color.toUpperCase())) {
@@ -352,7 +348,7 @@ public class MetaItemStack {
 
             if (split[0].equalsIgnoreCase("effect") || (allowShortName && split[0].equalsIgnoreCase("e"))) {
                 pEffectType = Potions.getByName(split[1]);
-                if (pEffectType != null && pEffectType.getName() != null) {
+                if (pEffectType != null) {
                     if (hasMetaPermission(sender, "potions." + pEffectType.getName().toLowerCase(Locale.ENGLISH), true, false, ess)) {
                         validPotionEffect = true;
                     } else {
@@ -379,7 +375,7 @@ public class MetaItemStack {
                     throw new Exception(tl("invalidPotionMeta", split[1]));
                 }
             } else if (split[0].equalsIgnoreCase("splash") || (allowShortName && split[0].equalsIgnoreCase("s"))) {
-                isSplashPotion = Boolean.valueOf(split[1]);
+                isSplashPotion = Boolean.parseBoolean(split[1]);
             }
 
             if (isValidPotion()) {
@@ -416,8 +412,7 @@ public class MetaItemStack {
         if (split.length > 1) {
             try {
                 level = Integer.parseInt(split[1]);
-            } catch (NumberFormatException ex) {
-                level = -1;
+            } catch (NumberFormatException ignored) {
             }
         }
 
@@ -476,7 +471,7 @@ public class MetaItemStack {
             final String[] split = splitPattern.split(string, 2);
 
             if (split.length < 2) {
-                throw new Exception(tl("invalidBanner", split[1]));
+                throw new Exception(tl("invalidBanner", split[0]));
             }
 
             PatternType patternType = null;
@@ -486,11 +481,11 @@ public class MetaItemStack {
 
             final BannerMeta meta = (BannerMeta) stack.getItemMeta();
             if (split[0].equalsIgnoreCase("basecolor")) {
-                Color color = Color.fromRGB(Integer.valueOf(split[1]));
+                Color color = Color.fromRGB(Integer.parseInt(split[1]));
                 meta.setBaseColor(DyeColor.getByColor(color));
             } else if (patternType != null) {
                 PatternType type = PatternType.valueOf(split[0]);
-                DyeColor color = DyeColor.getByColor(Color.fromRGB(Integer.valueOf(split[1])));
+                DyeColor color = DyeColor.getByColor(Color.fromRGB(Integer.parseInt(split[1])));
                 org.bukkit.block.banner.Pattern pattern = new org.bukkit.block.banner.Pattern(color, type);
                 meta.addPattern(pattern);
             }
@@ -500,7 +495,7 @@ public class MetaItemStack {
             final String[] split = splitPattern.split(string, 2);
 
             if (split.length < 2) {
-                throw new Exception(tl("invalidBanner", split[1]));
+                throw new Exception(tl("invalidBanner", split[0]));
             }
 
             PatternType patternType = null;
@@ -512,11 +507,11 @@ public class MetaItemStack {
             BlockStateMeta meta = (BlockStateMeta) stack.getItemMeta();
             Banner banner = (Banner) meta.getBlockState();
             if (split[0].equalsIgnoreCase("basecolor")) {
-                Color color = Color.fromRGB(Integer.valueOf(split[1]));
+                Color color = Color.fromRGB(Integer.parseInt(split[1]));
                 banner.setBaseColor(DyeColor.getByColor(color));
             } else if (patternType != null) {
                 PatternType type = PatternType.valueOf(split[0]);
-                DyeColor color = DyeColor.getByColor(Color.fromRGB(Integer.valueOf(split[1])));
+                DyeColor color = DyeColor.getByColor(Color.fromRGB(Integer.parseInt(split[1])));
                 org.bukkit.block.banner.Pattern pattern = new org.bukkit.block.banner.Pattern(color, type);
                 banner.addPattern(pattern);
             }

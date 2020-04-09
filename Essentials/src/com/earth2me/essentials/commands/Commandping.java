@@ -7,13 +7,14 @@ import org.bukkit.Server;
 import static com.earth2me.essentials.I18n.tl;
 
 // This command can be used to echo messages to the users screen, mostly useless but also an #EasterEgg
+@SuppressWarnings("unused")
 public class Commandping extends EssentialsCommand {
     public Commandping() {
         super("ping");
     }
 
     @Override
-    public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         if (args.length < 1) {
 
             sender.sendMessage(tl("pong"));

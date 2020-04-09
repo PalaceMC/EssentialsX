@@ -20,22 +20,15 @@ public class EssentialsPluginListener implements Listener, IConf {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginEnable(final PluginEnableEvent event) {
-        if (event.getPlugin().getName().equals("EssentialsChat")) {
-            ess.getSettings().setEssentialsChatActive(true);
-        }
-        ess.getPermissionsHandler().setUseSuperperms(ess.getSettings().useBukkitPermissions());
         ess.getPermissionsHandler().checkPermissions();
         ess.getAlternativeCommandsHandler().addPlugin(event.getPlugin());
         if (!Methods.hasMethod() && Methods.setMethod(ess.getServer().getPluginManager())) {
-            ess.getLogger().log(Level.INFO, "Payment method found (" + Methods.getMethod().getLongName() + " version: " + ess.getPaymentMethod().getMethod().getVersion() + ")");
+            ess.getLogger().log(Level.INFO, "Payment method found (" + Methods.getMethod().getLongName() + " version: " + Methods.getMethod().getVersion() + ")");
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPluginDisable(final PluginDisableEvent event) {
-        if (event.getPlugin().getName().equals("EssentialsChat")) {
-            ess.getSettings().setEssentialsChatActive(false);
-        }
         ess.getAlternativeCommandsHandler().removePlugin(event.getPlugin());
         // Check to see if the plugin thats being disabled is the one we are using
         if (ess.getPaymentMethod() != null && Methods.hasMethod() && Methods.checkDisabled(event.getPlugin())) {

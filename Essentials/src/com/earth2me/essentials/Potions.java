@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 
+@SuppressWarnings("deprecation")
 public class Potions {
     private static final Map<String, PotionEffectType> POTIONS = new HashMap<>();
     private static final Map<String, PotionEffectType> ALIASPOTIONS = new HashMap<>();

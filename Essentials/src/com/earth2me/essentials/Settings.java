@@ -4,14 +4,10 @@ import com.earth2me.essentials.api.IItemDb;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 //import com.earth2me.essentials.signs.EssentialsSign;
 //import com.earth2me.essentials.signs.Signs;
-import com.earth2me.essentials.textreader.IText;
-import com.earth2me.essentials.textreader.SimpleTextInput;
-import com.earth2me.essentials.utils.EnumUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -25,7 +21,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -95,46 +89,6 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getInt("sethome-multiple." + set, config.getInt("sethome-multiple.default", 3));
     }
 
-    private int chatRadius = 0;
-
-    private int _getChatRadius() {
-        return config.getInt("chat.radius", config.getInt("chat-radius", 0));
-    }
-
-    @Override
-    public int getChatRadius() {
-        return chatRadius;
-    }
-
-    @Override
-    public int getNearRadius() {
-        return config.getInt("near-radius", 200);
-    }
-
-    // #easteregg
-    private char chatShout = '!';
-
-    private char _getChatShout() {
-        return config.getString("chat.shout", "!").charAt(0);
-    }
-
-    @Override
-    public char getChatShout() {
-        return chatShout;
-    }
-
-    // #easteregg
-    private char chatQuestion = '?';
-
-    private char _getChatQuestion() {
-        return config.getString("chat.question", "?").charAt(0);
-    }
-
-    @Override
-    public char getChatQuestion() {
-        return chatQuestion;
-    }
-
     private boolean teleportSafety;
 
     public boolean _isTeleportSafetyEnabled() {
@@ -182,12 +136,7 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBigDecimal("starting-balance", BigDecimal.ZERO);
     }
 
-    @Override
-    public boolean isCommandDisabled(final IEssentialsCommand cmd) {
-        return isCommandDisabled(cmd.getName());
-    }
-
-    private Set<String> disabledCommands = new HashSet<String>();
+    private Set<String> disabledCommands = new HashSet<>();
 
     @Override
     public boolean isCommandDisabled(String label) {
@@ -195,7 +144,7 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     private Set<String> getDisabledCommands() {
-        Set<String> disCommands = new HashSet<String>();
+        Set<String> disCommands = new HashSet<>();
         for (String c : config.getStringList("disabled-commands")) {
             disCommands.add(c.toLowerCase(Locale.ENGLISH));
         }
@@ -205,17 +154,6 @@ public class Settings implements net.ess3.api.ISettings {
             }
         }
         return disCommands;
-    }
-
-    @Override
-    public boolean isPlayerCommand(String label) {
-        for (String c : config.getStringList("player-commands")) {
-            if (!c.equalsIgnoreCase(label)) {
-                continue;
-            }
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -237,8 +175,8 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     private ConfigurationSection _getCommandCosts() {
-        if (config.isConfigurationSection("command-costs")) {
-            final ConfigurationSection section = config.getConfigurationSection("command-costs");
+        final ConfigurationSection section = config.getConfigurationSection("command-costs");
+        if (section != null) {
             final ConfigurationSection newSection = new MemoryConfiguration();
             for (String command : section.getKeys(false)) {
                 if (command.charAt(0) == '/') {
@@ -251,6 +189,7 @@ public class Settings implements net.ess3.api.ISettings {
                 } else if (section.isString(command)) {
                     String costString = section.getString(command);
                     try {
+                        //noinspection ConstantConditions
                         double cost = Double.parseDouble(costString.trim().replace(getCurrencySymbol(), "").replaceAll("\\W", ""));
                         newSection.set(command.toLowerCase(Locale.ENGLISH), cost);
                     } catch (NumberFormatException ex) {
@@ -275,10 +214,10 @@ public class Settings implements net.ess3.api.ISettings {
         return BigDecimal.ZERO;
     }
 
-    private Set<String> muteCommands = new HashSet<String>();
+    private Set<String> muteCommands = new HashSet<>();
 
     private Set<String> _getMuteCommands() {
-        Set<String> muteCommands = new HashSet<String>();
+        Set<String> muteCommands = new HashSet<>();
         if (config.isList("mute-commands")) {
             for (String s : config.getStringList("mute-commands")) {
                 muteCommands.add(s.toLowerCase(Locale.ENGLISH));
@@ -291,17 +230,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public Set<String> getMuteCommands() {
         return muteCommands;
-    }
-
-    private String nicknamePrefix = "~";
-
-    private String _getNicknamePrefix() {
-        return config.getString("nickname-prefix", "~");
-    }
-
-    @Override
-    public String getNicknamePrefix() {
-        return nicknamePrefix;
     }
 
     @Override
@@ -330,38 +258,8 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     @Override
-    public ConfigurationSection getKitSection() {
-        return config.getConfigurationSection("kits");
-    }
-
-    @Override
     public boolean isSkippingUsedOneTimeKitsFromKitList() {
         return config.getBoolean("skip-used-one-time-kits-from-kit-list", false);
-    }
-
-    private ChatColor operatorColor = null;
-
-    @Override
-    public ChatColor getOperatorColor() {
-        return operatorColor;
-    }
-
-    private ChatColor _getOperatorColor() {
-        String colorName = config.getString("ops-name-color", null);
-
-        if (colorName == null) {
-            return ChatColor.DARK_RED;
-        }
-        if ("none".equalsIgnoreCase(colorName) || colorName.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return ChatColor.valueOf(colorName.toUpperCase(Locale.ENGLISH));
-        } catch (IllegalArgumentException ex) {
-        }
-
-        return ChatColor.getByChar(colorName);
     }
 
     @Override
@@ -379,11 +277,6 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("hide-permissionless-help", true);
     }
 
-    @Override
-    public int getProtectCreeperMaxHeight() {
-        return config.getInt("protect.creeper.max-height", -1);
-    }
-
     /*@Override
     public boolean areSignsDisabled() {
         return !signsEnabled;
@@ -399,44 +292,7 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getString("backup.command", null);
     }
 
-    private final Map<String, String> chatFormats = Collections.synchronizedMap(new HashMap<String, String>());
-
-    @Override
-    public String getChatFormat(String group) {
-        String mFormat = chatFormats.get(group);
-        if (mFormat == null) {
-            mFormat = config.getString("chat.group-formats." + (group == null ? "Default" : group), config.getString("chat.format", "&7[{GROUP}]&r {DISPLAYNAME}&7:&r {MESSAGE}"));
-            mFormat = FormatUtil.replaceFormat(mFormat);
-            mFormat = mFormat.replace("{DISPLAYNAME}", "%1$s");
-            mFormat = mFormat.replace("{MESSAGE}", "%2$s");
-            mFormat = mFormat.replace("{GROUP}", "{0}");
-            mFormat = mFormat.replace("{WORLD}", "{1}");
-            mFormat = mFormat.replace("{WORLDNAME}", "{1}");
-            mFormat = mFormat.replace("{SHORTWORLDNAME}", "{2}");
-            mFormat = mFormat.replace("{TEAMPREFIX}", "{3}");
-            mFormat = mFormat.replace("{TEAMSUFFIX}", "{4}");
-            mFormat = mFormat.replace("{TEAMNAME}", "{5}");
-            mFormat = mFormat.replace("{PREFIX}", "{6}");
-            mFormat = mFormat.replace("{SUFFIX}", "{7}");
-            mFormat = mFormat.replace("{USERNAME}", "{8}");
-            mFormat = "§r".concat(mFormat);
-            chatFormats.put(group, mFormat);
-        }
-        if (isDebug()) {
-            ess.getLogger().info(String.format("Found format '%s' for group '%s'", mFormat, group));
-        }
-        return mFormat;
-    }
-
-    @Override
-    public boolean getAnnounceNewPlayers() {
-        return !config.getString("newbies.announce-format", "-").isEmpty();
-    }
-
-    @Override
-    public IText getAnnounceNewPlayerFormat() {
-        return new SimpleTextInput(FormatUtil.replaceFormat(config.getString("newbies.announce-format", "&dWelcome {DISPLAYNAME} to the server!")));
-    }
+    private final Map<String, String> chatFormats = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public String getNewPlayerKit() {
@@ -456,12 +312,15 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public Map<String, Object> getListGroupConfig() {
         if (config.isConfigurationSection("list")) {
-            Map<String, Object> values = config.getConfigurationSection("list").getValues(false);
-            if (!values.isEmpty()) {
-                return values;
+            ConfigurationSection section = config.getConfigurationSection("list");
+            if (section != null) {
+                Map<String, Object> values = section.getValues(false);
+                if (!values.isEmpty()) {
+                    return values;
+                }
             }
         }
-        Map<String, Object> defaultMap = new HashMap<String, Object>();
+        Map<String, Object> defaultMap = new HashMap<>();
         if (config.getBoolean("sort-list-by-groups", false)) {
             defaultMap.put("ListByGroup", "ListByGroup");
         } else {
@@ -473,7 +332,7 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public void reloadConfig() {
         config.load();
-        noGodWorlds = new HashSet<String>(config.getStringList("no-god-in-worlds"));
+        noGodWorlds = new HashSet<>(config.getStringList("no-god-in-worlds"));
         //enabledSigns = _getEnabledSigns();
         teleportSafety = _isTeleportSafetyEnabled();
         forceDisableTeleportSafety = _isForceDisableTeleportSafety();
@@ -491,22 +350,9 @@ public class Settings implements net.ess3.api.ISettings {
         loginAttackDelay = _getLoginAttackDelay();
         //signUsePerSecond = _getSignUsePerSecond();
         chatFormats.clear();
-        changeDisplayName = _changeDisplayName();
         disabledCommands = getDisabledCommands();
-        nicknamePrefix = _getNicknamePrefix();
-        operatorColor = _getOperatorColor();
-        changePlayerListName = _changePlayerListName();
         configDebug = _isDebug();
-        prefixsuffixconfigured = _isPrefixSuffixConfigured();
-        addprefixsuffix = _addPrefixSuffix();
-        disablePrefix = _disablePrefix();
-        disableSuffix = _disableSuffix();
-        chatRadius = _getChatRadius();
-        chatShout = _getChatShout();
-        chatQuestion = _getChatQuestion();
         commandCosts = _getCommandCosts();
-        warnOnBuildDisallow = _warnOnBuildDisallow();
-        mailsPerMinute = _getMailsPerMinute();
         maxMoney = _getMaxMoney();
         minMoney = _getMinMoney();
         permissionsLagWarning = _getPermissionsLagWarning();
@@ -514,11 +360,6 @@ public class Settings implements net.ess3.api.ISettings {
         economyLog = _isEcoLogEnabled();
         economyLogUpdate = _isEcoLogUpdateEnabled();
         economyDisabled = _isEcoDisabled();
-        allowSilentJoin = _allowSilentJoinQuit();
-        customJoinMessage = _getCustomJoinMessage();
-        isCustomJoinMessage = !customJoinMessage.equals("none");
-        customQuitMessage = _getCustomQuitMessage();
-        isCustomQuitMessage = !customQuitMessage.equals("none");
         muteCommands = _getMuteCommands();
         spawnOnJoinGroups = _getSpawnOnJoinGroups();
         commandCooldowns = _getCommandCooldowns();
@@ -535,8 +376,8 @@ public class Settings implements net.ess3.api.ISettings {
         isWaterSafe = _isWaterSafe();
         isSafeUsermap = _isSafeUsermap();
         logCommandBlockCommands = _logCommandBlockCommands();
-        nickBlacklist = _getNickBlacklist();
         maxProjectileSpeed = _getMaxProjectileSpeed();
+        removeEffectsOnHeal = _isRemovingEffectsOnHeal();
     }
 
     void _lateLoadItemSpawnBlacklist() {
@@ -557,6 +398,7 @@ public class Settings implements net.ess3.api.ISettings {
             logger.log(Level.FINE, "Skipping item spawn blacklist read; item DB not yet loaded.");
             return epItemSpwn;
         }
+        //noinspection ConstantConditions
         for (String itemName : config.getString("item-spawn-blacklist", "").split(",")) {
             itemName = itemName.trim();
             if (itemName.isEmpty()) {
@@ -605,17 +447,6 @@ public class Settings implements net.ess3.api.ISettings {
         return newSigns;
     }*/
 
-    private boolean warnOnBuildDisallow;
-
-    private boolean _warnOnBuildDisallow() {
-        return config.getBoolean("protect.disable.warn-on-build-disallow", false);
-    }
-
-    @Override
-    public boolean warnOnBuildDisallow() {
-        return warnOnBuildDisallow;
-    }
-
     private boolean debug = false;
     private boolean configDebug = false;
 
@@ -647,6 +478,7 @@ public class Settings implements net.ess3.api.ISettings {
     //If you need to use a string currency, for example "coins", use the translation key 'currency'.
     @Override
     public String getCurrencySymbol() {
+        //noinspection ConstantConditions
         return config.getString("currency-symbol", "$").concat("$").substring(0, 1).replaceAll("[0-9]", "$");
     }
 
@@ -673,48 +505,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isEcoDisabled() {
         return economyDisabled;
-    }
-
-    @Override
-    public boolean getProtectPreventSpawn(final String creatureName) {
-        return config.getBoolean("protect.prevent.spawn." + creatureName, false);
-    }
-
-    @Override
-    public List<Material> getProtectList(final String configName) {
-        final List<Material> list = new ArrayList<>();
-        for (String itemName : config.getString(configName, "").split(",")) {
-            itemName = itemName.trim();
-            if (itemName.isEmpty()) {
-                continue;
-            }
-
-            Material mat = EnumUtil.getMaterial(itemName.toUpperCase());
-            
-            if (mat == null) {
-                try {
-                    ItemStack itemStack = ess.getItemDb().get(itemName);
-                    mat = itemStack.getType();
-                } catch (Exception ignored) {}
-            }
-
-            if (mat == null) {
-                logger.log(Level.SEVERE, tl("unknownItemInList", itemName, configName));
-            } else {
-                list.add(mat);
-            }
-        }
-        return list;
-    }
-
-    @Override
-    public String getProtectString(final String configName) {
-        return config.getString(configName, null);
-    }
-
-    @Override
-    public boolean getProtectBoolean(final String configName, boolean def) {
-        return config.getBoolean(configName, def);
     }
 
     private static final BigDecimal MAXMONEY = new BigDecimal("10000000000000");
@@ -764,11 +554,6 @@ public class Settings implements net.ess3.api.ISettings {
         return economyLogUpdate;
     }
 
-    @Override
-    public boolean realNamesOnList() {
-        return config.getBoolean("real-names-on-list", false);
-    }
-
     public boolean _isEcoLogUpdateEnabled() {
         return config.getBoolean("economy-log-update-enabled", false);
     }
@@ -776,79 +561,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean removeGodOnDisconnect() {
         return config.getBoolean("remove-god-on-disconnect", false);
-    }
-
-    private boolean changeDisplayName = true;
-
-    private boolean _changeDisplayName() {
-        return config.getBoolean("change-displayname", true);
-    }
-
-    @Override
-    public boolean changeDisplayName() {
-        return changeDisplayName;
-    }
-
-    private boolean changePlayerListName = false;
-
-    private boolean _changePlayerListName() {
-        return config.getBoolean("change-playerlist", false);
-    }
-
-    @Override
-    public boolean changePlayerListName() {
-        return changePlayerListName;
-    }
-
-    @Override
-    public boolean useBukkitPermissions() {
-        return config.getBoolean("use-bukkit-permissions", false);
-    }
-
-    private boolean prefixsuffixconfigured = false;
-    private boolean addprefixsuffix = false;
-    private boolean essentialsChatActive = false;
-
-    private boolean _addPrefixSuffix() {
-        return config.getBoolean("add-prefix-suffix", false);
-    }
-
-    private boolean _isPrefixSuffixConfigured() {
-        return config.hasProperty("add-prefix-suffix");
-    }
-
-    @Override
-    public void setEssentialsChatActive(boolean essentialsChatActive) {
-        this.essentialsChatActive = essentialsChatActive;
-    }
-
-    @Override
-    public boolean addPrefixSuffix() {
-        return prefixsuffixconfigured ? addprefixsuffix : essentialsChatActive;
-    }
-
-    // #easteregg
-    private boolean disablePrefix = false;
-
-    private boolean _disablePrefix() {
-        return config.getBoolean("disablePrefix", false);
-    }
-
-    @Override
-    public boolean disablePrefix() {
-        return disablePrefix;
-    }
-
-    // #easteregg
-    private boolean disableSuffix = false;
-
-    private boolean _disableSuffix() {
-        return config.getBoolean("disableSuffix", false);
-    }
-
-    @Override
-    public boolean disableSuffix() {
-        return disableSuffix;
     }
 
     @Override
@@ -927,7 +639,7 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("death-messages", true);
     }
 
-    private Set<String> noGodWorlds = new HashSet<String>();
+    private Set<String> noGodWorlds = new HashSet<>();
 
     @Override
     public Set<String> getNoGodWorlds() {
@@ -1005,12 +717,14 @@ public class Settings implements net.ess3.api.ISettings {
 
     @Override
     public EventPriority getRespawnPriority() {
+        //noinspection ConstantConditions
         String priority = config.getString("respawn-listener-priority", "normal").toLowerCase(Locale.ENGLISH);
         return getPriority(priority);
     }
 
     @Override
     public EventPriority getSpawnJoinPriority() {
+        //noinspection ConstantConditions
         String priority = config.getString("spawn-join-listener-priority", "normal").toLowerCase(Locale.ENGLISH);
         return getPriority(priority);
     }
@@ -1077,24 +791,12 @@ public class Settings implements net.ess3.api.ISettings {
         return maxSpeed > 1.0 ? 1.0 : Math.abs(maxSpeed);
     }
 
-    private int mailsPerMinute;
-
-    private int _getMailsPerMinute() {
-        return config.getInt("mails-per-minute", 1000);
-    }
-
-    @Override
-    public int getMailsPerMinute() {
-        return mailsPerMinute;
-    }
-
     // #easteregg
     private long economyLagWarning;
 
     private long _getEconomyLagWarning() {
         // Default to 25ms
-        final long value = (long) (config.getDouble("economy-lag-warning", 25.0) * 1000000);
-        return value;
+        return (long) (config.getDouble("economy-lag-warning", 25.0) * 1000000);
     }
 
     @Override
@@ -1107,8 +809,7 @@ public class Settings implements net.ess3.api.ISettings {
 
     private long _getPermissionsLagWarning() {
         // Default to 25ms
-        final long value = (long) (config.getDouble("permissions-lag-warning", 25.0) * 1000000);
-        return value;
+        return (long) (config.getDouble("permissions-lag-warning", 25.0) * 1000000);
     }
 
     @Override
@@ -1117,78 +818,8 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     @Override
-    public long getMaxMute() {
-        return config.getLong("max-mute-time", -1);
-    }
-
-    @Override
     public long getMaxTempban() {
         return config.getLong("max-tempban-time", -1);
-    }
-
-    @Override
-    public int getMaxNickLength() {
-        return config.getInt("max-nick-length", 30);
-    }
-
-    @Override
-    public boolean ignoreColorsInMaxLength() {
-        return config.getBoolean("ignore-colors-in-max-nick-length", false);
-    }
-
-    @Override
-    public boolean hideDisplayNameInVanish() {
-        return config.getBoolean("hide-displayname-in-vanish", false);
-    }
-
-    private boolean allowSilentJoin;
-
-    public boolean _allowSilentJoinQuit() {
-        return config.getBoolean("allow-silent-join-quit", false);
-    }
-
-    @Override
-    public boolean allowSilentJoinQuit() {
-        return allowSilentJoin;
-    }
-
-    private String customJoinMessage;
-    private boolean isCustomJoinMessage;
-
-    public String _getCustomJoinMessage() {
-        return FormatUtil.replaceFormat(config.getString("custom-join-message", "none"));
-    }
-
-    @Override
-    public String getCustomJoinMessage() {
-        return customJoinMessage;
-    }
-
-    @Override
-    public boolean isCustomJoinMessage() {
-        return isCustomJoinMessage;
-    }
-
-    private String customQuitMessage;
-    private boolean isCustomQuitMessage;
-
-    public String _getCustomQuitMessage() {
-        return FormatUtil.replaceFormat(config.getString("custom-quit-message", "none"));
-    }
-
-    @Override
-    public String getCustomQuitMessage() {
-        return customQuitMessage;
-    }
-
-    @Override
-    public boolean isCustomQuitMessage() {
-        return isCustomQuitMessage;
-    }
-
-    @Override
-    public boolean isNotifyNoNewMail() {
-        return config.getBoolean("notify-no-new-mail", true);
     }
 
     @Override
@@ -1203,16 +834,9 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getInt("max-user-cache-count", (int) count);
     }
 
-    @Override public boolean isLastMessageReplyRecipient() {
-        return config.getBoolean("last-message-reply-recipient", false);
-    }
-
     @Override public BigDecimal getMinimumPayAmount() {
+        //noinspection ConstantConditions
         return new BigDecimal(config.getString("minimum-pay-amount", "0.001"));
-    }
-
-    @Override public long getLastMessageReplyRecipientTimeout() {
-        return config.getLong("last-message-reply-recipient-timeout", 180);
     }
 
     @Override public boolean isMilkBucketEasterEggEnabled() {
@@ -1245,7 +869,8 @@ public class Settings implements net.ess3.api.ISettings {
                 return config.getBoolean("spawn-on-join") ? Collections.singletonList("*") : def;
             }
             // Take whatever the value is, convert to string and add it to a list as a single value.
-            String val = config.get("spawn-on-join").toString();
+            //noinspection ConstantConditions
+            String val = config.get("spawn-on-join", "").toString();
             return !val.isEmpty() ? Collections.singletonList(val) : def;
         } else {
             return def;
@@ -1275,10 +900,10 @@ public class Settings implements net.ess3.api.ISettings {
     private Map<Pattern, Long> commandCooldowns;
 
     private Map<Pattern, Long> _getCommandCooldowns() {
-        if (!config.isConfigurationSection("command-cooldowns")) {
+        ConfigurationSection section = config.getConfigurationSection("command-cooldowns");
+        if (section == null) {
             return null;
         }
-        ConfigurationSection section = config.getConfigurationSection("command-cooldowns");
         Map<Pattern, Long> result = new LinkedHashMap<>();
         for (String cmdEntry : section.getKeys(false)) {
             Pattern pattern = null;
@@ -1306,7 +931,7 @@ public class Settings implements net.ess3.api.ISettings {
              * >> Process cooldown value
              * ================================ */
             Object value = section.get(cmdEntry);
-            if (!(value instanceof Number) && value instanceof String) {
+            if (value instanceof String) {
                 try {
                     value = Double.parseDouble(value.toString());
                 } catch (NumberFormatException ignored) {
@@ -1386,6 +1011,7 @@ public class Settings implements net.ess3.api.ISettings {
             decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.US);
         }
 
+        //noinspection ConstantConditions
         DecimalFormat currencyFormat = new DecimalFormat(currencyFormatString, decimalFormatSymbols);
         currencyFormat.setRoundingMode(RoundingMode.FLOOR);
 
@@ -1432,21 +1058,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isAllowBulkBuySell() {
         return config.getBoolean("allow-bulk-buy-sell", false);
-    }
-
-    @Override
-    public boolean isAddingPrefixInPlayerlist() {
-        return config.getBoolean("add-prefix-in-playerlist", false);
-    }
-
-    @Override
-    public boolean isAddingSuffixInPlayerlist() {
-        return config.getBoolean("add-suffix-in-playerlist", false);
-    }
-
-    @Override
-    public int getNotifyPlayerOfMailCooldown() {
-        return config.getInt("notify-player-of-mail-cooldown", 0);
     }
 
     @Override
@@ -1579,27 +1190,6 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean logCommandBlockCommands() {
         return logCommandBlockCommands;
-    }
-
-    private Set<Predicate<String>> nickBlacklist;
-
-    private Set<Predicate<String>> _getNickBlacklist() {
-        Set<Predicate<String>> blacklist = new HashSet<>();
-
-        config.getStringList("nick-blacklist").forEach(entry -> {
-            try {
-                blacklist.add(Pattern.compile(entry).asPredicate());
-            } catch (PatternSyntaxException e) {
-                logger.warning("Invalid nickname blacklist regex: " + entry);
-            }
-        });
-
-        return blacklist;
-    }
-
-    @Override
-    public Set<Predicate<String>> getNickBlacklist() {
-        return nickBlacklist;
     }
 
     private double maxProjectileSpeed;

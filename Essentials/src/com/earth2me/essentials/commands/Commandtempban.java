@@ -1,13 +1,11 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.DateUtil;
 import org.bukkit.BanList;
 import org.bukkit.Server;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtempban extends EssentialsCommand {
     public Commandtempban() {
         super("tempban");
@@ -52,11 +50,11 @@ public class Commandtempban extends EssentialsCommand {
             banReason = tl("defaultBanReason");
         }
 
-        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
+        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : "Console";
         ess.getServer().getBanList(BanList.Type.NAME).addBan(user.getName(), banReason, new Date(banTimestamp), senderName);
         final String expiry = DateUtil.formatDateDiff(banTimestamp);
 
-        final String banDisplay = tl("tempBanned", expiry, senderName, banReason);
+        final String banDisplay = tl("tempBanned", senderName, expiry, banReason);
         user.getBase().kickPlayer(banDisplay);
 
         final String message = tl("playerTempBanned", senderName, user.getName(), expiry, banReason);

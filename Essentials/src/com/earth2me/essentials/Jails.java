@@ -68,43 +68,39 @@ public class Jails extends AsyncStorageObjectHolder<com.earth2me.essentials.sett
     }
 
     private void checkRegister() {
-        if (enabled == false && getCount() > 0) {
+        if (!enabled && getCount() > 0) {
             registerListeners();
         }
     }
 
     @Override
-    public Location getJail(final String jailName) throws Exception {
+    public Location getJail(final String jailName) {
         acquireReadLock();
         try {
             if (getData().getJails() == null || jailName == null || !getData().getJails().containsKey(jailName.toLowerCase(Locale.ENGLISH))) {
-                throw new Exception(tl("jailNotExist"));
+                return null;
             }
-            Location loc = getData().getJails().get(jailName.toLowerCase(Locale.ENGLISH));
-            if (loc == null || loc.getWorld() == null) {
-                throw new Exception(tl("jailNotExist"));
-            }
-            return loc;
+            return getData().getJails().get(jailName.toLowerCase(Locale.ENGLISH));
         } finally {
             unlock();
         }
     }
 
     @Override
-    public Collection<String> getList() throws Exception {
+    public Collection<String> getList() {
         acquireReadLock();
         try {
             if (getData().getJails() == null) {
                 return Collections.emptyList();
             }
-            return new ArrayList<String>(getData().getJails().keySet());
+            return new ArrayList<>(getData().getJails().keySet());
         } finally {
             unlock();
         }
     }
 
     @Override
-    public void removeJail(final String jail) throws Exception {
+    public void removeJail(final String jail) {
         acquireWriteLock();
         try {
             if (getData().getJails() == null) {
@@ -131,11 +127,11 @@ public class Jails extends AsyncStorageObjectHolder<com.earth2me.essentials.sett
     }
 
     @Override
-    public void setJail(final String jailName, final Location loc) throws Exception {
+    public void setJail(final String jailName, final Location loc) {
         acquireWriteLock();
         try {
             if (getData().getJails() == null) {
-                getData().setJails(new HashMap<String, Location>());
+                getData().setJails(new HashMap<>());
             }
             getData().getJails().put(jailName.toLowerCase(Locale.ENGLISH), loc);
         } finally {

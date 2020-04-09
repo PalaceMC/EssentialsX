@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 /**
  * You should use Vault instead of directly using this class.
  */
+@SuppressWarnings("unused")
 public class Economy {
     public Economy() {
     }

@@ -11,14 +11,14 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandgc extends EssentialsCommand {
     public Commandgc() {
         super("gc");
     }
 
     @Override
-    protected void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    protected void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         double tps = ess.getTimer().getAverageTPS();
         ChatColor color;
         if (tps >= 18.0) {

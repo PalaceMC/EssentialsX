@@ -22,12 +22,13 @@ import java.util.stream.Collectors;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("deprecation")
 public abstract class AbstractItemDb implements IConf, net.ess3.api.IItemDb {
 
     protected final IEssentials ess;
     protected boolean ready = false;
 
-    private Map<PluginKey, ItemResolver> resolverMap = new HashMap<>();
+    private final Map<PluginKey, ItemResolver> resolverMap = new HashMap<>();
 
     AbstractItemDb(IEssentials ess) {
         this.ess = ess;
@@ -119,14 +120,14 @@ public abstract class AbstractItemDb implements IConf, net.ess3.api.IItemDb {
             is.add(user.getItemInHand().clone());
         } else if (args[0].equalsIgnoreCase("inventory") || args[0].equalsIgnoreCase("invent") || args[0].equalsIgnoreCase("all")) {
             for (ItemStack stack : user.getBase().getInventory().getContents()) {
-                if (stack == null || stack.getType() == Material.AIR) {
+                if (stack.getType() == Material.AIR) {
                     continue;
                 }
                 is.add(stack.clone());
             }
         } else if (args[0].equalsIgnoreCase("blocks")) {
             for (ItemStack stack : user.getBase().getInventory().getContents()) {
-                if (stack == null || stack.getType() == Material.AIR) {
+                if (stack.getType() == Material.AIR) {
                     continue;
                 }
                 is.add(stack.clone());
@@ -181,7 +182,7 @@ public abstract class AbstractItemDb implements IConf, net.ess3.api.IItemDb {
             }
 
             Set<ItemFlag> flags = meta.getItemFlags();
-            if (flags != null && !flags.isEmpty()) {
+            if (!flags.isEmpty()) {
                 sb.append("itemflags:");
                 boolean first = true;
                 for (ItemFlag flag : flags) {
@@ -222,7 +223,7 @@ public abstract class AbstractItemDb implements IConf, net.ess3.api.IItemDb {
             FireworkMeta fireworkMeta = (FireworkMeta) is.getItemMeta();
             if (fireworkMeta.hasEffects()) {
                 for (FireworkEffect effect : fireworkMeta.getEffects()) {
-                    if (effect.getColors() != null && !effect.getColors().isEmpty()) {
+                    if (!effect.getColors().isEmpty()) {
                         sb.append("color:");
                         boolean first = true;
                         for (Color c : effect.getColors()) {
@@ -236,7 +237,7 @@ public abstract class AbstractItemDb implements IConf, net.ess3.api.IItemDb {
                     }
 
                     sb.append("shape:").append(effect.getType().name()).append(" ");
-                    if (effect.getFadeColors() != null && !effect.getFadeColors().isEmpty()) {
+                    if (!effect.getFadeColors().isEmpty()) {
                         sb.append("fade:");
                         boolean first = true;
                         for (Color c : effect.getFadeColors()) {
@@ -269,10 +270,8 @@ public abstract class AbstractItemDb implements IConf, net.ess3.api.IItemDb {
                 BlockStateMeta shieldMeta = (BlockStateMeta) is.getItemMeta();
                 Banner shieldBannerMeta = (Banner) shieldMeta.getBlockState();
                 DyeColor baseDyeColor = shieldBannerMeta.getBaseColor();
-                if (baseDyeColor != null) {
-                    int basecolor = baseDyeColor.getColor().asRGB();
-                    sb.append("basecolor:").append(basecolor).append(" ");
-                }
+                int basecolor = baseDyeColor.getColor().asRGB();
+                sb.append("basecolor:").append(basecolor).append(" ");
                 for (org.bukkit.block.banner.Pattern p : shieldBannerMeta.getPatterns()) {
                     String type = p.getPattern().getIdentifier();
                     int color = p.getColor().getColor().asRGB();

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class LegacyItemDb extends AbstractItemDb {
     protected static final Logger LOGGER = Logger.getLogger("Essentials");
     private final transient Map<String, Integer> items = new HashMap<>();
@@ -111,7 +112,7 @@ public class LegacyItemDb extends AbstractItemDb {
         }
 
         for (List<String> nameList : names.values()) {
-            Collections.sort(nameList, LengthCompare.INSTANCE);
+            nameList.sort(LengthCompare.INSTANCE);
         }
 
         LOGGER.info(String.format("Loaded %s items from items.csv.", listNames().size()));
@@ -229,9 +230,6 @@ public class LegacyItemDb extends AbstractItemDb {
         if (name == null) {
             itemData = new ItemData(item.getType().getId(), (short) 0);
             name = primaryName.get(itemData);
-            if (name == null) {
-                return null;
-            }
         }
         return name;
     }
@@ -255,7 +253,7 @@ public class LegacyItemDb extends AbstractItemDb {
     }
 
     static class ItemData {
-        private int itemNo;
+        private final int itemNo;
         final private short itemData;
 
         ItemData(final int itemNo, final short itemData) {

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-
+@SuppressWarnings("unused")
 public abstract class EssentialsToggleCommand extends EssentialsCommand {
     String othersPermission;
 
@@ -42,7 +42,7 @@ public abstract class EssentialsToggleCommand extends EssentialsCommand {
         return null;
     }
 
-    protected void toggleOtherPlayers(final Server server, final CommandSource sender, final String[] args) throws PlayerNotFoundException, NotEnoughArgumentsException {
+    protected void toggleOtherPlayers(final Server server, final CommandSource sender, final String[] args) throws PlayerNotFoundException {
         if (args.length < 1 || args[0].trim().length() < 2) {
             throw new PlayerNotFoundException();
         }
@@ -58,7 +58,7 @@ public abstract class EssentialsToggleCommand extends EssentialsCommand {
             foundUser = true;
             if (args.length > 1) {
                 Boolean toggle = matchToggleArgument(args[1]);
-                if (toggle == true) {
+                if (toggle) {
                     togglePlayer(sender, player, true);
                 } else {
                     togglePlayer(sender, player, false);
@@ -73,7 +73,7 @@ public abstract class EssentialsToggleCommand extends EssentialsCommand {
     }
 
     // Make sure when implementing this method that all 3 Boolean states are handled, 'null' should toggle the existing state.
-    abstract void togglePlayer(CommandSource sender, User user, Boolean enabled) throws NotEnoughArgumentsException;
+    abstract void togglePlayer(CommandSource sender, User user, Boolean enabled);
 
     @Override
     protected List<String> getTabCompleteOptions(final Server server, final User user, final String commandLabel, final String[] args) {

@@ -14,6 +14,7 @@ import java.util.List;
 import static com.earth2me.essentials.I18n.tl;
 
 // This method contains an undocumented sub command #EasterEgg
+@SuppressWarnings("unused")
 public class Commandjump extends EssentialsCommand {
     public Commandjump() {
         super("jump");

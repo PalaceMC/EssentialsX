@@ -3,6 +3,7 @@ package com.earth2me.essentials.messaging;
 /**
  * Represents an interface for message recipients.
  */
+@SuppressWarnings("unused")
 public interface IMessageRecipient {
 
     /**

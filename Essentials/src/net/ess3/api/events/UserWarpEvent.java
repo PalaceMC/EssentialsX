@@ -3,7 +3,6 @@ package net.ess3.api.events;
 import com.earth2me.essentials.Trade;
 import net.ess3.api.IUser;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,9 +12,9 @@ import org.bukkit.event.HandlerList;
 public class UserWarpEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private IUser user;
+    private final IUser user;
     private String warp;
-    private Trade trade;
+    private final Trade trade;
     private boolean cancelled = false;
 
 

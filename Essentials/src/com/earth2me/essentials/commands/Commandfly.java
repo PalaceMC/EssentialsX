@@ -7,6 +7,7 @@ import net.ess3.api.events.FlyStatusChangeEvent;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandfly extends EssentialsToggleCommand {
     public Commandfly() {
         super("fly", "essentials.fly.others");

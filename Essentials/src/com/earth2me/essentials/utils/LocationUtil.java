@@ -15,6 +15,7 @@ import java.util.*;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class LocationUtil {
     // Water types used for TRANSPARENT_MATERIALS and is-water-safe config option
     private static final Set<Material> WATER_TYPES =
@@ -53,9 +54,9 @@ public class LocationUtil {
 
 
     public static class Vector3D {
-        public int x;
-        public int y;
-        public int z;
+        public final int x;
+        public final int y;
+        public final int z;
 
         Vector3D(int x, int y, int z) {
             this.x = x;

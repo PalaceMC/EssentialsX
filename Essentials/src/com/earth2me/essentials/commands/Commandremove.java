@@ -18,7 +18,7 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 // This could be rewritten in a simpler form if we made a mapping of all Entity names to their types (which would also provide possible mod support)
-
+@SuppressWarnings("unused")
 public class Commandremove extends EssentialsCommand {
     public Commandremove() {
         super("remove");
@@ -225,10 +225,8 @@ public class Commandremove extends EssentialsCommand {
                             break;
                         case ENTITIES:
                         case ALL:
-                            if (e instanceof Entity) {
-                                e.remove();
-                                removed++;
-                            }
+                            e.remove();
+                            removed++;
                             break;
                         case CUSTOM:
                             for (Mob type : customRemoveTypes) {

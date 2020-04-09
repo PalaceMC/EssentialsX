@@ -7,6 +7,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Commandinvsee extends EssentialsCommand {
     public Commandinvsee() {
         super("invsee");

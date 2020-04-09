@@ -10,7 +10,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandsethome extends EssentialsCommand {
     public Commandsethome() {
         super("sethome");
@@ -66,9 +66,7 @@ public class Commandsethome extends EssentialsCommand {
             if (usersHome.getHomes().size() >= limit) {
                 throw new Exception(tl("maxHomes", ess.getSettings().getHomeLimit(user)));
             }
-            if (limit == 1) {
-                return true;
-            }
+            return limit == 1;
         }
         return false;
     }

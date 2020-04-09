@@ -64,7 +64,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
     }
 
     // Get online players - only show vanished if source has permission
-    protected User getPlayer(final Server server, final CommandSource sender, final String searchTerm) throws PlayerNotFoundException, NotEnoughArgumentsException {
+    protected User getPlayer(final Server server, final CommandSource sender, final String searchTerm) throws PlayerNotFoundException {
         if (sender.isPlayer()) {
             User user = ess.getUser(sender.getPlayer());
             return getPlayer(server, user, searchTerm, user.canInteractVanished(), false);
@@ -185,7 +185,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         if (options == null) {
             return null;
         }
-        return StringUtil.copyPartialMatches(args[args.length - 1], options, Lists.<String>newArrayList());
+        return StringUtil.copyPartialMatches(args[args.length - 1], options, Lists.newArrayList());
     }
 
     // Doesn't need to do any starts-with checks
@@ -203,7 +203,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         if (options == null) {
             return null;
         }
-        return StringUtil.copyPartialMatches(args[args.length - 1], options, Lists.<String>newArrayList());
+        return StringUtil.copyPartialMatches(args[args.length - 1], options, Lists.newArrayList());
     }
 
     // Doesn't need to do any starts-with checks
@@ -313,9 +313,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         for (Plugin p : server.getPluginManager().getPlugins()) {
             final PluginDescriptionFile desc = p.getDescription();
             final Map<String, Map<String, Object>> cmds = desc.getCommands();
-            if (cmds != null) {
-                commands.addAll(cmds.keySet());
-            }
+            commands.addAll(cmds.keySet());
         }
         return commands;
     }
@@ -333,9 +331,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
         int numArgs = args.length - index - 1;
         ess.getLogger().info(numArgs + " " + index + " " + Arrays.toString(args));
         String[] effectiveArgs = new String[numArgs];
-        for (int i = 0; i < numArgs; i++) {
-            effectiveArgs[i] = args[i + index];
-        }
+        System.arraycopy(args, index, effectiveArgs, 0, numArgs);
         if (effectiveArgs.length == 0) {
             effectiveArgs = new String[] { "" };
         }

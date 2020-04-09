@@ -12,7 +12,7 @@ import java.util.*;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandpweather extends EssentialsCommand {
     public static final Set<String> getAliases = new HashSet<>();
     public static final Map<String, WeatherType> weatherAliases = new HashMap<>();

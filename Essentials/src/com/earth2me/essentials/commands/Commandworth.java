@@ -15,6 +15,7 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandworth extends EssentialsCommand {
     public Commandworth() {
         super("worth");
@@ -23,7 +24,6 @@ public class Commandworth extends EssentialsCommand {
     @Override
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         BigDecimal totalWorth = BigDecimal.ZERO;
-        String type = "";
 
         List<ItemStack> is = ess.getItemDb().getMatching(user, args);
         int count = 0;
@@ -51,9 +51,9 @@ public class Commandworth extends EssentialsCommand {
         }
         if (count > 1) {
             if (args.length > 0 && args[0].equalsIgnoreCase("blocks")) {
-                user.sendMessage(tl("totalSellableBlocks", type, NumberUtil.displayCurrency(totalWorth, ess)));
+                user.sendMessage(tl("totalSellableBlocks", NumberUtil.displayCurrency(totalWorth, ess)));
             } else {
-                user.sendMessage(tl("totalSellableAll", type, NumberUtil.displayCurrency(totalWorth, ess)));
+                user.sendMessage(tl("totalSellableAll", NumberUtil.displayCurrency(totalWorth, ess)));
             }
         }
     }

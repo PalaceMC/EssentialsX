@@ -46,13 +46,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
+@SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation"})
 public class EssentialsConf extends YamlConfiguration {
     protected static final Logger LOGGER = Logger.getLogger("Essentials");
     protected final File configFile;
     protected String templateName = null;
     protected static final Charset UTF8 = StandardCharsets.UTF_8;
-    private Class<?> resourceClass = EssentialsConf.class;
+    private final Class<?> resourceClass = EssentialsConf.class;
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
     private final AtomicInteger pendingDiskWrites = new AtomicInteger(0);
     private final AtomicBoolean transaction = new AtomicBoolean(false);
@@ -222,11 +222,6 @@ public class EssentialsConf extends YamlConfiguration {
         return configFile;
     }
 
-    public void setTemplateName(final String templateName, final Class<?> resClass) {
-        this.templateName = templateName;
-        this.resourceClass = resClass;
-    }
-
     public void startTransaction() {
         transaction.set(true);
     }
@@ -358,7 +353,8 @@ public class EssentialsConf extends YamlConfiguration {
     }
 
     public void setProperty(final String path, final Location loc) {
-        set((path == null ? "" : path + ".") + "world", loc.getWorld().getName());
+        World world = loc.getWorld();
+        set((path == null ? "" : path + ".") + "world", (world != null) ? world.getName() : "null");
         set((path == null ? "" : path + ".") + "x", loc.getX());
         set((path == null ? "" : path + ".") + "y", loc.getY());
         set((path == null ? "" : path + ".") + "z", loc.getZ());
@@ -438,9 +434,5 @@ public class EssentialsConf extends YamlConfiguration {
                 return def;
             }
         }
-    }
-
-    public synchronized Map<String, Object> getMap() {
-        return map;
     }
 }

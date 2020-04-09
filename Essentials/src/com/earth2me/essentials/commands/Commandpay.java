@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
@@ -18,7 +17,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandpay extends EssentialsLoopCommand {
     BigDecimal amount;
     boolean informToConfirm;
@@ -38,7 +37,7 @@ public class Commandpay extends EssentialsLoopCommand {
             throw new Exception(tl("payMustBePositive"));
         }
 
-        String stringAmount = args[1].replaceAll("[^0-9\\.]", "");
+        String stringAmount = args[1].replaceAll("[^0-9.]", "");
 
         if (stringAmount.length() < 1) {
             throw new NotEnoughArgumentsException();
@@ -50,13 +49,13 @@ public class Commandpay extends EssentialsLoopCommand {
         }
         loopOnlinePlayers(server, user.getSource(), false, user.isAuthorized("essentials.pay.multiple"), args[0], args);
         if (informToConfirm) {
-            String cmd = "/" + commandLabel + " " + StringUtil.joinList(" ", (Object[]) args);
+            String cmd = "/" + commandLabel + " " + StringUtil.joinList(" ", args);
             user.sendMessage(tl("confirmPayment", NumberUtil.displayCurrency(amount, ess), cmd));
         }
     }
 
     @Override
-    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws ChargeException {
+    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) {
         User user = ess.getUser(sender.getPlayer());
         try {
             if (!player.isAcceptingPay()) {

@@ -75,6 +75,7 @@ public class EnumUtil {
      * @param names The names of the fields to search for
      * @return The first matching Statistic
      */
+    @SuppressWarnings("unused")
     public static Statistic getStatistic(String... names) {
         return valueOf(Statistic.class, names);
     }

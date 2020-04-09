@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandseen extends EssentialsCommand {
     public Commandseen() {
         super("seen");
@@ -88,7 +88,7 @@ public class Commandseen extends EssentialsCommand {
         }
     }
 
-    private void showSeenMessage(Server server, CommandSource sender, User player, boolean showBan, boolean showIp, boolean showLocation)  throws Exception {
+    private void showSeenMessage(Server server, CommandSource sender, User player, boolean showBan, boolean showIp, boolean showLocation) {
         if (player.getBase().isOnline() && canInteractWith(sender, player)) {
             seenOnline(server, sender, player, showBan, showIp, showLocation);
         } else {
@@ -96,7 +96,7 @@ public class Commandseen extends EssentialsCommand {
         }
     }
 
-    private void seenOnline(final Server server, final CommandSource sender, final User user, final boolean showBan, final boolean showIp, final boolean showLocation) throws Exception {
+    private void seenOnline(final Server server, final CommandSource sender, final User user, final boolean showBan, final boolean showIp, final boolean showLocation) {
 
         sender.sendMessage(tl("seenOnline", user.getDisplayName(), DateUtil.formatDateDiff(user.getLastLogin())));
 
@@ -132,7 +132,7 @@ public class Commandseen extends EssentialsCommand {
         }
     }
 
-    private void seenOffline(final Server server, final CommandSource sender, User user, final boolean showBan, final boolean showIp, final boolean showLocation) throws Exception {
+    private void seenOffline(final Server server, final CommandSource sender, User user, final boolean showBan, final boolean showIp, final boolean showLocation) {
         if (user.getLastLogout() > 0) {
             sender.sendMessage(tl("seenOffline", user.getName(), DateUtil.formatDateDiff(user.getLastLogout())));
         } else {
@@ -188,7 +188,7 @@ public class Commandseen extends EssentialsCommand {
         }
     }
 
-    private void seenIP(final Server server, final CommandSource sender, final String ipAddress) throws Exception {
+    private void seenIP(final Server server, final CommandSource sender, final String ipAddress) {
         final UserMap userMap = ess.getUserMap();
 
         if (ess.getServer().getBanList(BanList.Type.IP).isBanned(ipAddress)) {
@@ -197,31 +197,28 @@ public class Commandseen extends EssentialsCommand {
 
         sender.sendMessage(tl("runningPlayerMatch", ipAddress));
 
-        ess.runTaskAsynchronously(new Runnable() {
-            @Override
-            public void run() {
-                final List<String> matches = new ArrayList<>();
-                for (final UUID u : userMap.getAllUniqueUsers()) {
-                    final User user = ess.getUserMap().getUser(u);
-                    if (user == null) {
-                        continue;
-                    }
-
-                    final String uIPAddress = user.getLastLoginAddress();
-
-                    if (!uIPAddress.isEmpty() && uIPAddress.equalsIgnoreCase(ipAddress)) {
-                        matches.add(user.getName());
-                    }
+        ess.runTaskAsynchronously(() -> {
+            final List<String> matches = new ArrayList<>();
+            for (final UUID u : userMap.getAllUniqueUsers()) {
+                final User user = ess.getUserMap().getUser(u);
+                if (user == null) {
+                    continue;
                 }
 
-                if (matches.size() > 0) {
-                    sender.sendMessage(tl("matchingIPAddress"));
-                    sender.sendMessage(StringUtil.joinList(matches));
-                } else {
-                    sender.sendMessage(tl("noMatchingPlayers"));
-                }
+                final String uIPAddress = user.getLastLoginAddress();
 
+                if (!uIPAddress.isEmpty() && uIPAddress.equalsIgnoreCase(ipAddress)) {
+                    matches.add(user.getName());
+                }
             }
+
+            if (matches.size() > 0) {
+                sender.sendMessage(tl("matchingIPAddress"));
+                sender.sendMessage(StringUtil.joinList(matches));
+            } else {
+                sender.sendMessage(tl("noMatchingPlayers"));
+            }
+
         });
 
     }

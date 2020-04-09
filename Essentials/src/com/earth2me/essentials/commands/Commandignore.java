@@ -17,6 +17,7 @@ import static com.earth2me.essentials.I18n.tl;
  * ignoring stuff, this has to stay.
  */
 
+@SuppressWarnings("unused")
 public class Commandignore extends EssentialsCommand {
     public Commandignore() {
         super("ignore");
@@ -41,9 +42,7 @@ public class Commandignore extends EssentialsCommand {
             if (player == null) {
                 throw new PlayerNotFoundException();
             }
-            if (player.isIgnoreExempt()) {
-                user.sendMessage(tl("ignoreExempt"));
-            } else if (user.isIgnoredPlayer(player)) {
+            if (user.isIgnoredPlayer(player)) {
                 user.setIgnoredPlayer(player, false);
                 user.sendMessage(tl("unignorePlayer", player.getName()));
             } else {

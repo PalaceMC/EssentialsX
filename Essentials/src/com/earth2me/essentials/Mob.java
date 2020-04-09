@@ -7,10 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.*;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.earth2me.essentials.I18n.tl;
 
 
 // Suffixes can be appended on the end of a mob name to make it plural
@@ -141,13 +138,8 @@ public enum Mob {
         return Collections.unmodifiableSet(hashMap.keySet());
     }
 
-    public Entity spawn(final World world, final Server server, final Location loc) throws MobException {
-        final Entity entity = world.spawn(loc, this.bukkitType.getEntityClass());
-        if (entity == null) {
-            logger.log(Level.WARNING, tl("unableToSpawnMob"));
-            throw new MobException();
-        }
-        return entity;
+    public Entity spawn(final World world, final Server server, final Location loc) {
+        return world.spawn(loc, this.bukkitType.getEntityClass());
     }
 
 

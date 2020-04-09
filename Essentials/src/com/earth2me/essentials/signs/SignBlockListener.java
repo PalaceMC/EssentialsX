@@ -1,23 +1,8 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.I18n;
-import com.earth2me.essentials.User;
-import com.earth2me.essentials.utils.EnumUtil;
-import com.earth2me.essentials.utils.FormatUtil;
-import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 

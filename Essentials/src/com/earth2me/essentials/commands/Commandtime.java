@@ -12,7 +12,7 @@ import java.util.*;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtime extends EssentialsCommand {
     public Commandtime() {
         super("time");
@@ -29,7 +29,7 @@ public class Commandtime extends EssentialsCommand {
             add = true;
             argList.set(0, argList.get(0) + "t");
         }
-        final String[] validArgs = argList.toArray(new String[argList.size()]);
+        final String[] validArgs = argList.toArray(new String[0]);
 
         // Which World(s) are we interested in?
         String worldSelector = null;

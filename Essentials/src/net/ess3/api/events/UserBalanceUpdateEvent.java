@@ -15,7 +15,7 @@ public class UserBalanceUpdateEvent extends Event {
     private final Player player;
     private final BigDecimal originalBalance;
     private BigDecimal balance;
-    private Cause cause;
+    private final Cause cause;
 
     @Deprecated
     public UserBalanceUpdateEvent(Player player, BigDecimal originalBalance, BigDecimal balance) {

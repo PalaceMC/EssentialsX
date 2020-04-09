@@ -8,7 +8,7 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import java.util.List;
 
-
+@SuppressWarnings("unused")
 public interface IEssentialsCommand {
     String getName();
 

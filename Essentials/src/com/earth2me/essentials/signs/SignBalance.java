@@ -13,7 +13,7 @@ public class SignBalance extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) {
         player.sendMessage(tl("balance", NumberUtil.displayCurrency(player.getMoney(), ess)));
         return true;
     }

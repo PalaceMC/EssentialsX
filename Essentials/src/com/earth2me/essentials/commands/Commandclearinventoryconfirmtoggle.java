@@ -6,14 +6,14 @@ import com.earth2me.essentials.User;
 
 import org.bukkit.Server;
 
+@SuppressWarnings("unused")
 public class Commandclearinventoryconfirmtoggle extends EssentialsCommand {
-
     public Commandclearinventoryconfirmtoggle() {
         super("clearinventoryconfirmtoggle");
     }
 
     @Override
-    public void run(Server server, User user, String commandLabel, String[] args) throws Exception {
+    public void run(Server server, User user, String commandLabel, String[] args) {
         boolean confirmingClear = !user.isPromptingClearConfirm();
         if (commandLabel.toLowerCase().endsWith("on")) {
             confirmingClear = true;

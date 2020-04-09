@@ -8,7 +8,7 @@ import com.earth2me.essentials.textreader.TextPager;
 import com.earth2me.essentials.utils.NumberUtil;
 import org.bukkit.Server;
 
-
+@SuppressWarnings("unused")
 public class Commandcustomtext extends EssentialsCommand {
     public Commandcustomtext() {
         super("customtext");

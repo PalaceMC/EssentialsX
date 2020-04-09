@@ -55,7 +55,7 @@ public class TimedTeleport implements Runnable {
     @Override
     public void run() {
 
-        if (teleportOwner == null || !teleportOwner.getBase().isOnline() || teleportOwner.getBase().getLocation() == null) {
+        if (teleportOwner == null || !teleportOwner.getBase().isOnline()) {
             cancelTimer(false);
             return;
         }
@@ -68,10 +68,6 @@ public class TimedTeleport implements Runnable {
         }
 
         final Location currLocation = teleportUser.getBase().getLocation();
-        if (currLocation == null) {
-            cancelTimer(false);
-            return;
-        }
 
         if (!timer_canMove && (Math.round(currLocation.getX() * MOVE_CONSTANT) != timer_initX || Math.round(currLocation.getY() * MOVE_CONSTANT) != timer_initY || Math.round(currLocation.getZ() * MOVE_CONSTANT) != timer_initZ || teleportUser.getBase().getHealth() < timer_health)) {
             // user moved, cancelTimer teleportPlayer

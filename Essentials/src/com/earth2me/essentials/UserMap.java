@@ -8,6 +8,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import net.ess3.api.IEssentials;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -25,7 +27,7 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
     private final transient ConcurrentSkipListSet<UUID> keys = new ConcurrentSkipListSet<>();
     private final transient ConcurrentSkipListMap<String, UUID> names = new ConcurrentSkipListMap<>();
     private final transient ConcurrentSkipListMap<UUID, ArrayList<String>> history = new ConcurrentSkipListMap<>();
-    private UUIDMap uuidMap;
+    private final UUIDMap uuidMap;
 
     private final transient Cache<String, User> users;
     private static boolean legacy = false;
@@ -53,29 +55,26 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
     }
 
     private void loadAllUsersAsync(final IEssentials ess) {
-        ess.runTaskAsynchronously(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (users) {
-                    final File userdir = new File(ess.getDataFolder(), "userdata");
-                    if (!userdir.exists()) {
-                        return;
-                    }
-                    keys.clear();
-                    users.invalidateAll();
-                    for (String string : userdir.list()) {
-                        if (!string.endsWith(".yml")) {
-                            continue;
-                        }
-                        final String name = string.substring(0, string.length() - 4);
-                        try {
-                            keys.add(UUID.fromString(name));
-                        } catch (IllegalArgumentException ex) {
-                            //Ignore these users till they rejoin.
-                        }
-                    }
-                    uuidMap.loadAllUsers(names, history);
+        ess.runTaskAsynchronously(() -> {
+            synchronized (users) {
+                final File userdir = new File(ess.getDataFolder(), "userdata");
+                if (!userdir.exists()) {
+                    return;
                 }
+                keys.clear();
+                users.invalidateAll();
+                for (String string : userdir.list()) {
+                    if (!string.endsWith(".yml")) {
+                        continue;
+                    }
+                    final String name = string.substring(0, string.length() - 4);
+                    try {
+                        keys.add(UUID.fromString(name));
+                    } catch (IllegalArgumentException ex) {
+                        //Ignore these users till they rejoin.
+                    }
+                }
+                uuidMap.loadAllUsers(names, history);
             }
         });
     }
@@ -95,7 +94,7 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
             final File userFile = getUserFileFromString(sanitizedName);
             if (userFile.exists()) {
                 ess.getLogger().info("Importing user " + name + " to usermap.");
-                User user = new User(new OfflinePlayer(sanitizedName, ess.getServer()), ess);
+                User user = new User(Bukkit.getPlayer(name), ess);
                 trackUUID(user.getBase().getUniqueId(), user.getName(), true);
                 return user;
             }
@@ -112,9 +111,7 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
             } else {
                 return legacyCacheGet(uuid);
             }
-        } catch (ExecutionException ex) {
-            return null;
-        } catch (UncheckedExecutionException ex) {
+        } catch (ExecutionException | UncheckedExecutionException ex) {
             return null;
         }
     }
@@ -155,9 +152,8 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
         final File userFile = getUserFileFromID(uuid);
 
         if (userFile.exists()) {
-            player = new OfflinePlayer(uuid, ess.getServer());
+            player = Bukkit.getPlayer(uuid);
             final User user = new User(player, ess);
-            ((OfflinePlayer) player).setName(user.getLastAccountName());
             trackUUID(uuid, user.getName(), false);
             return user;
         }
@@ -247,10 +243,8 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
         if (name == null || !validUserPattern.matcher(name).matches()) {
             return null;
         }
-        org.bukkit.OfflinePlayer offlinePlayer = ess.getServer().getOfflinePlayer(name);
-        if (offlinePlayer == null) {
-            return null;
-        }
+        OfflinePlayer offlinePlayer = ess.getServer().getOfflinePlayer(name);
+
         UUID uuid;
         try {
             uuid = offlinePlayer.getUniqueId();

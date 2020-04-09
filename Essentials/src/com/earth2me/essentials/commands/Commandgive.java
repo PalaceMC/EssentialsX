@@ -19,6 +19,7 @@ import java.util.Map;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandgive extends EssentialsCommand {
     public Commandgive() {
         super("give");

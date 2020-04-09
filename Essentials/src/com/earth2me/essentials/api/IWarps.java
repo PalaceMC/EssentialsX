@@ -5,11 +5,10 @@ import com.earth2me.essentials.IUser;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import org.bukkit.Location;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.UUID;
 
-
+@SuppressWarnings("unused")
 public interface IWarps extends IConf {
     /**
      * Get a warp by name
@@ -19,7 +18,7 @@ public interface IWarps extends IConf {
      * @return - Location the warp is set to
      *
      * @throws WarpNotFoundException When the warp is not found
-     * @throws InvalidWorldException When the world the warp is in is not found
+     * @throws net.ess3.api.InvalidWorldException When the world the warp is in is not found
      */
     Location getWarp(String warp) throws WarpNotFoundException, net.ess3.api.InvalidWorldException;
 
@@ -81,15 +80,4 @@ public interface IWarps extends IConf {
      * @return
      */
     boolean isEmpty();
-
-    /**
-     * Get a warp file note: this is not yet implemented, as 3.x uses different storage methods
-     *
-     * @param name - name of file
-     *
-     * @return - an instance of the file
-     *
-     * @throws InvalidNameException - When the file is not found
-     */
-    File getWarpFile(String name) throws net.ess3.api.InvalidNameException;
 }

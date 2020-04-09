@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandweather extends EssentialsCommand {
     public Commandweather() {
         super("weather");

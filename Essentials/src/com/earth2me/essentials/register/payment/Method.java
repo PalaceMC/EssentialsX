@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @author Nijikokun <nijikokun@shortmail.com> (@nijikokun)
  */
+@SuppressWarnings("unused")
 public interface Method {
     /**
      * Encodes the Plugin into an Object disguised as the Plugin. If you want the original Plugin Class you must cast it

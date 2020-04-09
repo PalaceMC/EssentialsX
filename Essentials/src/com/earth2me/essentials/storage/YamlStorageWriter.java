@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 
+@SuppressWarnings("deprecation")
 public class YamlStorageWriter implements IStorageWriter {
     private transient static final Pattern NON_WORD_PATTERN = Pattern.compile("\\W");
     private transient static final Yaml YAML = new Yaml();
@@ -33,9 +34,7 @@ public class YamlStorageWriter implements IStorageWriter {
     public void save(final StorageObject object) {
         try {
             writeToFile(object, 0, object.getClass());
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(YamlStorageWriter.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(YamlStorageWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -73,13 +72,13 @@ public class YamlStorageWriter implements IStorageWriter {
             return true;
         }
         writeIndention(depth);
-        if (data == null && commentPresent) {
+        if (data == null) {
             writer.print('#');
         }
         final String name = field.getName();
         writer.print(name);
         writer.print(": ");
-        if (data == null && commentPresent) {
+        if (data == null) {
             writer.println();
             writer.println();
             return true;

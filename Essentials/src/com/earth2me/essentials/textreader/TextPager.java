@@ -48,9 +48,8 @@ public class TextPager {
                     sb.append(string);
                 }
                 sender.sendMessage(sb.toString());
-                return;
             } else {
-                int page = 1;
+                int page;
                 try {
                     page = Integer.parseInt(pageStr);
                 } catch (NumberFormatException ex) {
@@ -92,8 +91,8 @@ public class TextPager {
                 if (!onePage && page < pages && commandName != null) {
                     sender.sendMessage(tl("readNextPage", commandName, page + 1));
                 }
-                return;
             }
+            return;
         }
 
         //If we have a chapter, check to see if we have a page number
@@ -101,11 +100,9 @@ public class TextPager {
         if (chapterPageStr != null) {
             try {
                 chapterpage = Integer.parseInt(chapterPageStr) - 1;
-            } catch (NumberFormatException ex) {
-                chapterpage = 0;
-            }
-            if (chapterpage < 0) {
-                chapterpage = 0;
+                if (chapterpage < 0)
+                    chapterpage = 0;
+            } catch (NumberFormatException ignored) {
             }
         }
 

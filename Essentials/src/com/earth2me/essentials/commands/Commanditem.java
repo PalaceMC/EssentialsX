@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings({"deprecation","unused"})
 public class Commanditem extends EssentialsCommand {
     public Commanditem() {
         super("item");

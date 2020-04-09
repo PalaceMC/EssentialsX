@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandspeed extends EssentialsCommand {
     public Commandspeed() {
         super("speed");
@@ -52,10 +52,10 @@ public class Commandspeed extends EssentialsCommand {
         }
 
         if (isFly) {
-            user.getBase().setFlySpeed(getRealMoveSpeed(speed, isFly, isBypass));
+            user.getBase().setFlySpeed(getRealMoveSpeed(speed, true, isBypass));
             user.sendMessage(tl("moveSpeed", tl("flying"), speed, user.getDisplayName()));
         } else {
-            user.getBase().setWalkSpeed(getRealMoveSpeed(speed, isFly, isBypass));
+            user.getBase().setWalkSpeed(getRealMoveSpeed(speed, false, isBypass));
             user.sendMessage(tl("moveSpeed", tl("walking"), speed, user.getDisplayName()));
         }
     }
@@ -71,10 +71,10 @@ public class Commandspeed extends EssentialsCommand {
             }
             foundUser = true;
             if (isFly) {
-                matchPlayer.setFlySpeed(getRealMoveSpeed(speed, isFly, isBypass));
+                matchPlayer.setFlySpeed(getRealMoveSpeed(speed, true, isBypass));
                 sender.sendMessage(tl("moveSpeed", tl("flying"), speed, matchPlayer.getDisplayName()));
             } else {
-                matchPlayer.setWalkSpeed(getRealMoveSpeed(speed, isFly, isBypass));
+                matchPlayer.setWalkSpeed(getRealMoveSpeed(speed, false, isBypass));
                 sender.sendMessage(tl("moveSpeed", tl("walking"), speed, matchPlayer.getDisplayName()));
             }
         }
@@ -83,15 +83,12 @@ public class Commandspeed extends EssentialsCommand {
         }
     }
 
-    private Boolean flyPermCheck(User user, boolean input) throws Exception {
+    private Boolean flyPermCheck(User user, boolean input) {
         boolean canFly = user.isAuthorized("essentials.speed.fly");
         boolean canWalk = user.isAuthorized("essentials.speed.walk");
-        if (input && canFly || !input && canWalk || !canFly && !canWalk) {
+        if (input && canFly || !input && canWalk || !canFly && !canWalk)
             return input;
-        } else if (canWalk) {
-            return false;
-        }
-        return true;
+        return !canWalk;
     }
 
     private boolean isFlyMode(final String modeString) throws NotEnoughArgumentsException {

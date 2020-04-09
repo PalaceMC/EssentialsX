@@ -7,7 +7,6 @@ import net.ess3.api.IEssentials;
 import net.ess3.api.IUser;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.Location;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -24,6 +23,7 @@ import java.util.logging.Logger;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class Trade {
     private final transient String command;
     private final transient Trade fallbackTrade;
@@ -147,16 +147,15 @@ public class Trade {
                             final int maxStackSize = loStack.getType().getMaxStackSize();
                             final int stacks = loStack.getAmount() / maxStackSize;
                             final int leftover = loStack.getAmount() % maxStackSize;
-                            final Item[] itemStacks = new Item[stacks + (leftover > 0 ? 1 : 0)];
                             for (int i = 0; i < stacks; i++) {
                                 final ItemStack stack = loStack.clone();
                                 stack.setAmount(maxStackSize);
-                                itemStacks[i] = loc.getWorld().dropItem(loc, stack);
+                                loc.getWorld().dropItem(loc, stack);
                             }
                             if (leftover > 0) {
                                 final ItemStack stack = loStack.clone();
                                 stack.setAmount(leftover);
-                                itemStacks[stacks] = loc.getWorld().dropItem(loc, stack);
+                                loc.getWorld().dropItem(loc, stack);
                             }
                         }
                         if (ess.getSettings().isDebug()) {

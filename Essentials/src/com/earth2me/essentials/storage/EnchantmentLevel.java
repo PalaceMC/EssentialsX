@@ -55,11 +55,12 @@ public class EnchantmentLevel implements Entry<Enchantment, Integer> {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof Entry) {
+            //noinspection rawtypes
             final Entry entry = (Entry) obj;
             if (entry.getKey() instanceof Enchantment && entry.getValue() instanceof Integer) {
                 final Enchantment enchant = (Enchantment) entry.getKey();
                 final Integer lvl = (Integer) entry.getValue();
-                return this.enchantment.equals(enchant) && this.level == lvl.intValue();
+                return this.enchantment.equals(enchant) && this.level == lvl;
             }
         }
         return false;

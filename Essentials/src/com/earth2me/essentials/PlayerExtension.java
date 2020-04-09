@@ -17,8 +17,8 @@ public class PlayerExtension {
         return base;
     }
 
-    public final Player setBase(final Player base) {
-        return this.base = base;
+    public final void setBase(final Player base) {
+        this.base = base;
     }
 
     public Server getServer() {

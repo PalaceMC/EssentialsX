@@ -5,14 +5,14 @@ import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandcompass extends EssentialsCommand {
     public Commandcompass() {
         super("compass");
     }
 
     @Override
-    public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
+    public void run(final Server server, final User user, final String commandLabel, final String[] args) {
         final int bearing = (int) (user.getLocation().getYaw() + 180 + 360) % 360;
         String dir;
         if (bearing < 23) {

@@ -2,12 +2,10 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import com.earth2me.essentials.utils.StringUtil;
-import net.ess3.api.InvalidNameException;
 import net.ess3.api.InvalidWorldException;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +14,7 @@ import static com.earth2me.essentials.I18n.tl;
 
 public class Warps implements IConf, net.ess3.api.IWarps {
     private static final Logger logger = Logger.getLogger("Essentials");
-    private final Map<StringIgnoreCase, EssentialsConf> warpPoints = new HashMap<StringIgnoreCase, EssentialsConf>();
+    private final Map<StringIgnoreCase, EssentialsConf> warpPoints = new HashMap<>();
     private final File warpsFolder;
     private final Server server;
 
@@ -36,11 +34,11 @@ public class Warps implements IConf, net.ess3.api.IWarps {
 
     @Override
     public Collection<String> getList() {
-        final List<String> keys = new ArrayList<String>();
+        final List<String> keys = new ArrayList<>();
         for (StringIgnoreCase stringIgnoreCase : warpPoints.keySet()) {
             keys.add(stringIgnoreCase.getString());
         }
-        Collections.sort(keys, String.CASE_INSENSITIVE_ORDER);
+        keys.sort(String.CASE_INSENSITIVE_ORDER);
         return keys;
     }
 
@@ -106,12 +104,12 @@ public class Warps implements IConf, net.ess3.api.IWarps {
     public final void reloadConfig() {
         warpPoints.clear();
         File[] listOfFiles = warpsFolder.listFiles();
-        if (listOfFiles.length >= 1) {
-            for (int i = 0; i < listOfFiles.length; i++) {
-                String filename = listOfFiles[i].getName();
-                if (listOfFiles[i].isFile() && filename.endsWith(".yml")) {
+        if (listOfFiles != null && listOfFiles.length >= 1) {
+            for (File listOfFile : listOfFiles) {
+                String filename = listOfFile.getName();
+                if (listOfFile.isFile() && filename.endsWith(".yml")) {
                     try {
-                        EssentialsConf conf = new EssentialsConf(listOfFiles[i]);
+                        EssentialsConf conf = new EssentialsConf(listOfFile);
                         conf.load();
                         String name = conf.getString("name");
                         if (name != null) {
@@ -123,12 +121,6 @@ public class Warps implements IConf, net.ess3.api.IWarps {
                 }
             }
         }
-    }
-
-    //This is here for future 3.x api support. Not implemented here becasue storage is handled differently
-    @Override
-    public File getWarpFile(String name) throws InvalidNameException {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

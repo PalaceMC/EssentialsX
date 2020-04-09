@@ -16,6 +16,7 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandpowertool extends EssentialsCommand {
     public Commandpowertool() {
         super("powertool");
@@ -85,7 +86,7 @@ public class Commandpowertool extends EssentialsCommand {
                     // Replace all commands with this one
                     powertools.clear();
                 } else {
-                    powertools = new ArrayList<String>();
+                    powertools = new ArrayList<>();
                 }
 
                 powertools.add(command);

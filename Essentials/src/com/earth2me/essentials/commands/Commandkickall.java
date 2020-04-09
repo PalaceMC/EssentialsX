@@ -7,14 +7,14 @@ import org.bukkit.entity.Player;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandkickall extends EssentialsCommand {
     public Commandkickall() {
         super("kickall");
     }
 
     @Override
-    public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         String kickReason = args.length > 0 ? getFinalArg(args, 0) : tl("kickDefault");
         kickReason = FormatUtil.replaceFormat(kickReason.replace("\\n", "\n").replace("|", "\n"));
 

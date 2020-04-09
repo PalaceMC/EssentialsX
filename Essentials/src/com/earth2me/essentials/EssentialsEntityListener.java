@@ -18,9 +18,10 @@ import java.util.regex.Pattern;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class EssentialsEntityListener implements Listener {
     private static final Logger LOGGER = Logger.getLogger("Essentials");
-    private static final transient Pattern powertoolPlayer = Pattern.compile("\\{player\\}");
+    private static final transient Pattern powertoolPlayer = Pattern.compile("\\{player}");
     private final IEssentials ess;
 
     public EssentialsEntityListener(IEssentials ess) {
@@ -39,7 +40,7 @@ public class EssentialsEntityListener implements Listener {
             } else if (eDefend instanceof Ageable) {
                 final ItemStack hand = attacker.getBase().getItemInHand();
                 if (ess.getSettings().isMilkBucketEasterEggEnabled()
-                        && hand != null && hand.getType() == Material.MILK_BUCKET) {
+                        && hand.getType() == Material.MILK_BUCKET) {
                     ((Ageable) eDefend).setBaby();
                     hand.setType(Material.BUCKET);
                     attacker.getBase().setItemInHand(hand);

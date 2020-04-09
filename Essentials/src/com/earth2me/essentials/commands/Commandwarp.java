@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandwarp extends EssentialsCommand {
     private static final int WARPS_PER_PAGE = 20;
 
@@ -36,17 +36,13 @@ public class Commandwarp extends EssentialsCommand {
             warpList(user.getSource(), args, user);
             throw new NoChargeException();
         }
-        if (args.length > 0) {
-            //TODO: Remove 'otherplayers' permission.
-            User otherUser = null;
-            if (args.length == 2 && (user.isAuthorized("essentials.warp.otherplayers") || user.isAuthorized("essentials.warp.others"))) {
-                otherUser = getPlayer(server, user, args, 1);
-                warpUser(user, otherUser, args[0]);
-                throw new NoChargeException();
-            }
-            warpUser(user, user, args[0]);
+        //TODO: Remove 'otherplayers' permission.
+        if (args.length == 2 && (user.isAuthorized("essentials.warp.otherplayers") || user.isAuthorized("essentials.warp.others"))) {
+            warpUser(user, getPlayer(server, user, args, 1), args[0]);
             throw new NoChargeException();
         }
+        warpUser(user, user, args[0]);
+        throw new NoChargeException();
     }
 
     @Override

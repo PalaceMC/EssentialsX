@@ -11,8 +11,8 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandshowkit extends EssentialsCommand {
-
     public Commandshowkit() {
         super("showkit");
     }

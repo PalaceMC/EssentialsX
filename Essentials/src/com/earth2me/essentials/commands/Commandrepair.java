@@ -19,6 +19,7 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandrepair extends EssentialsCommand {
     public Commandrepair() {
         super("repair");
@@ -40,7 +41,7 @@ public class Commandrepair extends EssentialsCommand {
 
     public void repairHand(User user) throws Exception {
         final ItemStack item = user.getItemInHand();
-        if (item == null || item.getType().isBlock() || item.getDurability() == 0) {
+        if (item.getType().isBlock() || item.getDurability() == 0) {
             throw new Exception(tl("repairInvalidType"));
         }
 
@@ -89,7 +90,7 @@ public class Commandrepair extends EssentialsCommand {
         item.setDurability((short) 0);
     }
 
-    private void repairItems(final ItemStack[] items, final IUser user, final List<String> repaired) throws Exception {
+    private void repairItems(final ItemStack[] items, final IUser user, final List<String> repaired) {
         for (ItemStack item : items) {
             if (item == null || item.getType().isBlock() || item.getDurability() == 0) {
                 continue;

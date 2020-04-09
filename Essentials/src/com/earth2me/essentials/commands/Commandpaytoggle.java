@@ -2,19 +2,18 @@ package com.earth2me.essentials.commands;
 
 import static com.earth2me.essentials.I18n.tl;
 
-import com.earth2me.essentials.I18n;
 import com.earth2me.essentials.User;
 
 import org.bukkit.Server;
 
+@SuppressWarnings("unused")
 public class Commandpaytoggle extends EssentialsCommand {
-
     public Commandpaytoggle() {
         super("paytoggle");
     }
 
     @Override
-    public void run(Server server, User user, String commandLabel, String[] args) throws Exception {
+    public void run(Server server, User user, String commandLabel, String[] args) {
         boolean acceptingPay = !user.isAcceptingPay();
         if (commandLabel.contains("payon")) {
             acceptingPay = true;

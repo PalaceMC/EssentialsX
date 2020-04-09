@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.EssentialsUpgrade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.UserMap;
 import com.earth2me.essentials.utils.*;
@@ -22,6 +21,7 @@ import java.util.function.Supplier;
 import static com.earth2me.essentials.I18n.tl;
 
 // This command has 4 undocumented behaviours #EasterEgg
+@SuppressWarnings({"deprecation","unused"})
 public class Commandessentials extends EssentialsCommand {
 
     private static final Sound NOTE_HARP = EnumUtil.valueOf(Sound.class, "BLOCK_NOTE_BLOCK_HARP", "BLOCK_NOTE_HARP", "NOTE_PIANO");
@@ -100,9 +100,6 @@ public class Commandessentials extends EssentialsCommand {
             case "cleanup":
                 runCleanup(server, sender, commandLabel, args);
                 break;
-            case "uuidconvert":
-                runUUIDConvert(server, sender, commandLabel, args);
-                break;
             case "uuidtest":
                 runUUIDTest(server, sender, commandLabel, args);
                 break;
@@ -153,19 +150,19 @@ public class Commandessentials extends EssentialsCommand {
     }
 
     // Toggles debug mode.
-    private void runDebug(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    private void runDebug(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         ess.getSettings().setDebug(!ess.getSettings().isDebug());
         sender.sendMessage("Essentials " + ess.getDescription().getVersion() + " debug mode " + (ess.getSettings().isDebug() ? "enabled" : "disabled"));
     }
 
     // Reloads all reloadable configs.
-    private void runReload(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    private void runReload(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         ess.reload();
         sender.sendMessage(tl("essentialsReload", ess.getDescription().getVersion()));
     }
 
     // Pop tarts.
-    private void runNya(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    private void runNya(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         if (currentTune != null) {
             currentTune.cancel();
         }
@@ -175,7 +172,7 @@ public class Commandessentials extends EssentialsCommand {
     }
 
     // Cow farts.
-    private void runMoo(final Server server, final CommandSource sender, final String command, final String args[]) {
+    private void runMoo(final Server server, final CommandSource sender, final String command, final String[] args) {
         if (args.length == 2 && args[1].equals("moo")) {
             for (String s : CONSOLE_MOO) {
                 logger.info(s);
@@ -197,7 +194,7 @@ public class Commandessentials extends EssentialsCommand {
     }
 
     // Cleans up inactive users.
-    private void runCleanup(final Server server, final CommandSource sender, final String command, final String args[]) throws Exception {
+    private void runCleanup(final Server server, final CommandSource sender, final String command, final String[] args) throws Exception {
         if (args.length < 2 || !NumberUtil.isInt(args[1])) {
             sender.sendMessage("This sub-command will delete users who haven't logged in in the last <days> days.");
             sender.sendMessage("Optional parameters define the minimum amount required to prevent deletion.");
@@ -208,7 +205,7 @@ public class Commandessentials extends EssentialsCommand {
         sender.sendMessage(tl("cleaning"));
 
         final long daysArg = Long.parseLong(args[1]);
-        final double moneyArg = args.length >= 3 ? FloatUtil.parseDouble(args[2].replaceAll("[^0-9\\.]", "")) : 0;
+        final double moneyArg = args.length >= 3 ? FloatUtil.parseDouble(args[2].replaceAll("[^0-9.]", "")) : 0;
         final int homesArg = args.length >= 4 && NumberUtil.isInt(args[3]) ? Integer.parseInt(args[3]) : 0;
         final UserMap userMap = ess.getUserMap();
 
@@ -252,16 +249,6 @@ public class Commandessentials extends EssentialsCommand {
 
     }
 
-    // Forces a rerun of userdata UUID conversion.
-    private void runUUIDConvert(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
-        sender.sendMessage("Starting Essentials UUID userdata conversion; this may lag the server.");
-
-        Boolean ignoreUFCache = (args.length > 2 && args[1].toLowerCase(Locale.ENGLISH).contains("ignore"));
-        EssentialsUpgrade.uuidFileConvert(ess, ignoreUFCache);
-
-        sender.sendMessage("UUID conversion complete. Check your server log for more information.");
-    }
-
     // Looks up various UUIDs for a user.
     private void runUUIDTest(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
         if (args.length < 2) {
@@ -301,7 +288,7 @@ public class Commandessentials extends EssentialsCommand {
     }
 
     // Displays versions of EssentialsX and related plugins.
-    private void runVersion(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception {
+    private void runVersion(final Server server, final CommandSource sender, final String commandLabel, final String[] args) {
         if (sender.isPlayer() && !ess.getUser(sender.getPlayer()).isAuthorized("essentials.version")) return;
 
         boolean isMismatched = false;

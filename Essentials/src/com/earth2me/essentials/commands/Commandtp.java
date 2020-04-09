@@ -1,13 +1,10 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Console;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.util.Collections;
@@ -15,7 +12,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtp extends EssentialsCommand {
     public Commandtp() {
         super("tp");
@@ -112,7 +109,7 @@ public class Commandtp extends EssentialsCommand {
         final User target = getPlayer(server, args, 0, true, false);
         if (args.length == 2) {
             final User toPlayer = getPlayer(server, args, 1, true, false);
-            target.sendMessage(tl("teleportAtoB", Console.NAME, toPlayer.getDisplayName()));
+            target.sendMessage(tl("teleportAtoB", "Console", toPlayer.getDisplayName()));
             target.getTeleport().now(toPlayer.getBase(), false, TeleportCause.COMMAND);
         } else if (args.length > 3) {
             final double x = args[1].startsWith("~") ? target.getLocation().getX() + (args[1].length() > 1 ? Double.parseDouble(args[1].substring(1)) : 0) : Double.parseDouble(args[1]);

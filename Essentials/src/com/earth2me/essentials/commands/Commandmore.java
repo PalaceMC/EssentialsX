@@ -9,6 +9,7 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandmore extends EssentialsCommand {
     public Commandmore() {
         super("more");
@@ -17,9 +18,6 @@ public class Commandmore extends EssentialsCommand {
     @Override
     public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         final ItemStack stack = user.getItemInHand();
-        if (stack == null) {
-            throw new Exception(tl("cantSpawnItem", "Air"));
-        }
 
         if (stack.getAmount() >= ((user.isAuthorized("essentials.oversizedstacks")) ? ess.getSettings().getOversizedStackSize() : stack.getMaxStackSize())) {
             throw new Exception(tl("fullStack"));

@@ -1,7 +1,6 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.NotEnoughArgumentsException;
-import com.earth2me.essentials.utils.VersionUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -13,6 +12,7 @@ import java.util.Locale;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings("deprecation")
 public class Worth implements IConf {
     private final EssentialsConf config;
 
@@ -100,7 +100,7 @@ public class Worth implements IConf {
 
         int max = 0;
         for (ItemStack s : user.getBase().getInventory().getContents()) {
-            if (s == null || !s.isSimilar(is)) {
+            if (!s.isSimilar(is)) {
                 continue;
             }
             max += s.getAmount();
@@ -138,12 +138,6 @@ public class Worth implements IConf {
      */
     public void setPrice(IEssentials ess, ItemStack itemStack, double price) {
         String path = "worth." + itemStack.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", "");
-
-        // Spigot 1.13+ throws an exception if a 1.13+ plugin even *attempts* to do set data.
-        if (VersionUtil.getServerBukkitVersion().isLowerThan(VersionUtil.v1_13_0_R01) && itemStack.getType().getData() == null) {
-            // Bukkit-bug: getDurability still contains the correct value, while getData().getData() is 0.
-            path = path + "." + itemStack.getDurability();
-        }
 
         config.setProperty(path, price);
         config.save();

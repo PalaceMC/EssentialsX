@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandeco extends EssentialsLoopCommand {
     Commandeco.EcoCommands cmd;
     BigDecimal amount;
@@ -35,7 +35,7 @@ public class Commandeco extends EssentialsLoopCommand {
 
         try {
             cmd = Commandeco.EcoCommands.valueOf(args[0].toUpperCase(Locale.ENGLISH));
-            amount = (cmd == Commandeco.EcoCommands.RESET) ? startingBalance : new BigDecimal(args[2].replaceAll("[^0-9\\.]", ""));
+            amount = (cmd == Commandeco.EcoCommands.RESET) ? startingBalance : new BigDecimal(args[2].replaceAll("[^0-9.]", ""));
         } catch (Exception ex) {
             throw new NotEnoughArgumentsException(ex);
         }
@@ -52,7 +52,7 @@ public class Commandeco extends EssentialsLoopCommand {
     }
 
     @Override
-    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws NotEnoughArgumentsException, ChargeException, MaxMoneyException {
+    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws ChargeException, MaxMoneyException {
         switch (cmd) {
             case GIVE:
                 player.giveMoney(amount, sender, UserBalanceUpdateEvent.Cause.COMMAND_ECO);

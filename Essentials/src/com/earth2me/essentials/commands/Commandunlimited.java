@@ -6,13 +6,12 @@ import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandunlimited extends EssentialsCommand {
     public Commandunlimited() {
         super("unlimited");
@@ -64,7 +63,7 @@ public class Commandunlimited extends EssentialsCommand {
         return output.toString();
     }
 
-    private Boolean toggleUnlimited(final User user, final User target, final String item) throws Exception {
+    private void toggleUnlimited(final User user, final User target, final String item) throws Exception {
         final ItemStack stack = ess.getItemDb().get(item, 1);
         stack.setAmount(Math.min(stack.getType().getMaxStackSize(), 2));
 
@@ -88,7 +87,5 @@ public class Commandunlimited extends EssentialsCommand {
         }
         target.sendMessage(tl(message, itemname, target.getDisplayName()));
         target.setUnlimited(stack, enableUnlimited);
-
-        return true;
     }
 }

@@ -22,6 +22,7 @@ import java.util.TreeSet;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandenchant extends EssentialsCommand {
     public Commandenchant() {
         super("enchant");
@@ -31,7 +32,7 @@ public class Commandenchant extends EssentialsCommand {
     @Override
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         final ItemStack stack = user.getItemInHand();
-        if (stack == null || stack.getType() == Material.AIR) {
+        if (stack.getType() == Material.AIR) {
             throw new Exception(tl("nothingInHand"));
         }
         if (args.length == 0) {

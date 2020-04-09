@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandfeed extends EssentialsLoopCommand {
     public Commandfeed() {
         super("feed");
@@ -42,7 +42,7 @@ public class Commandfeed extends EssentialsLoopCommand {
     }
 
     @Override
-    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws PlayerExemptException {
+    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) {
         try {
             feedPlayer(player.getBase());
             sender.sendMessage(tl("feedOther", player.getDisplayName()));
@@ -60,7 +60,7 @@ public class Commandfeed extends EssentialsLoopCommand {
             throw new QuietAbortException();
         }
 
-        player.setFoodLevel(flce.getFoodLevel() > 20 ? 20 : flce.getFoodLevel());
+        player.setFoodLevel(Math.min(flce.getFoodLevel(), 20));
         player.setSaturation(10);
         player.setExhaustion(0F);
     }

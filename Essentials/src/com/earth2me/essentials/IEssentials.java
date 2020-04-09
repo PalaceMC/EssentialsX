@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public interface IEssentials extends Plugin {
     void addReloadListener(IConf listener);
 
@@ -43,10 +44,13 @@ public interface IEssentials extends Plugin {
 
     World getWorld(String name);
 
+    @SuppressWarnings("UnusedReturnValue")
     int broadcastMessage(String message);
 
+    @SuppressWarnings("UnusedReturnValue")
     int broadcastMessage(IUser sender, String message);
 
+    @SuppressWarnings("UnusedReturnValue")
     int broadcastMessage(String permission, String message);
 
     ISettings getSettings();

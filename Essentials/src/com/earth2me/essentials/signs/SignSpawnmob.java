@@ -15,7 +15,7 @@ public class SignSpawnmob extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignCreate(ISign sign, User player, String username, IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignCreate(ISign sign, User player, String username, IEssentials ess) throws SignException {
         validateInteger(sign, 1);
         validateTrade(sign, 3, ess);
         return true;

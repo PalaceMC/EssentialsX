@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public interface IItemDb extends com.earth2me.essentials.api.IItemDb {
 
     /**

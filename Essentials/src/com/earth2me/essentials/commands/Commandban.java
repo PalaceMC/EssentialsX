@@ -1,11 +1,10 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Console;
-import com.earth2me.essentials.OfflinePlayer;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import org.bukkit.BanList;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import java.util.Collections;
@@ -14,7 +13,7 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandban extends EssentialsCommand {
     public Commandban() {
         super("ban");
@@ -31,7 +30,7 @@ public class Commandban extends EssentialsCommand {
             user = getPlayer(server, args, 0, true, true);
         } catch (PlayerNotFoundException e) {
             nomatch = true;
-            user = ess.getUser(new OfflinePlayer(args[0], ess.getServer()));
+            user = ess.getUser(Bukkit.getPlayer(args[0]));
         }
         if (!user.getBase().isOnline()) {
             if (sender.isPlayer() && !ess.getUser(sender.getPlayer()).isAuthorized("essentials.ban.offline")) {
@@ -43,7 +42,7 @@ public class Commandban extends EssentialsCommand {
             }
         }
 
-        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
+        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : "Console";
         String banReason;
         if (args.length > 1) {
             banReason = FormatUtil.replaceFormat(getFinalArg(args, 1).replace("\\n", "\n").replace("|", "\n"));

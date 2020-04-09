@@ -2,9 +2,7 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.IEssentialsCommand;
 //import com.earth2me.essentials.signs.EssentialsSign;
-import com.earth2me.essentials.textreader.IText;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventPriority;
@@ -15,32 +13,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 
 public interface ISettings extends IConf {
     //boolean areSignsDisabled();
 
-    IText getAnnounceNewPlayerFormat();
-
-    boolean getAnnounceNewPlayers();
-
     String getNewPlayerKit();
 
     String getBackupCommand();
 
     long getBackupInterval();
-
-    String getChatFormat(String group);
-
-    int getChatRadius();
-
-    int getNearRadius();
-
-    char getChatShout();
-
-    char getChatQuestion();
 
     BigDecimal getCommandCost(IEssentialsCommand cmd);
 
@@ -57,25 +40,22 @@ public interface ISettings extends IConf {
     Set<String> getMuteCommands();
 
     /**
-     * @Deprecated in favor of {@link Kits#getKits()}
+     * @deprecated in favor of {@link Kits#getKits()}
      */
     @Deprecated
     ConfigurationSection getKits();
 
     /**
-     * @Deprecated in favor of {@link Kits#getKit(String)}
+     * @deprecated in favor of {@link Kits#getKit(String)}
      */
     @Deprecated
     Map<String, Object> getKit(String kit);
 
     /**
-     * @Deprecated in favor of {@link Kits#addKit(String, List, long)}}
+     * @deprecated in favor of {@link Kits#addKit(String, List, long)}}
      */
     @Deprecated
     void addKit(String name, List<String> lines, long delay);
-
-    @Deprecated
-    ConfigurationSection getKitSection();
 
     boolean isSkippingUsedOneTimeKitsFromKitList();
 
@@ -83,21 +63,7 @@ public interface ISettings extends IConf {
 
     String getNewbieSpawn();
 
-    String getNicknamePrefix();
-
-    ChatColor getOperatorColor() throws Exception;
-
     boolean getPerWarpPermission();
-
-    boolean getProtectBoolean(final String configName, boolean def);
-
-    int getProtectCreeperMaxHeight();
-
-    List<Material> getProtectList(final String configName);
-
-    boolean getProtectPreventSpawn(final String creatureName);
-
-    String getProtectString(final String configName);
 
     boolean getRespawnAtHome();
 
@@ -123,8 +89,6 @@ public interface ISettings extends IConf {
 
     boolean hidePermissionlessHelp();
 
-    boolean isCommandDisabled(final IEssentialsCommand cmd);
-
     boolean isCommandDisabled(String label);
 
     boolean isCommandOverridden(String name);
@@ -146,8 +110,6 @@ public interface ISettings extends IConf {
 
     boolean showNonEssCommandsInHelp();
 
-    boolean warnOnBuildDisallow();
-
     boolean warnOnSmite();
 
     BigDecimal getMaxMoney();
@@ -158,23 +120,7 @@ public interface ISettings extends IConf {
 
     boolean isEcoLogUpdateEnabled();
 
-    boolean realNamesOnList();
-
     boolean removeGodOnDisconnect();
-
-    boolean changeDisplayName();
-
-    boolean changePlayerListName();
-
-    boolean isPlayerCommand(String string);
-
-    boolean useBukkitPermissions();
-
-    boolean addPrefixSuffix();
-
-    boolean disablePrefix();
-
-    boolean disableSuffix();
 
     long getAutoAfk();
 
@@ -230,47 +176,19 @@ public interface ISettings extends IConf {
 
     double getMaxWalkSpeed();
 
-    int getMailsPerMinute();
-
     long getEconomyLagWarning();
 
     long getPermissionsLagWarning();
-
-    void setEssentialsChatActive(boolean b);
-
-    long getMaxMute();
 
     long getMaxTempban();
 
     Map<String, Object> getListGroupConfig();
 
-    int getMaxNickLength();
-
-    boolean ignoreColorsInMaxLength();
-
-    boolean hideDisplayNameInVanish();
-
     int getMaxUserCacheCount();
-
-    boolean allowSilentJoinQuit();
-
-    boolean isCustomJoinMessage();
-
-    String getCustomJoinMessage();
-
-    boolean isCustomQuitMessage();
-
-    String getCustomQuitMessage();
-
-    boolean isNotifyNoNewMail();
 
     boolean isDropItemsIfFull();
 
-    boolean isLastMessageReplyRecipient();
-
     BigDecimal getMinimumPayAmount();
-
-    long getLastMessageReplyRecipientTimeout();
 
     boolean isMilkBucketEasterEggEnabled();
 
@@ -304,12 +222,6 @@ public interface ISettings extends IConf {
 
     boolean isAllowBulkBuySell();
 
-    boolean isAddingPrefixInPlayerlist();
-
-    boolean isAddingSuffixInPlayerlist();
-
-    int getNotifyPlayerOfMailCooldown();
-
     int getMotdDelay();
 
     boolean isDirectHatAllowed();
@@ -335,8 +247,6 @@ public interface ISettings extends IConf {
     boolean isSafeUsermap();
 
     boolean logCommandBlockCommands();
-
-    Set<Predicate<String>> getNickBlacklist();
 
     double getMaxProjectileSpeed();
 

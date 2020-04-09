@@ -5,27 +5,26 @@ import net.ess3.api.IEssentials;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class HelpInput implements IText {
     private static final String DESCRIPTION = "description";
     private static final String PERMISSION = "permission";
     private static final String PERMISSIONS = "permissions";
     private static final Logger logger = Logger.getLogger("Essentials");
-    private final transient List<String> lines = new ArrayList<String>();
-    private final transient List<String> chapters = new ArrayList<String>();
-    private final transient Map<String, Integer> bookmarks = new HashMap<String, Integer>();
+    private final transient List<String> lines = new ArrayList<>();
+    private final transient List<String> chapters = new ArrayList<>();
+    private final transient Map<String, Integer> bookmarks = new HashMap<>();
 
-    public HelpInput(final User user, final String match, final IEssentials ess) throws IOException {
+    public HelpInput(final User user, final String match, final IEssentials ess) {
         boolean reported = false;
-        final List<String> newLines = new ArrayList<String>();
-        String pluginName = "";
+        final List<String> newLines = new ArrayList<>();
+        String pluginName;
         String pluginNameLow = "";
         if (!match.equalsIgnoreCase("")) {
             lines.add(tl("helpMatching", match));
@@ -33,7 +32,7 @@ public class HelpInput implements IText {
 
         for (Plugin p : ess.getServer().getPluginManager().getPlugins()) {
             try {
-                final List<String> pluginLines = new ArrayList<String>();
+                final List<String> pluginLines = new ArrayList<>();
                 final PluginDescriptionFile desc = p.getDescription();
                 final Map<String, Map<String, Object>> cmds = desc.getCommands();
                 pluginName = p.getDescription().getName();
@@ -89,7 +88,7 @@ public class HelpInput implements IText {
                                 }
                             }
                         }
-                    } catch (NullPointerException ex) {
+                    } catch (NullPointerException ignored) {
                     }
                 }
                 if (!pluginLines.isEmpty()) {
@@ -101,7 +100,7 @@ public class HelpInput implements IText {
                         lines.add(tl("helpPlugin", pluginName, pluginNameLow));
                     }
                 }
-            } catch (NullPointerException ex) {
+            } catch (NullPointerException ignored) {
             } catch (Exception ex) {
                 if (!reported) {
                     logger.log(Level.WARNING, tl("commandHelpFailedForPlugin", pluginNameLow), ex);

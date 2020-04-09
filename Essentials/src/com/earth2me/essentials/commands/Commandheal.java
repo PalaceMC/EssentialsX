@@ -14,6 +14,7 @@ import java.util.List;
 import static com.earth2me.essentials.I18n.tl;
 
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandheal extends EssentialsLoopCommand {
     public Commandheal() {
         super("heal");

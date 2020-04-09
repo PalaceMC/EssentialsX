@@ -12,9 +12,9 @@ import org.bukkit.event.HandlerList;
 public class UserTeleportEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
-    private IUser user;
-    private TeleportCause cause;
-    private Location target;
+    private final IUser user;
+    private final TeleportCause cause;
+    private final Location target;
     private boolean cancelled = false;
 
     public UserTeleportEvent(IUser user, TeleportCause cause, Location target) {

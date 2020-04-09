@@ -6,14 +6,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandsuicide extends EssentialsCommand {
     public Commandsuicide() {
         super("suicide");
     }
 
     @Override
-    public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
+    public void run(final Server server, final User user, final String commandLabel, final String[] args) {
         EntityDamageEvent ede = new EntityDamageEvent(user.getBase(), EntityDamageEvent.DamageCause.SUICIDE, Short.MAX_VALUE);
         server.getPluginManager().callEvent(ede);
         ede.getEntity().setLastDamageCause(ede);

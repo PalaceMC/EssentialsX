@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandskull extends EssentialsCommand {
 
     private static final Material SKULL_ITEM = EnumUtil.getMaterial("PLAYER_HEAD", "SKULL_ITEM");
@@ -37,10 +38,10 @@ public class Commandskull extends EssentialsCommand {
         }
 
         ItemStack itemSkull = user.getItemInHand();
-        SkullMeta metaSkull = null;
+        SkullMeta metaSkull;
         boolean spawn = false;
 
-        if (itemSkull != null && MaterialUtil.isPlayerHead(itemSkull.getType(), itemSkull.getDurability())) {
+        if (MaterialUtil.isPlayerHead(itemSkull.getType(), itemSkull.getDurability())) {
             metaSkull = (SkullMeta) itemSkull.getItemMeta();
         } else if (user.isAuthorized("essentials.skull.spawn")) {
             itemSkull = new ItemStack(SKULL_ITEM, 1, (byte) 3);

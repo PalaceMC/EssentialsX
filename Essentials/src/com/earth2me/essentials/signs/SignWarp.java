@@ -1,6 +1,5 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
@@ -37,7 +36,7 @@ public class SignWarp extends EssentialsSign {
     }
 
     @Override
-    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException, ChargeException {
+    protected boolean onSignInteract(final ISign sign, final User player, final String username, final IEssentials ess) throws SignException {
         final String warpName = sign.getLine(1);
         final String group = sign.getLine(2);
 

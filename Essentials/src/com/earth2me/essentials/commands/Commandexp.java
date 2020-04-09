@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandexp extends EssentialsCommand {
     public Commandexp() {
         super("exp");
@@ -56,13 +56,13 @@ public class Commandexp extends EssentialsCommand {
                 showExp(user.getSource(), user);
             }
         } else {
-            if (args.length >= 1 && NumberUtil.isInt(args[0].toLowerCase(Locale.ENGLISH).replace("l", "")) && user.isAuthorized("essentials.exp.give")) {
+            if (NumberUtil.isInt(args[0].toLowerCase(Locale.ENGLISH).replace("l", "")) && user.isAuthorized("essentials.exp.give")) {
                 if (args.length >= 2 && user.isAuthorized("essentials.exp.give.others")) {
                     expMatch(server, user.getSource(), args[1], args[0], true);
                 } else {
                     setExp(user.getSource(), user, args[0], true);
                 }
-            } else if (args.length >= 1 && user.isAuthorized("essentials.exp.others")) {
+            } else if (user.isAuthorized("essentials.exp.others")) {
                 String match = args[0].trim();
                 showMatch(server, user.getSource(), match);
             } else {
@@ -139,7 +139,7 @@ public class Commandexp extends EssentialsCommand {
             if (give) {
                 neededLevel += target.getBase().getLevel();
             }
-            amount = (long) SetExpFix.getExpToLevel(neededLevel);
+            amount = SetExpFix.getExpToLevel(neededLevel);
             SetExpFix.setTotalExperience(target.getBase(), 0);
         } else {
             amount = Long.parseLong(strAmount);
@@ -152,10 +152,10 @@ public class Commandexp extends EssentialsCommand {
             amount += SetExpFix.getTotalExperience(target.getBase());
         }
         if (amount > Integer.MAX_VALUE) {
-            amount = (long) Integer.MAX_VALUE;
+            amount = Integer.MAX_VALUE;
         }
-        if (amount < 0l) {
-            amount = 0l;
+        if (amount < 0L) {
+            amount = 0L;
         }
         SetExpFix.setTotalExperience(target.getBase(), (int) amount);
         sender.sendMessage(tl("expSet", target.getDisplayName(), amount));

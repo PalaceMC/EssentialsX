@@ -6,14 +6,14 @@ import com.earth2me.essentials.User;
 
 import org.bukkit.Server;
 
+@SuppressWarnings("unused")
 public class Commandpayconfirmtoggle extends EssentialsCommand {
-
     public Commandpayconfirmtoggle() {
         super("payconfirmtoggle");
     }
 
     @Override
-    public void run(Server server, User user, String commandLabel, String[] args) throws Exception {
+    public void run(Server server, User user, String commandLabel, String[] args) {
         boolean confirmingPay = !user.isPromptingPayConfirm();
         if (commandLabel.contains("payconfirmon")) {
             confirmingPay = true;

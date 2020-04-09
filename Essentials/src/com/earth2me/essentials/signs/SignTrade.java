@@ -17,6 +17,7 @@ import java.util.Map;
 import static com.earth2me.essentials.I18n.tl;
 
 //TODO: TL exceptions
+@SuppressWarnings("deprecation")
 public class SignTrade extends EssentialsSign {
     public SignTrade() {
         super("Trade");
@@ -81,7 +82,7 @@ public class SignTrade extends EssentialsSign {
 
     private Trade rechargeSign(final ISign sign, final IEssentials ess, final User player) throws SignException, ChargeException {
         final Trade trade = getTrade(sign, 2, AmountType.COST, false, true, ess);
-        if (trade.getItemStack() != null && player.getBase().getItemInHand() != null && trade.getItemStack().getType() == player.getBase().getItemInHand().getType() && trade.getItemStack().getDurability() == player.getBase().getItemInHand().getDurability() && trade.getItemStack().getEnchantments().equals(player.getBase().getItemInHand().getEnchantments())) {
+        if (trade.getItemStack() != null && trade.getItemStack().getType() == player.getBase().getItemInHand().getType() && trade.getItemStack().getDurability() == player.getBase().getItemInHand().getDurability() && trade.getItemStack().getEnchantments().equals(player.getBase().getItemInHand().getEnchantments())) {
             int amount = player.getBase().getItemInHand().getAmount();
             amount -= amount % trade.getItemStack().getAmount();
             if (amount > 0) {
@@ -101,8 +102,8 @@ public class SignTrade extends EssentialsSign {
         final String signOwner = sign.getLine(3);
 
         final boolean isOwner = (signOwner.length() > 3 && signOwner.substring(2).equalsIgnoreCase(username));
-        final boolean canBreak = isOwner ? true : player.isAuthorized("essentials.signs.trade.override");
-        final boolean canCollect = isOwner ? true : player.isAuthorized("essentials.signs.trade.override.collect");
+        final boolean canBreak = isOwner || player.isAuthorized("essentials.signs.trade.override");
+        final boolean canCollect = isOwner || player.isAuthorized("essentials.signs.trade.override.collect");
 
         if (canBreak) {
             try {
@@ -135,10 +136,8 @@ public class SignTrade extends EssentialsSign {
                 }
                 throw e;
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     protected final void validateTrade(final ISign sign, final int index, final boolean amountNeeded, final IEssentials ess) throws SignException {
@@ -162,7 +161,7 @@ public class SignTrade extends EssentialsSign {
         if (split.length == 2 && amountNeeded) {
             final BigDecimal money = getMoney(split[0]);
             BigDecimal amount = getBigDecimalPositive(split[1]);
-            if (money != null && amount != null) {
+            if (money != null) {
                 amount = amount.subtract(amount.remainder(money));
                 if (amount.compareTo(MINTRANSACTION) < 0 || money.compareTo(MINTRANSACTION) < 0) {
                     throw new SignException(tl("moreThanZero"));
@@ -220,7 +219,7 @@ public class SignTrade extends EssentialsSign {
             try {
                 final BigDecimal money = getMoney(split[0]);
                 final BigDecimal amount = notEmpty ? getBigDecimalPositive(split[1]) : getBigDecimal(split[1]);
-                if (money != null && amount != null) {
+                if (money != null) {
                     return new Trade(amountType == AmountType.COST ? money : amount, ess);
                 }
             } catch (SignException e) {
@@ -267,7 +266,7 @@ public class SignTrade extends EssentialsSign {
         }
         final Integer exp = trade.getExperience();
         if (exp != null) {
-            changeAmount(sign, index, BigDecimal.valueOf(-exp.intValue()), ess);
+            changeAmount(sign, index, BigDecimal.valueOf(-exp), ess);
         }
     }
 
@@ -282,7 +281,7 @@ public class SignTrade extends EssentialsSign {
         }
         final Integer exp = trade.getExperience();
         if (exp != null) {
-            changeAmount(sign, index, BigDecimal.valueOf(exp.intValue()), ess);
+            changeAmount(sign, index, BigDecimal.valueOf(exp), ess);
         }
     }
 
@@ -319,7 +318,7 @@ public class SignTrade extends EssentialsSign {
         if (split.length == 2) {
             final BigDecimal money = getMoney(split[0]);
             final BigDecimal amount = getBigDecimal(split[1]);
-            if (money != null && amount != null) {
+            if (money != null) {
                 final String newline = NumberUtil.shortCurrency(money, ess) + ":" + NumberUtil.shortCurrency(value, ess).substring(1);
                 if (newline.length() > 15) {
                     throw new SignException("This sign is full: Line too long!");
@@ -330,24 +329,14 @@ public class SignTrade extends EssentialsSign {
         }
 
         if (split.length == 3) {
-            if (split[1].equalsIgnoreCase("exp") || split[1].equalsIgnoreCase("xp")) {
-                final int stackamount = getIntegerPositive(split[0]);
-                final String newline = stackamount + " " + split[1] + ":" + (value.intValueExact());
-                if (newline.length() > 15) {
-                    throw new SignException("This sign is full: Line too long!");
-                }
-                sign.setLine(index, newline);
-                return;
-            } else {
-                final int stackamount = getIntegerPositive(split[0]);
+            final int stackamount = getIntegerPositive(split[0]);
+            if (!split[1].equalsIgnoreCase("exp") && !split[1].equalsIgnoreCase("xp"))
                 getItemStack(split[1], stackamount, ess);
-                final String newline = stackamount + " " + split[1] + ":" + (value.intValueExact());
-                if (newline.length() > 15) {
-                    throw new SignException("This sign is full: Line too long!");
-                }
-                sign.setLine(index, newline);
-                return;
+            final String newline = stackamount + " " + split[1] + ":" + (value.intValueExact());
+            if (newline.length() > 15) {
+                throw new SignException("This sign is full: Line too long!");
             }
+            sign.setLine(index, newline);
         }
         throw new SignException(tl("invalidSignLine", index + 1));
     }

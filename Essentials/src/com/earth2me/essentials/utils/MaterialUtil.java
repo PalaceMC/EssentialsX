@@ -3,16 +3,14 @@ package com.earth2me.essentials.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
-import java.util.Optional;
 import java.util.Set;
 
+@SuppressWarnings("deprecation")
 public class MaterialUtil {
 
 
@@ -91,7 +89,7 @@ public class MaterialUtil {
             return true;
         }
 
-        return LEGACY_SKULLS.contains(material) && (durability < 0 || durability != 3);
+        return LEGACY_SKULLS.contains(material) && durability != 3;
     }
 
     public static boolean isPlayerHead(Material material, int durability) {

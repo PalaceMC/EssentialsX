@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 
 public class CommandSource {
-    protected CommandSender sender;
+    protected final CommandSender sender;
 
     public CommandSource(final CommandSender base) {
         this.sender = base;
@@ -25,11 +25,6 @@ public class CommandSource {
     public final boolean isPlayer() {
         return (sender instanceof Player);
     }
-
-    public final CommandSender setSender(final CommandSender base) {
-        return this.sender = base;
-    }
-
 
     public void sendMessage(String message) {
         if (!message.isEmpty()) {

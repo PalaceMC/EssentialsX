@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings({"deprecation","unused"})
 public class Commandfireball extends EssentialsCommand {
     private static final Map<String, Class<? extends Projectile>> types;
 

@@ -1,11 +1,9 @@
 package com.earth2me.essentials;
 
-import com.earth2me.essentials.utils.EnumUtil;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
@@ -31,11 +29,7 @@ public class EssentialsBlockListener implements Listener {
         // http://leaky.bukkit.org/issues/663
         final ItemStack is = LocationUtil.convertBlockToItem(event.getBlockPlaced());
 
-        if (is == null) {
-            return;
-        }
-
-        if (is.getType() == MaterialUtil.SPAWNER && event.getItemInHand() != null && event.getPlayer() != null && event.getItemInHand().getType() == MaterialUtil.SPAWNER) {
+        if (is.getType() == MaterialUtil.SPAWNER && event.getItemInHand().getType() == MaterialUtil.SPAWNER) {
             final BlockState blockState = event.getBlockPlaced().getState();
             if (blockState instanceof CreatureSpawner) {
                 final CreatureSpawner spawner = (CreatureSpawner) blockState;
@@ -51,6 +45,7 @@ public class EssentialsBlockListener implements Listener {
 
         final User user = ess.getUser(event.getPlayer());
         if (user.hasUnlimited(is) && user.getBase().getGameMode() == GameMode.SURVIVAL) {
+            @SuppressWarnings("deprecation")
             class UnlimitedItemSpawnTask implements Runnable {
                 @Override
                 public void run() {

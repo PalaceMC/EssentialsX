@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
 import org.bukkit.BanList;
 import org.bukkit.OfflinePlayer;
@@ -11,7 +10,7 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings({"deprecation","unused"})
 public class Commandunban extends EssentialsCommand {
     public Commandunban() {
         super("unban");
@@ -36,7 +35,7 @@ public class Commandunban extends EssentialsCommand {
             ess.getServer().getBanList(BanList.Type.NAME).pardon(name);
         }
 
-        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
+        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : "Console";
         server.getLogger().log(Level.INFO, tl("playerUnbanned", senderName, name));
 
         ess.broadcastMessage("essentials.ban.notify", tl("playerUnbanned", senderName, name));

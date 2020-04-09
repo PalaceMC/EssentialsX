@@ -1,6 +1,7 @@
 package com.earth2me.essentials.signs;
 
 //This enum is used when checking to see what signs are enabled
+@SuppressWarnings("deprecation")
 public enum Signs {
     BALANCE(new SignBalance()),
     BUY(new SignBuy()),
@@ -11,7 +12,6 @@ public enum Signs {
     HEAL(new SignHeal()),
     INFO(new SignInfo()),
     KIT(new SignKit()),
-    PROTECTION(new SignProtection()),
     REPAIR(new SignRepair()),
     SELL(new SignSell()),
     SPAWNMOB(new SignSpawnmob()),

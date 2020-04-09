@@ -9,7 +9,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandtpahere extends EssentialsCommand {
     public Commandtpahere() {
         super("tpahere");

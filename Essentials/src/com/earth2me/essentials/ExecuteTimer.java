@@ -13,7 +13,7 @@ public class ExecuteTimer {
 
 
     public ExecuteTimer() {
-        times = new ArrayList<ExecuteRecord>();
+        times = new ArrayList<>();
     }
 
     public void start() {
@@ -34,7 +34,7 @@ public class ExecuteTimer {
         String mark;
         long time0 = 0;
         long time1 = 0;
-        long time2 = 0;
+        long time2;
         double duration;
 
         for (ExecuteRecord pair : times) {

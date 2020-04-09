@@ -33,9 +33,6 @@ import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.VersionUtil;
-import com.google.common.base.Throwables;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -73,14 +70,12 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import static com.earth2me.essentials.I18n.tl;
@@ -112,55 +107,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient PotionMetaProvider potionMetaProvider;
     private transient Kits kits;
 
-    public Essentials() {
-
-    }
-
-    protected Essentials(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
-    }
-
-    public Essentials(final Server server) {
-        super(new JavaPluginLoader(server), new PluginDescriptionFile("Essentials", "", "com.earth2me.essentials.Essentials"), null, null);
-    }
-
-    @SuppressWarnings("unused")
-    public void forceLoadClasses() {
-        try {
-            Class.forName(OfflinePlayer.class.getName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public ISettings getSettings() {
         return settings;
-    }
-
-    public void setupForTesting(final Server server) throws IOException, InvalidDescriptionException {
-        final File dataFolder = File.createTempFile("essentialstest", "");
-        if (!dataFolder.delete()) {
-            throw new IOException();
-        }
-        if (!dataFolder.mkdir()) {
-            throw new IOException();
-        }
-        i18n = new I18n(this);
-        i18n.onEnable();
-        i18n.updateLocale("en");
-        Console.setInstance(this);
-        
-        LOGGER.log(Level.INFO, tl("usingTempFolderForTesting"));
-        LOGGER.log(Level.INFO, dataFolder.toString());
-        settings = new Settings(this);
-        userMap = new UserMap(this);
-        permissionsHandler = new PermissionsHandler(this, false);
-        Economy.setEss(this);
-        confList = new ArrayList<>();
-        jails = new Jails(this);
-        registerListeners(server.getPluginManager());
-        kits = new Kits(this);
     }
 
     @Override
@@ -174,8 +123,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             i18n = new I18n(this);
             i18n.onEnable();
             execTimer.mark("I18n1");
-            
-            Console.setInstance(this);
 
             if (!VersionUtil.isServerSupported()) {
                 getLogger().severe(tl("serverUnsupported"));
@@ -195,13 +142,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 }
             }
 
-            forceLoadClasses();
-
             try {
-                final EssentialsUpgrade upgrade = new EssentialsUpgrade(this);
-                upgrade.beforeSettings();
-                execTimer.mark("Upgrade");
-
                 confList = new ArrayList<>();
                 settings = new Settings(this);
                 confList.add(settings);
@@ -213,11 +154,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
                 kits = new Kits(this);
                 confList.add(kits);
-                upgrade.convertKits();
                 execTimer.mark("Kits");
-
-                upgrade.afterSettings();
-                execTimer.mark("Upgrade2");
 
                 warps = new Warps(getServer(), this.getDataFolder());
                 confList.add(warps);
@@ -279,7 +216,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 return;
             }
             backup = new Backup(this);
-            permissionsHandler = new PermissionsHandler(this, settings.useBukkitPermissions());
+            permissionsHandler = new PermissionsHandler(this);
             alternativeCommandsHandler = new AlternativeCommandsHandler(this);
 
             timer = new EssentialsTimer(this);
@@ -394,7 +331,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String commandLabel, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String commandLabel, @NotNull String[] args) {
         return onTabCompleteEssentials(sender, command, commandLabel, args, Essentials.class.getClassLoader(),
             "com.earth2me.essentials.commands.Command", "essentials.", null);
     }
@@ -471,7 +408,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args) {
+    public boolean onCommand(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String commandLabel, @NotNull final String[] args) {
         return onCommandEssentials(sender, command, commandLabel, args, Essentials.class.getClassLoader(), "com.earth2me.essentials.commands.Command", "essentials.", null);
     }
 
@@ -560,9 +497,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                     cmd.run(getServer(), user, commandLabel, command, args);
                 }
                 return true;
-            } catch (NoChargeException ex) {
-                return true;
-            } catch (QuietAbortException ex) {
+            } catch (NoChargeException | QuietAbortException ex) {
                 return true;
             } catch (NotEnoughArgumentsException ex) {
                 sender.sendMessage(command.getDescription());
@@ -680,17 +615,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     //This will return null if there is not a match.
     @Override
     public User getOfflineUser(final String name) {
-        final User user = userMap.getUser(name);
-        if (user != null && user.getBase() instanceof OfflinePlayer) {
-            //This code should attempt to use the last known name of a user, if Bukkit returns name as null.
-            final String lastName = user.getLastAccountName();
-            if (lastName != null) {
-                ((OfflinePlayer) user.getBase()).setName(lastName);
-            } else {
-                ((OfflinePlayer) user.getBase()).setName(name);
-            }
-        }
-        return user;
+        return userMap.getUser(name);
     }
 
     //This will create a new user if there is not a match.
@@ -746,6 +671,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     }
 
     @Override
+    @SuppressWarnings("unused")
     public void addReloadListener(final IConf listener) {
         confList.add(listener);
     }
@@ -860,6 +786,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     }
 
     @Override
+    @SuppressWarnings("unused")
     public List<String> getVanishedPlayers() {
         return Collections.unmodifiableList(new ArrayList<>(vanishedPlayers));
     }
@@ -876,9 +803,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         } catch (NoSuchMethodError ex) {
             try {
                 return Arrays.asList((Player[]) oldGetOnlinePlayers.invoke(getServer()));
-            } catch (InvocationTargetException ex1) {
-                throw Throwables.propagate(ex.getCause());
-            } catch (IllegalAccessException ex1) {
+            } catch (IllegalAccessException | InvocationTargetException ex1) {
                 throw new RuntimeException("Error invoking oldGetOnlinePlayers", ex1);
             }
         }

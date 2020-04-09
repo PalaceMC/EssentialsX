@@ -13,6 +13,7 @@ import org.bukkit.entity.Tameable;
 import java.util.Random;
 
 // This command is not documented on the wiki #EasterEgg
+@SuppressWarnings({"deprecation","unused"})
 public class Commandkittycannon extends EssentialsCommand {
     private static final Random random = new Random();
 
@@ -36,11 +37,8 @@ public class Commandkittycannon extends EssentialsCommand {
 
     }
 
-    private static Ocelot spawnOcelot(World world, Server server, User user) throws Mob.MobException {
+    private static Ocelot spawnOcelot(World world, Server server, User user) {
         final Ocelot ocelot = (Ocelot) Mob.OCELOT.spawn(user.getWorld(), server, user.getBase().getEyeLocation());
-        if (ocelot == null) {
-            return null;
-        }
         final int i = random.nextInt(Ocelot.Type.values().length);
         ocelot.setCatType(Ocelot.Type.values()[i]);
         ((Tameable) ocelot).setTamed(true);
@@ -50,11 +48,8 @@ public class Commandkittycannon extends EssentialsCommand {
         return ocelot;
     }
 
-    private static Entity spawnCat(World world, Server server, User user) throws Mob.MobException {
+    private static Entity spawnCat(World world, Server server, User user) {
         final Cat cat = (Cat) Mob.CAT.spawn(user.getWorld(), server, user.getBase().getEyeLocation());
-        if (cat == null) {
-            return null;
-        }
         final int i = random.nextInt(Cat.Type.values().length);
         cat.setCatType(Cat.Type.values()[i]);
         cat.setTamed(true);

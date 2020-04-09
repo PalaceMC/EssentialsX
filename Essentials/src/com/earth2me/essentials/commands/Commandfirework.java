@@ -7,7 +7,6 @@ import com.earth2me.essentials.utils.NumberUtil;
 import com.google.common.collect.Lists;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -36,8 +35,8 @@ import static com.earth2me.essentials.I18n.tl;
 //4: Possible Shapes:              star, ball, large, creeper, burst
 //4: Possible Effects              trail, twinkle
 
+@SuppressWarnings("unused")
 public class Commandfirework extends EssentialsCommand {
-
     public Commandfirework() {
         super("firework");
     }

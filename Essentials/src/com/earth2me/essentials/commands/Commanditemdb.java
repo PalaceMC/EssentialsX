@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings({"deprecation","unused"})
 public class Commanditemdb extends EssentialsCommand {
     public Commanditemdb() {
         super("itemdb");

@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandback extends EssentialsCommand {
     public Commandback() {
         super("back");
@@ -23,7 +23,7 @@ public class Commandback extends EssentialsCommand {
     protected void run(Server server, User user, String commandLabel, String[] args) throws Exception {
         CommandSource sender = user.getSource();
         if (args.length > 0 && user.isAuthorized("essentials.back.others")) {
-            this.parseCommand(server, sender, args, true);
+            this.parseCommand(server, sender, args);
             return;
         }
 
@@ -36,13 +36,13 @@ public class Commandback extends EssentialsCommand {
             throw new NotEnoughArgumentsException();
         }
 
-        this.parseCommand(server, sender, args, true);
+        this.parseCommand(server, sender, args);
     }
 
-    private void parseCommand(Server server, CommandSource sender, String[] args, boolean allowOthers) throws Exception {
+    private void parseCommand(Server server, CommandSource sender, String[] args) throws Exception {
         Collection<Player> players = new ArrayList<>();
 
-        if (allowOthers && args.length > 0 && args[0].trim().length() > 2) {
+        if (args.length > 0 && args[0].trim().length() > 2) {
             players = server.matchPlayer(args[0].trim());
         }
 

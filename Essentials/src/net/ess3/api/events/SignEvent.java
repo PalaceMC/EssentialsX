@@ -15,9 +15,9 @@ import org.bukkit.event.HandlerList;
 public class SignEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
-    ISign sign;
-    EssentialsSign essSign;
-    IUser user;
+    final ISign sign;
+    final EssentialsSign essSign;
+    final IUser user;
 
     public SignEvent(final ISign sign, final EssentialsSign essSign, final IUser user) {
         super(!Bukkit.getServer().isPrimaryThread());

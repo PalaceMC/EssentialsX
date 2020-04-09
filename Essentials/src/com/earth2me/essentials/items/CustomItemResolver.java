@@ -10,6 +10,7 @@ import net.ess3.api.IItemDb;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings("unused")
 public class CustomItemResolver implements IItemDb.ItemResolver, IConf {
     private final EssentialsConf config;
     private final Essentials ess;

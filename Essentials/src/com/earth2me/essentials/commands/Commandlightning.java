@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandlightning extends EssentialsLoopCommand {
     int power = 5;
 
@@ -27,7 +27,7 @@ public class Commandlightning extends EssentialsLoopCommand {
         if (sender.isPlayer()) {
             User user = ess.getUser(sender.getPlayer());
             if ((args.length < 1 || !user.isAuthorized("essentials.lightning.others"))) {
-                user.getWorld().strikeLightning(user.getBase().getTargetBlock((Set<Material>) null, 600).getLocation());
+                user.getWorld().strikeLightning(user.getBase().getTargetBlock(null, 600).getLocation());
                 return;
             }
         }
