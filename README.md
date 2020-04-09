@@ -1,9 +1,12 @@
 # THIS IS A CUSTOM BUILD
 
-> This includes very minor tweaks to the [EssentialsX plugin](https://essentialsx.github.io).
-> Please use the actual plugin instead of this version, unless you know what you are doing and understand the changes made.
+> This includes **MAJOR** changes to the [EssentialsX plugin](https://essentialsx.github.io). Some features act differently and others are completely removed.
+>
+> Please use the actual plugin instead of this version, unless you're trying to copy me ;)
 
-[![Build Status](https://travis-ci.com/almic/EssentialsX.svg?branch=2.x)](https://travis-ci.com/almic/EssentialsX)
+![Build EssentialsX](https://github.com/almic/EssentialsX/workflows/Build%20EssentialsX/badge.svg)
+
+# ORIGINAL README.MD
 
 [![EssentialsX](https://i.imgur.com/CP4SZpB.png)](https://essentialsx.github.io)
 
