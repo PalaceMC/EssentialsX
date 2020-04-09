@@ -108,7 +108,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     private boolean isPermSetCheck(final String node) {
-        if (base instanceof OfflinePlayer) {
+        if (!base.isOnline()) {
             return false;
         }
 

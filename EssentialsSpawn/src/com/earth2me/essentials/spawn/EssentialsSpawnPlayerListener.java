@@ -1,7 +1,6 @@
 package com.earth2me.essentials.spawn;
 
 import com.earth2me.essentials.Kit;
-import com.earth2me.essentials.OfflinePlayer;
 import com.earth2me.essentials.User;
 import io.papermc.lib.PaperLib;
 import net.ess3.api.IEssentials;
@@ -118,7 +117,7 @@ class EssentialsSpawnPlayerListener implements Listener {
 
         @Override
         public void run() {
-            if (user.getBase() instanceof OfflinePlayer || !user.getBase().isOnline()) {
+            if (!user.getBase().isOnline()) {
                 return;
             }
 
