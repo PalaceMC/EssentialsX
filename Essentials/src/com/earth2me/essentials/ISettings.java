@@ -1,7 +1,7 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.IEssentialsCommand;
-import com.earth2me.essentials.signs.EssentialsSign;
+//import com.earth2me.essentials.signs.EssentialsSign;
 import com.earth2me.essentials.textreader.IText;
 
 import org.bukkit.ChatColor;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 
 public interface ISettings extends IConf {
-    boolean areSignsDisabled();
+    //boolean areSignsDisabled();
 
     IText getAnnounceNewPlayerFormat();
 
@@ -53,10 +53,6 @@ public interface ISettings extends IConf {
     int getDefaultStackSize();
 
     double getHealCooldown();
-
-    Set<String> getSocialSpyCommands();
-
-    boolean getSocialSpyListenMutedPlayers();
 
     Set<String> getMuteCommands();
 
@@ -144,7 +140,7 @@ public interface ISettings extends IConf {
 
     List<Material> itemSpawnBlacklist();
 
-    List<EssentialsSign> enabledSigns();
+    //List<EssentialsSign> enabledSigns();
 
     boolean permissionBasedItemSpawn();
 
@@ -228,7 +224,7 @@ public interface ISettings extends IConf {
 
     long getLoginAttackDelay();
 
-    int getSignUsePerSecond();
+    //int getSignUsePerSecond();
 
     double getMaxFlySpeed();
 
@@ -302,7 +298,7 @@ public interface ISettings extends IConf {
 
     NumberFormat getCurrencyFormat();
 
-    List<EssentialsSign> getUnprotectedSignNames();
+    //List<EssentialsSign> getUnprotectedSignNames();
 
     boolean isPastebinCreateKit();
 
@@ -332,7 +328,7 @@ public interface ISettings extends IConf {
 
     boolean isForceEnableRecipe();
 
-    boolean allowOldIdSigns();
+    //boolean allowOldIdSigns();
 
     boolean isWaterSafe();
   

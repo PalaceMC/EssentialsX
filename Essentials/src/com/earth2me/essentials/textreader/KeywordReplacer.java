@@ -136,11 +136,6 @@ public class KeywordReplacer implements IText {
                             replacer = NumberUtil.displayCurrency(user.getMoney(), ess);
                         }
                         break;
-                    case MAILS:
-                        if (user != null) {
-                            replacer = Integer.toString(user.getMails().size());
-                        }
-                        break;
                     case WORLD:
                     case WORLDNAME:
                         if (user != null) {

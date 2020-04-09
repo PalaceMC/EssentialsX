@@ -25,9 +25,19 @@ import java.util.Set;
 
 import static com.earth2me.essentials.I18n.tl;
 
+/**
+ * ========= WARNING =========
+ *
+ * Until I can find a better sign plugin,
+ * I'm just gonna leave all this code sitting
+ * here. All it's uses have been commented
+ * out, but just in case I decide Essentials
+ * is good enough for signs, it's gonna stay.
+ *
+ */
 
 public class EssentialsSign {
-    private static final Set<Material> EMPTY_SET = new HashSet<Material>();
+    private static final Set<Material> EMPTY_SET = new HashSet<>();
     protected static final BigDecimal MINTRANSACTION = new BigDecimal("0.01");
     protected transient final String signName;
 
@@ -98,7 +108,8 @@ public class EssentialsSign {
     }
 
     protected final boolean onSignInteract(final Block block, final Player player, final IEssentials ess) {
-        final ISign sign = new BlockSign(block);
+        return false;
+        /*final ISign sign = new BlockSign(block);
         final User user = ess.getUser(player);
         if (user.checkSignThrottle()) {
             return false;
@@ -118,7 +129,7 @@ public class EssentialsSign {
         } catch (Exception ex) {
             showError(ess, user.getSource(), ex, signName);
             return false;
-        }
+        }*/
     }
 
     protected final boolean onSignBreak(final Block block, final Player player, final IEssentials ess) throws MaxMoneyException {
@@ -232,7 +243,7 @@ public class EssentialsSign {
     }
 
     public static boolean isValidSign(final IEssentials ess, final ISign sign) {
-        if (!sign.getLine(0).matches("§1\\[.*\\]"))
+        /*if (!sign.getLine(0).matches("§1\\[.*\\]"))
             return false;
 
         // Validate that the sign is actually an essentials sign
@@ -240,7 +251,7 @@ public class EssentialsSign {
         for (EssentialsSign essSign : ess.getSettings().enabledSigns()) {
             if (essSign.getName().equalsIgnoreCase(signName))
                 return true;
-        }
+        }*/
 
         return false;
     }
@@ -346,7 +357,8 @@ public class EssentialsSign {
     }
 
     protected final ItemStack getItemStack(final String itemName, final int quantity, final boolean allowId, final IEssentials ess) throws SignException {
-        if (allowId && ess.getSettings().allowOldIdSigns()) {
+        //noinspection PointlessBooleanExpression,ConstantConditions
+        if (allowId && false /*ess.getSettings().allowOldIdSigns()*/) {
             final Material newMaterial = ess.getItemDb().getFromLegacy(itemName);
             if (newMaterial != null) {
                 return new ItemStack(newMaterial, quantity);

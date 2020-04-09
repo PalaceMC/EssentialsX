@@ -25,9 +25,9 @@ import com.earth2me.essentials.items.LegacyItemDb;
 import com.earth2me.essentials.metrics.Metrics;
 import com.earth2me.essentials.perm.PermissionsHandler;
 import com.earth2me.essentials.register.payment.Methods;
-import com.earth2me.essentials.signs.SignBlockListener;
-import com.earth2me.essentials.signs.SignEntityListener;
-import com.earth2me.essentials.signs.SignPlayerListener;
+//import com.earth2me.essentials.signs.SignBlockListener;
+//import com.earth2me.essentials.signs.SignEntityListener;
+//import com.earth2me.essentials.signs.SignPlayerListener;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
@@ -332,14 +332,14 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         final EssentialsBlockListener blockListener = new EssentialsBlockListener(this);
         pm.registerEvents(blockListener, this);
 
-        final SignBlockListener signBlockListener = new SignBlockListener(this);
-        pm.registerEvents(signBlockListener, this);
+        //final SignBlockListener signBlockListener = new SignBlockListener(this);
+        //pm.registerEvents(signBlockListener, this);
 
-        final SignPlayerListener signPlayerListener = new SignPlayerListener(this);
-        pm.registerEvents(signPlayerListener, this);
+        //final SignPlayerListener signPlayerListener = new SignPlayerListener(this);
+        //pm.registerEvents(signPlayerListener, this);
 
-        final SignEntityListener signEntityListener = new SignEntityListener(this);
-        pm.registerEvents(signEntityListener, this);
+        //final SignEntityListener signEntityListener = new SignEntityListener(this);
+        //pm.registerEvents(signEntityListener, this);
 
         final EssentialsEntityListener entityListener = new EssentialsEntityListener(this);
         pm.registerEvents(entityListener, this);
@@ -512,11 +512,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             }
 
             CommandSource sender = new CommandSource(cSender);
-
-            // New mail notification
-            if (user != null && !getSettings().isCommandDisabled("mail") && !command.getName().equals("mail") && user.isAuthorized("essentials.mail")) {
-                user.notifyOfMail();
-            }
 
             //Print version even if admin command is not available #easteregg
             if (commandLabel.equalsIgnoreCase("essversion")) {
@@ -718,7 +713,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             }
             user = new User(base, this);
         } else {
-            user.update(base);
+            user.setBase(base);
         }
         return user;
     }
@@ -786,7 +781,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
         for (Player player : players) {
             final User user = getUser(player);
-            if ((permission == null && (sender == null || !user.isIgnoredPlayer(sender))) || (permission != null && user.isAuthorized(permission))) {
+            if ((permission == null && sender == null) || (permission != null && user.isAuthorized(permission))) {
                 if (keywords) {
                     broadcast = new KeywordReplacer(broadcast, new CommandSource(player), this, false);
                 }

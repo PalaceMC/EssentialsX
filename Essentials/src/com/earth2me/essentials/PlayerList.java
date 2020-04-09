@@ -26,7 +26,6 @@ public class PlayerList {
             if (user.isHidden()) {
                 groupString.append(tl("listHiddenTag"));
             }
-            user.setDisplayNick();
             groupString.append(user.getDisplayName());
             if (ess.getSettings().realNamesOnList() && !ChatColor.stripColor(user.getDisplayName()).equals(user.getName())) {
                 groupString.append(" (").append(user.getName()).append(")");

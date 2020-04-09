@@ -2,8 +2,8 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.api.IItemDb;
 import com.earth2me.essentials.commands.IEssentialsCommand;
-import com.earth2me.essentials.signs.EssentialsSign;
-import com.earth2me.essentials.signs.Signs;
+//import com.earth2me.essentials.signs.EssentialsSign;
+//import com.earth2me.essentials.signs.Signs;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.EnumUtil;
@@ -275,32 +275,6 @@ public class Settings implements net.ess3.api.ISettings {
         return BigDecimal.ZERO;
     }
 
-    private Set<String> socialSpyCommands = new HashSet<String>();
-
-    private Set<String> _getSocialSpyCommands() {
-        Set<String> socialspyCommands = new HashSet<String>();
-
-        if (config.isList("socialspy-commands")) {
-            for (String c : config.getStringList("socialspy-commands")) {
-                socialspyCommands.add(c.toLowerCase(Locale.ENGLISH));
-            }
-        } else {
-            socialspyCommands.addAll(Arrays.asList("msg", "r", "mail", "m", "whisper", "emsg", "t", "tell", "er", "reply", "ereply", "email", "action", "describe", "eme", "eaction", "edescribe", "etell", "ewhisper", "pm"));
-        }
-
-        return socialspyCommands;
-    }
-
-    @Override
-    public Set<String> getSocialSpyCommands() {
-        return socialSpyCommands;
-    }
-
-    @Override
-    public boolean getSocialSpyListenMutedPlayers() {
-        return config.getBoolean("socialspy-listen-muted-players", true);
-    }
-
     private Set<String> muteCommands = new HashSet<String>();
 
     private Set<String> _getMuteCommands() {
@@ -410,10 +384,10 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getInt("protect.creeper.max-height", -1);
     }
 
-    @Override
+    /*@Override
     public boolean areSignsDisabled() {
         return !signsEnabled;
-    }
+    }*/
 
     @Override
     public long getBackupInterval() {
@@ -500,7 +474,7 @@ public class Settings implements net.ess3.api.ISettings {
     public void reloadConfig() {
         config.load();
         noGodWorlds = new HashSet<String>(config.getStringList("no-god-in-worlds"));
-        enabledSigns = _getEnabledSigns();
+        //enabledSigns = _getEnabledSigns();
         teleportSafety = _isTeleportSafetyEnabled();
         forceDisableTeleportSafety = _isForceDisableTeleportSafety();
         teleportInvulnerabilityTime = _getTeleportInvulnerability();
@@ -515,7 +489,7 @@ public class Settings implements net.ess3.api.ISettings {
         isAfkListName = !afkListName.equalsIgnoreCase("none");
         itemSpawnBl = _getItemSpawnBlacklist();
         loginAttackDelay = _getLoginAttackDelay();
-        signUsePerSecond = _getSignUsePerSecond();
+        //signUsePerSecond = _getSignUsePerSecond();
         chatFormats.clear();
         changeDisplayName = _changeDisplayName();
         disabledCommands = getDisabledCommands();
@@ -531,7 +505,6 @@ public class Settings implements net.ess3.api.ISettings {
         chatShout = _getChatShout();
         chatQuestion = _getChatQuestion();
         commandCosts = _getCommandCosts();
-        socialSpyCommands = _getSocialSpyCommands();
         warnOnBuildDisallow = _warnOnBuildDisallow();
         mailsPerMinute = _getMailsPerMinute();
         maxMoney = _getMaxMoney();
@@ -551,14 +524,14 @@ public class Settings implements net.ess3.api.ISettings {
         commandCooldowns = _getCommandCooldowns();
         npcsInBalanceRanking = _isNpcsInBalanceRanking();
         currencyFormat = _getCurrencyFormat();
-        unprotectedSigns = _getUnprotectedSign();
+        //unprotectedSigns = _getUnprotectedSign();
         defaultEnabledConfirmCommands = _getDefaultEnabledConfirmCommands();
         teleportBackWhenFreedFromJail = _isTeleportBackWhenFreedFromJail();
         isCompassTowardsHomePerm = _isCompassTowardsHomePerm();
         isAllowWorldInBroadcastworld = _isAllowWorldInBroadcastworld();
         itemDbType = _getItemDbType();
         forceEnableRecipe = _isForceEnableRecipe();
-        allowOldIdSigns = _allowOldIdSigns();
+        //allowOldIdSigns = _allowOldIdSigns();
         isWaterSafe = _isWaterSafe();
         isSafeUsermap = _isSafeUsermap();
         logCommandBlockCommands = _logCommandBlockCommands();
@@ -599,7 +572,7 @@ public class Settings implements net.ess3.api.ISettings {
         return epItemSpwn;
     }
 
-    private List<EssentialsSign> enabledSigns = new ArrayList<EssentialsSign>();
+    /*private List<EssentialsSign> enabledSigns = new ArrayList<EssentialsSign>();
     private boolean signsEnabled = false;
 
     @Override
@@ -630,7 +603,7 @@ public class Settings implements net.ess3.api.ISettings {
             signsEnabled = true;
         }
         return newSigns;
-    }
+    }*/
 
     private boolean warnOnBuildDisallow;
 
@@ -1080,7 +1053,7 @@ public class Settings implements net.ess3.api.ISettings {
         return loginAttackDelay;
     }
 
-    private int signUsePerSecond;
+    /*private int signUsePerSecond;
 
     private int _getSignUsePerSecond() {
         final int perSec = config.getInt("sign-use-per-second", 4);
@@ -1090,7 +1063,7 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public int getSignUsePerSecond() {
         return signUsePerSecond;
-    }
+    }*/
 
     @Override
     public double getMaxFlySpeed() {
@@ -1426,7 +1399,7 @@ public class Settings implements net.ess3.api.ISettings {
         return this.currencyFormat;
     }
 
-    private List<EssentialsSign> unprotectedSigns = Collections.emptyList();
+    /*private List<EssentialsSign> unprotectedSigns = Collections.emptyList();
 
     @Override
     public List<EssentialsSign> getUnprotectedSignNames() {
@@ -1449,7 +1422,7 @@ public class Settings implements net.ess3.api.ISettings {
             }
         }
         return newSigns;
-    }
+    }*/
 
     @Override
     public boolean isPastebinCreateKit() {
@@ -1561,7 +1534,7 @@ public class Settings implements net.ess3.api.ISettings {
         return forceEnableRecipe;
     }
 
-    private boolean allowOldIdSigns;
+    /*private boolean allowOldIdSigns;
 
     private boolean _allowOldIdSigns() {
         return config.getBoolean("allow-old-id-signs", false);
@@ -1570,7 +1543,7 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean allowOldIdSigns() {
         return allowOldIdSigns;
-    }
+    }*/
 
     private boolean isWaterSafe;
 

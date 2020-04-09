@@ -31,7 +31,7 @@ public interface IUser {
 
     void giveMoney(final BigDecimal value, final CommandSource initiator) throws MaxMoneyException;
 
-    void payUser(final User reciever, final BigDecimal value) throws Exception;
+    void payUser(final User receiver, final BigDecimal value) throws Exception;
 
     void takeMoney(BigDecimal value);
 
@@ -70,8 +70,6 @@ public interface IUser {
      * supported plugins. Use isVanished() if you want to check if a user is vanished by Essentials.
      *
      * @return If the user is hidden or not
-     *
-     * @see isVanished
      */
     boolean isHidden();
 
@@ -99,8 +97,6 @@ public interface IUser {
      * plugin.
      *
      * @return If the user is vanished or not
-     *
-     * @see isHidden
      */
     boolean isVanished();
 
@@ -137,15 +133,7 @@ public interface IUser {
 
     void setJail(String jail);
 
-    List<String> getMails();
-
-    void addMail(String mail);
-
     boolean isAfk();
-
-    void setIgnoreMsg(boolean ignoreMsg);
-
-    boolean isIgnoreMsg();
 
     void setConfigProperty(String node, Object object);
 
@@ -189,10 +177,6 @@ public interface IUser {
     boolean isPromptingClearConfirm();
     
     void setPromptingClearConfirm(boolean prompt);
-
-    boolean isLastMessageReplyRecipient();
-
-    void setLastMessageReplyRecipient(boolean enabled);
 
     Map<User, BigDecimal> getConfirmingPayments();
 }

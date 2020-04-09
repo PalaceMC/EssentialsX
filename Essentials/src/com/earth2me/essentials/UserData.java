@@ -21,17 +21,37 @@ import java.util.stream.Collectors;
 
 import static com.earth2me.essentials.I18n.tl;
 
+/**
+ * ========= WARNING ========
+ *
+ * I still use the "muted" interfaces here because, for now, essentials is handling the economy.
+ * And I do not want muted players being allowed to pay money to other players. If someone is
+ * abusing the economy, or suspected of doing so, the first thing we do is mute them to prevent
+ * them from sharing the secret or moving the money to another account.
+ *
+ * I would really like to have my own economy implementation, but that might not be entirely
+ * necessary. So for now, the mute functionality stays here and is only triggered by OUR mute
+ * command, to prevent the pay command from being used while muted.
+ *
+ * For personal preference reasons, no one is exempt from being ignored. Additionally, mods+ are not allowed to
+ * ignore anyone for any reason.
+ *
+ * Technically, WE (palace) handle ignores, but just to keep Essentials "in the loop," we manually call these
+ * ignore interfaces. Until such time that we replace all functionality in Essentials which uses it's own
+ * ignoring stuff, this has to stay.
+ *
+ */
 
-public abstract class UserData extends PlayerExtension implements IConf {
+public abstract class UserData extends PlayerExtension implements IConf, net.ess3.api.IUser {
     protected final transient IEssentials ess;
     private final EssentialsUserConf config;
-    private final File folder;
 
     protected UserData(Player base, IEssentials ess) {
         super(base);
         this.ess = ess;
-        folder = new File(ess.getDataFolder(), "userdata");
+        File folder = new File(ess.getDataFolder(), "userdata");
         if (!folder.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             folder.mkdirs();
         }
 
@@ -49,6 +69,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
 
     public final void reset() {
         config.forceSave();
+        //noinspection ResultOfMethodCallIgnored
         config.getFile().delete();
         if (config.username != null) {
             ess.getUserMap().removeUser(config.username);
@@ -70,7 +91,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
         lastTeleportTimestamp = _getLastTeleportTimestamp();
         lastHealTimestamp = _getLastHealTimestamp();
         jail = _getJail();
-        mails = _getMails();
         teleportEnabled = _getTeleportEnabled();
         godmode = _getGodModeEnabled();
         muted = _getMuted();
@@ -83,11 +103,9 @@ public abstract class UserData extends PlayerExtension implements IConf {
         lastLoginAddress = _getLastLoginAddress();
         afk = _getAfk();
         geolocation = _getGeoLocation();
-        isSocialSpyEnabled = _isSocialSpyEnabled();
         isNPC = _isNPC();
         arePowerToolsEnabled = _arePowerToolsEnabled();
         kitTimestamps = _getKitTimestamps();
-        nickname = _getNickname();
         ignoredPlayers = _getIgnoredPlayers();
         logoutLocation = _getLogoutLocation();
         lastAccountName = _getLastAccountName();
@@ -95,7 +113,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
         acceptingPay = _getAcceptingPay();
         confirmPay = _getConfirmPay();
         confirmClear = _getConfirmClear();
-        lastMessageReplyRecipient = _getLastMessageReplyRecipient();
     }
 
     private BigDecimal money;
@@ -217,22 +234,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
 
     public boolean hasHome() {
         return config.hasProperty("home");
-    }
-
-    private String nickname;
-
-    public String _getNickname() {
-        return config.getString("nickname");
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nick) {
-        nickname = nick;
-        config.setProperty("nickname", nick);
-        config.save();
     }
 
     private Set<Material> unlimited;
@@ -412,32 +413,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
             config.setProperty("jail", jail);
         }
         config.save();
-    }
-
-    private List<String> mails;
-
-    private List<String> _getMails() {
-        return config.getStringList("mail");
-    }
-
-    public List<String> getMails() {
-        return mails;
-    }
-
-    public void setMails(List<String> mails) {
-        if (mails == null) {
-            config.removeProperty("mail");
-            mails = _getMails();
-        } else {
-            config.setProperty("mail", mails);
-        }
-        this.mails = mails;
-        config.save();
-    }
-
-    public void addMail(String mail) {
-        mails.add(mail);
-        setMails(mails);
     }
 
     private boolean teleportEnabled;
@@ -718,22 +693,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
         config.save();
     }
 
-    private boolean isSocialSpyEnabled;
-
-    private boolean _isSocialSpyEnabled() {
-        return config.getBoolean("socialspy", false);
-    }
-
-    public boolean isSocialSpyEnabled() {
-        return isSocialSpyEnabled;
-    }
-
-    public void setSocialSpyEnabled(boolean status) {
-        isSocialSpyEnabled = status;
-        config.setProperty("socialspy", status);
-        config.save();
-    }
-
     private boolean isNPC;
 
     private boolean _isNPC() {
@@ -989,22 +948,6 @@ public abstract class UserData extends PlayerExtension implements IConf {
     public void setPromptingClearConfirm(boolean prompt) {
         this.confirmClear = prompt;
         config.setProperty("confirm-clear", prompt);
-        save();
-    }
-
-    private boolean lastMessageReplyRecipient;
-
-    private boolean _getLastMessageReplyRecipient() {
-        return config.getBoolean("last-message-reply-recipient", ess.getSettings().isLastMessageReplyRecipient());
-    }
-
-    public boolean isLastMessageReplyRecipient() {
-        return this.lastMessageReplyRecipient;
-    }
-
-    public void setLastMessageReplyRecipient(boolean enabled) {
-        this.lastMessageReplyRecipient = enabled;
-        config.setProperty("last-message-reply-recipient", enabled);
         save();
     }
 

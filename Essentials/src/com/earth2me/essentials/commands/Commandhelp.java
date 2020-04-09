@@ -39,7 +39,6 @@ public class Commandhelp extends EssentialsCommand {
             }
             chapterPageStr = null;
         } else {
-            user.setDisplayNick();
             output = new KeywordReplacer(input, user.getSource(), ess);
         }
         final TextPager pager = new TextPager(output);

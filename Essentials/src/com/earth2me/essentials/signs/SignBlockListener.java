@@ -29,7 +29,7 @@ public class SignBlockListener implements Listener {
         this.ess = ess;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    /*@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSignBlockBreak(final BlockBreakEvent event) {
         if (ess.getSettings().areSignsDisabled()) {
             event.getHandlers().unregister(this);
@@ -243,5 +243,5 @@ public class SignBlockListener implements Listener {
                 }
             }
         }
-    }
+    }*/
 }

@@ -1,7 +1,6 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.messaging.IMessageRecipient;
-import com.earth2me.essentials.messaging.SimpleMessageRecipient;
 
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -12,7 +11,6 @@ public final class Console implements IMessageRecipient {
     private static Console instance; // Set in essentials
     
     private final IEssentials ess;
-    private final IMessageRecipient messageRecipient;
 
     public static Console getInstance() {
         return instance;
@@ -32,7 +30,6 @@ public final class Console implements IMessageRecipient {
 
     private Console(IEssentials ess) {
         this.ess = ess;
-        this.messageRecipient = new SimpleMessageRecipient(ess, this);
     }
 
     public CommandSender getCommandSender() {
@@ -43,35 +40,11 @@ public final class Console implements IMessageRecipient {
         return Console.NAME;
     }
 
-    @Override public String getDisplayName() {
-        return Console.NAME;
-    }
-
     @Override public void sendMessage(String message) {
         getCommandSender().sendMessage(message);
     }
 
     @Override public boolean isReachable() {
         return true;
-    }
-    
-    /* ================================
-     * >> DELEGATE METHODS
-     * ================================ */
-
-    @Override public MessageResponse sendMessage(IMessageRecipient recipient, String message) {
-        return this.messageRecipient.sendMessage(recipient, message);
-    }
-
-    @Override public MessageResponse onReceiveMessage(IMessageRecipient sender, String message) {
-        return this.messageRecipient.onReceiveMessage(sender, message);
-    }
-
-    @Override public IMessageRecipient getReplyRecipient() {
-        return this.messageRecipient.getReplyRecipient();
-    }
-
-    @Override public void setReplyRecipient(IMessageRecipient recipient) {
-        this.messageRecipient.setReplyRecipient(recipient);
     }
 }

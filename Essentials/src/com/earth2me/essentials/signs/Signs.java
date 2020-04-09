@@ -11,7 +11,6 @@ public enum Signs {
     HEAL(new SignHeal()),
     INFO(new SignInfo()),
     KIT(new SignKit()),
-    MAIL(new SignMail()),
     PROTECTION(new SignProtection()),
     REPAIR(new SignRepair()),
     SELL(new SignSell()),

@@ -86,7 +86,6 @@ public class EssentialsPlayerListener implements Listener {
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
         final User user = ess.getUser(event.getPlayer());
         updateCompass(user);
-        user.setDisplayNick();
 
         if (ess.getSettings().isTeleportInvulnerability()) {
             user.enableInvulnerabilityAfterTeleport();
@@ -120,7 +119,6 @@ public class EssentialsPlayerListener implements Listener {
         }
 
         user.updateActivityOnInteract(true);
-        user.setDisplayNick();
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -252,7 +250,6 @@ public class EssentialsPlayerListener implements Listener {
 
                 user.setLastAccountName(user.getBase().getName());
                 user.setLastLogin(currentTime);
-                user.setDisplayNick();
                 updateCompass(user);
 
                 if (!ess.getVanishedPlayersNew().isEmpty() && !user.isAuthorized("essentials.vanish.see")) {
@@ -298,17 +295,6 @@ public class EssentialsPlayerListener implements Listener {
                     motdTask.run();
                 }
 
-                if (!ess.getSettings().isCommandDisabled("mail") && user.isAuthorized("essentials.mail")) {
-                    final List<String> mail = user.getMails();
-                    if (mail.isEmpty()) {
-                        if (ess.getSettings().isNotifyNoNewMail()) {
-                            user.sendMessage(tl("noNewMail")); // Only notify if they want us to.
-                        }
-                    } else {
-                        user.notifyOfMail();
-                    }
-                }
-
                 if (user.isAuthorized("essentials.fly.safelogin")) {
                     user.getBase().setFallDistance(0);
                     if (LocationUtil.shouldFly(user.getLocation())) {
@@ -323,11 +309,6 @@ public class EssentialsPlayerListener implements Listener {
                 if (!user.isAuthorized("essentials.speed")) {
                     user.getBase().setFlySpeed(0.1f);
                     user.getBase().setWalkSpeed(0.2f);
-                }
-
-                if (user.isSocialSpyEnabled() && !user.isAuthorized("essentials.socialspy")) {
-                    user.setSocialSpyEnabled(false);
-                    ess.getLogger().log(Level.INFO, "Set socialspy to false for {0} because they had it enabled without permission.", user.getName());
                 }
 
                 if (user.isGodModeEnabled() && !user.isAuthorized("essentials.god")) {
@@ -475,24 +456,6 @@ public class EssentialsPlayerListener implements Listener {
 
         PluginCommand pluginCommand = ess.getServer().getPluginCommand(cmd);
 
-        if (ess.getSettings().getSocialSpyCommands().contains(cmd) || ess.getSettings().getSocialSpyCommands().contains("*")) {
-            if (pluginCommand == null
-                    || (!pluginCommand.getName().equals("msg") && !pluginCommand.getName().equals("r"))) { // /msg and /r are handled in SimpleMessageRecipient
-                User user = ess.getUser(player);
-                if (!user.isAuthorized("essentials.chat.spy.exempt")) {
-                    for (User spyer : ess.getOnlineUsers()) {
-                        if (spyer.isSocialSpyEnabled() && !player.equals(spyer.getBase())) {
-                            if (user.isMuted() && ess.getSettings().getSocialSpyListenMutedPlayers()) {
-                                spyer.sendMessage(tl("socialSpyMutedPrefix") + player.getDisplayName() + ": " + event.getMessage());
-                            } else {
-                                spyer.sendMessage(tl("socialSpyPrefix") + player.getDisplayName() + ": " + event.getMessage());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         if (ess.getUser(player).isMuted() && (ess.getSettings().getMuteCommands().contains(cmd) || ess.getSettings().getMuteCommands().contains("*"))) {
             event.setCancelled(true);
             player.sendMessage(tl("voiceSilenced"));
@@ -592,7 +555,6 @@ public class EssentialsPlayerListener implements Listener {
     public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
         final User user = ess.getUser(event.getPlayer());
         final String newWorld = event.getPlayer().getLocation().getWorld().getName();
-        user.setDisplayNick();
         updateCompass(user);
         if (ess.getSettings().getNoGodWorlds().contains(newWorld) && user.isGodModeEnabledRaw()) {
             // Player god mode is never disabled in order to retain it when changing worlds once more.

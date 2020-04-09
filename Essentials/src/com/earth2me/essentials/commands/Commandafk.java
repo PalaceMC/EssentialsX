@@ -54,7 +54,6 @@ public class Commandafk extends EssentialsCommand {
                 throw new Exception(tl("noPermToAFKMessage"));
             }
         }
-        user.setDisplayNick();
         String msg = "";
         if (!user.toggleAfk(AfkStatusChangeEvent.Cause.COMMAND)) {
             //user.sendMessage(_("markedAsNotAway"));
@@ -76,7 +75,6 @@ public class Commandafk extends EssentialsCommand {
         if (!msg.isEmpty()) {
             ess.broadcastMessage(user, msg);
         }
-        user.setDisplayNick(); // Set this again after toggling
     }
 
     @Override
