@@ -114,6 +114,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public void onEnable() {
+
+        saveDefaultConfig();
+
         try {
             if (LOGGER != this.getLogger()) {
                 LOGGER.setParent(this.getLogger());
@@ -449,12 +452,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             }
 
             CommandSource sender = new CommandSource(cSender);
-
-            //Print version even if admin command is not available #easteregg
-            if (commandLabel.equalsIgnoreCase("essversion")) {
-                sender.sendMessage("This server is running Essentials " + getDescription().getVersion());
-                return true;
-            }
 
             // Check for disabled commands
             if (getSettings().isCommandDisabled(commandLabel)) {

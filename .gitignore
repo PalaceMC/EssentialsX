@@ -16,6 +16,7 @@
 # Build files
 target/
 jars/
+out/
 
 # Holy shit guys why is all this crap in my directory now, I just wanted the CraftBukkit jars lmfao
 apache-maven-3.6.0/
