@@ -14,7 +14,10 @@ public class EssentialsTimer implements Runnable {
     private final LinkedList<Double> history = new LinkedList<>();
     private int skip1 = 0;
     private int skip2 = 0;
+
+    @SuppressWarnings("FieldCanBeLocal")
     private final long maxTime = 10 * 1000000;
+    @SuppressWarnings("FieldCanBeLocal")
     private final long tickInterval = 50;
 
     EssentialsTimer(final IEssentials ess) {

@@ -13,6 +13,19 @@ import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
+/**
+ * ========= WARNING ========
+ *
+ * I still use the "muted" interfaces here because, for now, essentials is handling the economy.
+ * And I do not want muted players being allowed to pay money to other players. If someone is
+ * abusing the economy, or suspected of doing so, the first thing we do is mute them to prevent
+ * them from sharing the secret or moving the money to another account.
+ *
+ * I would really like to have my own economy implementation, but that might not be entirely
+ * necessary. So for now, the mute functionality stays here and is only triggered by OUR mute
+ * command, to prevent the pay command from being used while muted.
+ *
+ */
 
 public class Commandmute extends EssentialsCommand {
     public Commandmute() {

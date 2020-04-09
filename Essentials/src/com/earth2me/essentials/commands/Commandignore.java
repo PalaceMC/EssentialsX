@@ -8,6 +8,14 @@ import java.util.List;
 
 import static com.earth2me.essentials.I18n.tl;
 
+/**
+ * For personal preference reasons, no one is exempt from being ignored. Additionally, mods+ are not allowed to
+ * ignore anyone for any reason.
+ *
+ * Technically, WE (palace) handle ignores, but just to keep Essentials "in the loop," we manually call these
+ * ignore interfaces. Until such time that we replace all functionality in Essentials which uses it's own
+ * ignoring stuff, this has to stay.
+ */
 
 public class Commandignore extends EssentialsCommand {
     public Commandignore() {
