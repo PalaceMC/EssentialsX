@@ -6,10 +6,10 @@ import org.bukkit.event.Cancellable;
 
 
 /**
- * This handles common boilerplate for other StatusChangeEvents
+ * This handles common boilerplate for events for changes in state that are boolean (true/false).
  */
-public class StatusChangeEvent extends StateChangeEvent implements Cancellable {
-    private final boolean newValue;
+public abstract class StatusChangeEvent extends StateChangeEvent implements Cancellable {
+    private boolean newValue;
 
     public StatusChangeEvent(IUser affected, IUser controller, boolean value) {
         this(!Bukkit.getServer().isPrimaryThread(), affected, controller, value);
