@@ -480,11 +480,11 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         if (user == null || !user.getBase().isOnline()) {
             return false;
         }
-        return isIgnoredPlayer(user.getBase().getUniqueId());
+        return isIgnoredPlayer(user);
     }
 
-    public boolean isIgnoredPlayer(UUID uuid) {
-        return ignoredUUIDs.contains(uuid);
+    public boolean isIgnoredPlayer(IUser user) {
+        return ignoredUUIDs.contains(user.getBase().getUniqueId());
     }
 
     public void setIgnoredPlayer(UUID uuid, boolean set) {

@@ -704,7 +704,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
         for (Player player : players) {
             final User user = getUser(player);
-            if ((permission == null && (sender == null || !user.isIgnoredPlayer(sender.getBase().getUniqueId()))) || (permission != null && user.isAuthorized(permission))) {
+            if ((permission == null && (sender == null || !user.isIgnoredPlayer(sender))) || (permission != null && user.isAuthorized(permission))) {
                 if (keywords) {
                     broadcast = new KeywordReplacer(broadcast, new CommandSource(player), this, false);
                 }

@@ -45,7 +45,7 @@ public class Commandignore extends EssentialsCommand {
             if (player == null) {
                 throw new PlayerNotFoundException();
             }
-            if (user.isIgnoredPlayer(player.getBase().getUniqueId())) {
+            if (user.isIgnoredPlayer(player)) {
                 user.setIgnoredPlayer(player.getBase().getUniqueId(), false);
                 user.sendMessage(tl("unignorePlayer", player.getName()));
             } else {
