@@ -5,6 +5,7 @@ import org.bukkit.Server;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -27,8 +28,10 @@ public class Commandignore extends EssentialsCommand {
     protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
         if (args.length < 1) {
             StringBuilder sb = new StringBuilder();
-            for (String s : user._getIgnoredPlayers()) {
-                sb.append(s).append(" ");
+            for (UUID uuid : user._getIgnoredPlayers()) {
+                User u = ess.getUser(uuid);
+                if (u != null)
+                    sb.append(u.getName()).append(" ");
             }
             String ignoredList = sb.toString().trim();
             user.sendMessage(ignoredList.length() > 0 ? tl("ignoredList", ignoredList) : tl("noIgnored"));
@@ -42,11 +45,11 @@ public class Commandignore extends EssentialsCommand {
             if (player == null) {
                 throw new PlayerNotFoundException();
             }
-            if (user.isIgnoredPlayer(player)) {
-                user.setIgnoredPlayer(player, false);
+            if (user.isIgnoredPlayer(player.getBase().getUniqueId())) {
+                user.setIgnoredPlayer(player.getBase().getUniqueId(), false);
                 user.sendMessage(tl("unignorePlayer", player.getName()));
             } else {
-                user.setIgnoredPlayer(player, true);
+                user.setIgnoredPlayer(player.getBase().getUniqueId(), true);
                 user.sendMessage(tl("ignorePlayer", player.getName()));
             }
         }

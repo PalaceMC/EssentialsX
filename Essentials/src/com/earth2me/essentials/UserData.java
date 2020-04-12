@@ -106,7 +106,7 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         isNPC = _isNPC();
         arePowerToolsEnabled = _arePowerToolsEnabled();
         kitTimestamps = _getKitTimestamps();
-        ignoredPlayers = _getIgnoredPlayers();
+        ignoredUUIDs = _getIgnoredPlayers();
         logoutLocation = _getLogoutLocation();
         lastAccountName = _getLastAccountName();
         commandCooldowns = _getCommandCooldowns();
@@ -450,19 +450,26 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         config.save();
     }
 
-    private List<String> ignoredPlayers;
+    private List<UUID> ignoredUUIDs;
 
-    public List<String> _getIgnoredPlayers() {
-        return Collections.synchronizedList(config.getStringList("ignore"));
+    public List<UUID> _getIgnoredPlayers() {
+        List<String> uuidStrings = config.getStringList("ignore");
+        List<UUID> uuidList = new ArrayList<>();
+        for (String s : uuidStrings)
+            uuidList.add(UUID.fromString(s));
+        return Collections.synchronizedList(uuidList);
     }
 
-    public void setIgnoredPlayers(List<String> players) {
-        if (players == null || players.isEmpty()) {
-            ignoredPlayers = Collections.synchronizedList(new ArrayList<>());
+    public void setIgnoredPlayers(List<UUID> uuidList) {
+        if (uuidList == null || uuidList.isEmpty()) {
+            ignoredUUIDs = Collections.synchronizedList(new ArrayList<>());
             config.removeProperty("ignore");
         } else {
-            ignoredPlayers = players;
-            config.setProperty("ignore", players);
+            ignoredUUIDs = Collections.synchronizedList(new ArrayList<>(uuidList));
+            List<String> uuidStrings = new ArrayList<>();
+            for (UUID uuid : uuidList)
+                uuidStrings.add(uuid.toString());
+            config.setProperty("ignore", uuidStrings);
         }
         config.save();
     }
@@ -473,21 +480,20 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         if (user == null || !user.getBase().isOnline()) {
             return false;
         }
-        return isIgnoredPlayer(user);
+        return isIgnoredPlayer(user.getBase().getUniqueId());
     }
 
-    public boolean isIgnoredPlayer(IUser user) {
-        return ignoredPlayers.contains(user.getName().toLowerCase(Locale.ENGLISH));
+    public boolean isIgnoredPlayer(UUID uuid) {
+        return ignoredUUIDs.contains(uuid);
     }
 
-    public void setIgnoredPlayer(IUser user, boolean set) {
-        final String entry = user.getName().toLowerCase(Locale.ENGLISH);
+    public void setIgnoredPlayer(UUID uuid, boolean set) {
         if (set) {
-            if (!ignoredPlayers.contains(entry)) ignoredPlayers.add(entry);
+            if (!ignoredUUIDs.contains(uuid)) ignoredUUIDs.add(uuid);
         } else {
-            ignoredPlayers.remove(entry);
+            ignoredUUIDs.remove(uuid);
         }
-        setIgnoredPlayers(ignoredPlayers);
+        setIgnoredPlayers(ignoredUUIDs);
     }
 
     private boolean godmode;
