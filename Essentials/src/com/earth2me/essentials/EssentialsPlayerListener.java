@@ -40,6 +40,9 @@ import java.util.regex.Pattern;
 
 import static com.earth2me.essentials.I18n.tl;
 
+/**
+ * TODO: This file needs a lot of work, some things should be moved to the proxy, our server plugin, or just simply removed completely.
+ */
 
 @SuppressWarnings("deprecation")
 public class EssentialsPlayerListener implements Listener {
@@ -351,6 +354,9 @@ public class EssentialsPlayerListener implements Listener {
         }
     }
 
+    /**
+     * check this
+     */
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerLoginBanned(final PlayerLoginEvent event) {
         if (event.getResult() == Result.KICK_BANNED) {
@@ -372,6 +378,9 @@ public class EssentialsPlayerListener implements Listener {
         }
     }
 
+    /**
+     * check this
+     */
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerLogin(final PlayerLoginEvent event) {
         if (event.getResult() == Result.KICK_FULL) {
