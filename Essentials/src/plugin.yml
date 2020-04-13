@@ -212,10 +212,6 @@ commands:
     description: The power of Thor. Strike at cursor or player.
     usage: /<command> [player] [power]
     aliases: [smite, strike]
-  list:
-    description: List all online players.
-    usage: /<command> [group]
-    aliases: [online, playerlist, plist]
   more:
     description: Fills the item stack in hand to maximum size.
     usage: /<command>
@@ -274,10 +270,6 @@ commands:
   rules:
     description: Views the server rules.
     usage: /<command> [chapter] [page]
-  seen:
-    description: Shows the last logout time of a player.
-    usage: /<command> <playername>
-    aliases: [eseen]
   sell:
     description: Sells the item currently in your hand.
     usage: /<command> <<itemname>|<id>|hand|inventory|blocks> [-][amount]
