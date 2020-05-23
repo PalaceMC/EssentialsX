@@ -26,22 +26,9 @@ public class EssentialsServerListener implements Listener {
     private boolean unsupportedLogged = false;
     private boolean npeWarned = false;
     private final boolean isPaperSample;
-    private Method setSampleText;
-    private Method getSampleText;
 
     public EssentialsServerListener(final IEssentials ess) {
         this.ess = ess;
-
-        if (ReflUtil.getClassCached("com.destroystokyo.paper.event.server.PaperServerListPingEvent") == null) {
-            // This workaround is only necessary for older Paper builds
-            setSampleText = ReflUtil.getMethodCached(ServerListPingEvent.class, "setSampleText", List.class);
-            getSampleText = ReflUtil.getMethodCached(ServerListPingEvent.class, "getSampleText");
-            if (setSampleText != null && getSampleText != null) {
-                ess.getLogger().info("ServerListPingEvent: Paper 1.12.2 setSampleText API");
-                isPaperSample = true;
-                return;
-            }
-        }
 
         ess.getLogger().info("ServerListPingEvent: Spigot iterator API");
         isPaperSample = false;
@@ -49,40 +36,18 @@ public class EssentialsServerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onServerListPing(final ServerListPingEvent event) throws Exception {
-        if (isPaperSample) {
-            try {
-                List<String> playerNames = (List<String>) getSampleText.invoke(event, null);
-                playerNames.removeIf(player -> ess.getUser(player).isVanished());
-                setSampleText.invoke(event, playerNames);
-            } catch (IllegalAccessException | InvocationTargetException | ClassCastException e) {
-                if (!unsupportedLogged && shouldWarnSLPECaller(e)) {
-                    ess.getLogger().log(Level.WARNING, "Unable to hide players from server list ping "
-                            + "using Paper 1.12 method!", e);
-                    unsupportedLogged = true;
-                }
-            } catch (NullPointerException e) {
-                if (!npeWarned && shouldWarnSLPECaller(e)) {
-                    npeWarned = true;
-                    Exception ex = new Exception("A plugin has fired a ServerListPingEvent "
-                            + "without implementing Paper's methods. Point the author to https://git.io/v7Xzl.");
-                    ex.setStackTrace(e.getStackTrace());
-                    throw ex;
+        try {
+            Iterator<Player> iterator = event.iterator();
+            while (iterator.hasNext()) {
+                Player player = iterator.next();
+                if (ess.getUser(player).isVanished()) {
+                    iterator.remove();
                 }
             }
-        } else {
-            try {
-                Iterator<Player> iterator = event.iterator();
-                while (iterator.hasNext()) {
-                    Player player = iterator.next();
-                    if (ess.getUser(player).isVanished()) {
-                        iterator.remove();
-                    }
-                }
-            } catch (UnsupportedOperationException e) {
-                if (!unsupportedLogged && shouldWarnSLPECaller(e)) {
-                    ess.getLogger().log(Level.WARNING, "Could not hide vanished players while handling " + event.getClass().getName(), e);
-                    unsupportedLogged = true;
-                }
+        } catch (UnsupportedOperationException e) {
+            if (!unsupportedLogged && shouldWarnSLPECaller(e)) {
+                ess.getLogger().log(Level.WARNING, "Could not hide vanished players while handling " + event.getClass().getName(), e);
+                unsupportedLogged = true;
             }
         }
     }

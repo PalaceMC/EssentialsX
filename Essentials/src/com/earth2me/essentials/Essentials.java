@@ -46,15 +46,8 @@ import net.ess3.nms.PotionMetaProvider;
 import net.ess3.nms.SpawnEggProvider;
 import net.ess3.nms.SpawnerProvider;
 import net.ess3.nms.flattened.FlatSpawnEggProvider;
-import net.ess3.nms.legacy.LegacyPotionMetaProvider;
-import net.ess3.nms.legacy.LegacySpawnEggProvider;
-import net.ess3.nms.legacy.LegacySpawnerProvider;
-import net.ess3.nms.refl.ReflSpawnEggProvider;
 import net.ess3.nms.updatedmeta.BasePotionDataProvider;
 import net.ess3.nms.updatedmeta.BlockMetaSpawnerProvider;
-import net.ess3.nms.v1_8_R1.v1_8_R1SpawnerProvider;
-import net.ess3.nms.v1_8_R2.v1_8_R2SpawnerProvider;
-import net.ess3.providers.ProviderFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -102,9 +95,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient EssentialsTimer timer;
     private final transient Set<String> vanishedPlayers = new LinkedHashSet<>();
     private transient Method oldGetOnlinePlayers;
-    private transient SpawnerProvider spawnerProvider;
-    private transient SpawnEggProvider spawnEggProvider;
-    private transient PotionMetaProvider potionMetaProvider;
+    private transient SpawnerProvider spawnerProvider = new BlockMetaSpawnerProvider();
+    private transient SpawnEggProvider spawnEggProvider = new FlatSpawnEggProvider();
+    private transient PotionMetaProvider potionMetaProvider = new BasePotionDataProvider();
     private transient Kits kits;
 
     @Override
@@ -185,25 +178,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 confList.add(jails);
                 execTimer.mark("Init(Jails)");
 
-                spawnerProvider = new ProviderFactory<>(getLogger(),
-                        Arrays.asList(
-                                BlockMetaSpawnerProvider.class,
-                                v1_8_R2SpawnerProvider.class,
-                                v1_8_R1SpawnerProvider.class,
-                                LegacySpawnerProvider.class
-                        ), "mob spawner").getProvider();
-                spawnEggProvider = new ProviderFactory<>(getLogger(),
-                        Arrays.asList(
-                                FlatSpawnEggProvider.class,
-                                ReflSpawnEggProvider.class,
-                                LegacySpawnEggProvider.class
-                        ), "spawn egg").getProvider();
-                potionMetaProvider = new ProviderFactory<>(getLogger(),
-                        Arrays.asList(
-                                BasePotionDataProvider.class,
-                                LegacyPotionMetaProvider.class
-                        ), "potion meta").getProvider();
-                execTimer.mark("Init(Providers)");
                 reload();
 
                 // The item spawn blacklist is loaded with all other settings, before the item
