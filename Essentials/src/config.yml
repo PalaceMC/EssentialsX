@@ -102,7 +102,7 @@ item-spawn-blacklist:
 permission-based-item-spawn: true
 
 # Mob limit on the /spawnmob command per execution.
-spawnmob-limit: 0
+spawnmob-limit: 1
 
 # Shall we notify users when using /lightning?
 warn-on-smite: true
