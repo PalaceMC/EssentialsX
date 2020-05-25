@@ -7,7 +7,7 @@ website: http://tiny.cc/EssentialsCommands
 description: Provides an essential, core set of commands for Bukkit.
 softdepend: [Vault]
 authors: [almic, Zenexer, ementalo, Aelux, Brettflan, KimKandor, snowleo, ceulemans, Xeology, KHobbits, md_5, Iaccidentally, drtshock, vemacs, SupaHam, md678685]
-api-version: 1.15
+api-version: "1.15"
 commands:
   afk:
     description: Marks you as away-from-keyboard.
@@ -123,14 +123,12 @@ commands:
   feed:
     description: Satisfy the hunger.
     usage: /<command> [player]
-    aliases: eat
   fly:
     description: Take off, and soar!
     usage: /<command> [player] [on|off]
   fireball:
     description: Throw a fireball or other assorted projectiles.
     usage: /<command> [fireball|small|large|arrow|skull|egg|snowball|expbottle|dragon|splashpotion|lingeringpotion|trident] [speed]
-    aliases: [efireball,fireentity,efireentity,fireskull,efireskull]
   firework:
     description: Allows you to modify a stack of fireworks.
     usage: /<command> <<meta param>|power [amount]|clear|fire [amount]>
@@ -152,7 +150,6 @@ commands:
   god:
     description: Enables your godly powers.
     usage: /<command> [player] [on|off]
-    aliases: godmode
   hat:
     description: Get some cool new headgear.
     usage: /<command> [remove]
@@ -169,7 +166,6 @@ commands:
   info:
     description: Shows information set by the server owner.
     usage: /<command> [chapter] [page]
-    aliases: [about, news]
   invsee:
     description: See the inventory of other players.
     usage: /<command> <player>
@@ -211,7 +207,7 @@ commands:
   lightning:
     description: The power of Thor. Strike at cursor or player.
     usage: /<command> [player] [power]
-    aliases: [smite, strike]
+    aliases: smite
   more:
     description: Fills the item stack in hand to maximum size.
     usage: /<command>
@@ -221,7 +217,6 @@ commands:
   nuke:
     description: May death rain upon them.
     usage: /<command> [player]
-    aliases: [enuke]
   tpoffline:
     description: Teleport to a player's last known logout location
     usage: /<command> <player>
@@ -298,7 +293,7 @@ commands:
   skull:
     description: Set the owner of a player skull
     usage: /<command> [owner]
-    aliases: [playerskull, head]
+    aliases: head
   spawner:
     description: Change the mob type of a spawner.
     usage: /<command> <mob> [delay]
@@ -403,14 +398,13 @@ commands:
   workbench:
     description: Opens up a workbench.
     usage: /<command>
-    aliases: [craft, wbench]
+    aliases: wbench
   world:
     description: Switch between worlds.
     usage: /<command> [world]
   worth:
     description: Calculates the worth of items in hand or as specified.
     usage: /<command> <<itemname>|<id>|hand|inventory|blocks> [-][amount]
-    aliases: price
 
 permissions:
   essentials.*:
@@ -418,9 +412,6 @@ permissions:
     description: Give players with op everything by default
     children:
       essentials.gamemode.*: true
-  essentials.sleepingignored:
-    default: false
-    description: If the player has this permission, they will not have to sleep for the night to be skipped
   # These permissions can't be assigned from player-commands for compatibility reasons
   essentials.teleport.cooldown.bypass.tpa:
     default: true
