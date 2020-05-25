@@ -35,8 +35,8 @@ import static com.earth2me.essentials.I18n.tl;
 //4: Possible Shapes:              star, ball, large, creeper, burst
 //4: Possible Effects              trail, twinkle
 
-@SuppressWarnings("unused")
 public class Commandfirework extends EssentialsCommand {
+
     public Commandfirework() {
         super("firework");
     }
@@ -121,7 +121,7 @@ public class Commandfirework extends EssentialsCommand {
 
     @Override
     protected List<String> getTabCompleteOptions(Server server, User user, String commandLabel, String[] args) {
-        // Note: this enforces an order of color fade shape effect, which the actual command doesn't have.  But that's fine. 
+        // Note: this enforces an order of color fade shape effect, which the actual command doesn't have.  But that's fine.
         if (args.length == 1) {
             List<String> options = Lists.newArrayList();
             if (args[0].startsWith("color:")) {

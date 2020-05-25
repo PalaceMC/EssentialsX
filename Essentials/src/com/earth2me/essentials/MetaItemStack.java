@@ -8,10 +8,6 @@ import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.MaterialUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import com.google.common.base.Joiner;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
 import net.ess3.api.IEssentials;
 import net.ess3.nms.refl.ReflUtil;
 import org.bukkit.Color;
@@ -27,6 +23,11 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -103,9 +104,9 @@ public class MetaItemStack {
             return true;
         } catch (NoSuchMethodError nsme) {
             return true;
-        } catch (Throwable throwable) {
+        } catch (Throwable npe) {
             if (ess.getSettings().isDebug()) {
-                ess.getLogger().log(Level.INFO, "Itemstack is invalid", throwable);
+                ess.getLogger().log(Level.INFO, "Itemstack is invalid", npe);
             }
             return false;
         }

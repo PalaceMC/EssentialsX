@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public interface IEssentials extends Plugin {
@@ -49,6 +50,9 @@ public interface IEssentials extends Plugin {
 
     @SuppressWarnings("UnusedReturnValue")
     int broadcastMessage(IUser sender, String message);
+
+    @SuppressWarnings("UnusedReturnValue")
+    int broadcastMessage(IUser sender, String message, Predicate<IUser> shouldExclude);
 
     @SuppressWarnings("UnusedReturnValue")
     int broadcastMessage(String permission, String message);

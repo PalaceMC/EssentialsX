@@ -1,5 +1,9 @@
 package com.earth2me.essentials.signs;
 
+import com.earth2me.essentials.I18n;
+import com.earth2me.essentials.User;
+import com.earth2me.essentials.utils.FormatUtil;
+import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
 import org.bukkit.event.Listener;
 
@@ -90,7 +94,7 @@ public class SignBlockListener implements Listener {
             if (lColorlessTopLine.contains(lSuccessName)) {
 
                 // If this sign is not enabled and it has been requested to not protect it's name (when disabled), then do not protect the name.
-                // By lower-casing it and stripping colours. 
+                // By lower-casing it and stripping colours.
                 if (!ess.getSettings().enabledSigns().contains(sign)
                     && ess.getSettings().getUnprotectedSignNames().contains(sign)) {
                     continue;

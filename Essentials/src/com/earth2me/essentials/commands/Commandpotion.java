@@ -1,10 +1,11 @@
 package com.earth2me.essentials.commands;
 
-import com.google.common.collect.Lists;
 import com.earth2me.essentials.MetaItemStack;
 import com.earth2me.essentials.Potions;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.StringUtil;
+import com.google.common.collect.Lists;
+import net.ess3.nms.refl.ReflUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
@@ -12,16 +13,9 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static com.earth2me.essentials.I18n.tl;
-
-import net.ess3.nms.refl.ReflUtil;
 
 @SuppressWarnings("unused")
 public class Commandpotion extends EssentialsCommand {
@@ -43,7 +37,7 @@ public class Commandpotion extends EssentialsCommand {
             }
             throw new NotEnoughArgumentsException(tl("potions", StringUtil.joinList(potionslist.toArray())));
         }
-        
+
         boolean holdingPotion = stack.getType() == Material.POTION;
         if (!holdingPotion && ReflUtil.getNmsVersionObject().isHigherThanOrEqualTo(ReflUtil.V1_9_R1)) {
             holdingPotion = stack.getType() == Material.SPLASH_POTION || stack.getType() == Material.LINGERING_POTION;
@@ -80,7 +74,7 @@ public class Commandpotion extends EssentialsCommand {
 
     @Override
     protected List<String> getTabCompleteOptions(Server server, User user, String commandLabel, String[] args) {
-        // Note: this enforces an order of effect power duration splash, which the actual command doesn't have.  But that's fine. 
+        // Note: this enforces an order of effect power duration splash, which the actual command doesn't have.  But that's fine.
         if (args.length == 1) {
             List<String> options = Lists.newArrayList();
             options.add("clear");

@@ -65,7 +65,7 @@ public class AlternativeCommandsHandler {
         final Iterator<Map.Entry<String, List<PluginCommand>>> iterator = altcommands.entrySet().iterator();
         while (iterator.hasNext()) {
             final Map.Entry<String, List<PluginCommand>> entry = iterator.next();
-            entry.getValue().removeIf(pc -> pc.getPlugin().equals(plugin));
+            entry.getValue().removeIf(pc -> pc.getPlugin() == null || pc.getPlugin().equals(plugin));
             if (entry.getValue().isEmpty()) {
                 iterator.remove();
             }

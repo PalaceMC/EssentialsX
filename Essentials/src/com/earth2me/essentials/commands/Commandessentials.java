@@ -210,7 +210,7 @@ public class Commandessentials extends EssentialsCommand {
         final UserMap userMap = ess.getUserMap();
 
         ess.runTaskAsynchronously(() -> {
-            Long currTime = System.currentTimeMillis();
+            long currTime = System.currentTimeMillis();
             for (UUID u : userMap.getAllUniqueUsers()) {
                 final User user = ess.getUserMap().getUser(u);
                 if (user == null) {

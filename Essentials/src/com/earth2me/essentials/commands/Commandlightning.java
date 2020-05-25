@@ -35,7 +35,7 @@ public class Commandlightning extends EssentialsLoopCommand {
         if (args.length > 1) {
             try {
                 power = Integer.parseInt(args[1]);
-            } catch (NumberFormatException ex) {
+            } catch (NumberFormatException ignored) {
             }
         }
         loopOnlinePlayers(server, sender, true, true, args[0], null);

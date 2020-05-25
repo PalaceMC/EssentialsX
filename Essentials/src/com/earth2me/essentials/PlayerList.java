@@ -101,18 +101,14 @@ public class PlayerList {
         if (users.isEmpty()) {
             throw new Exception(tl("groupDoesNotExist"));
         }
-        final StringBuilder displayGroupName = new StringBuilder();
-        displayGroupName.append(Character.toTitleCase(groupName.charAt(0)));
-        displayGroupName.append(groupName.substring(1));
-        return outputFormat(displayGroupName.toString(), listUsers(ess, users, ", "));
+        String displayGroupName = Character.toTitleCase(groupName.charAt(0)) +
+            groupName.substring(1);
+        return outputFormat(displayGroupName, listUsers(ess, users, ", "));
     }
 
     // Build the output string
     public static String outputFormat(final String group, final String message) {
-        final StringBuilder outputString = new StringBuilder();
-        outputString.append(tl("listGroupTag", FormatUtil.replaceFormat(group)));
-        outputString.append(' ');
-        outputString.append(message);
-        return outputString.toString();
+        return tl("listGroupTag", FormatUtil.replaceFormat(group)) +
+            message;
     }
 }

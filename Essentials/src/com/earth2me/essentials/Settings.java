@@ -292,6 +292,11 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getString("backup.command", null);
     }
 
+    @Override
+    public boolean isAlwaysRunBackup() {
+        return config.getBoolean("backup.always-run", false);
+    }
+
     private final Map<String, String> chatFormats = Collections.synchronizedMap(new HashMap<>());
 
     @Override
@@ -346,6 +351,7 @@ public class Settings implements net.ess3.api.ISettings {
         sleepIgnoresAfkPlayers = _sleepIgnoresAfkPlayers();
         afkListName = _getAfkListName();
         isAfkListName = !afkListName.equalsIgnoreCase("none");
+        broadcastAfkMessage = _broadcastAfkMessage();
         itemSpawnBl = _getItemSpawnBlacklist();
         loginAttackDelay = _getLoginAttackDelay();
         //signUsePerSecond = _getSignUsePerSecond();
@@ -425,7 +431,7 @@ public class Settings implements net.ess3.api.ISettings {
     private List<EssentialsSign> _getEnabledSigns() {
         this.signsEnabled = false; // Ensure boolean resets on reload.
 
-        List<EssentialsSign> newSigns = new ArrayList<EssentialsSign>();
+        List<EssentialsSign> newSigns = new ArrayList<>();
 
         for (String signName : config.getStringList("enabledSigns")) {
             signName = signName.trim().toUpperCase(Locale.ENGLISH);
@@ -480,6 +486,11 @@ public class Settings implements net.ess3.api.ISettings {
     public String getCurrencySymbol() {
         //noinspection ConstantConditions
         return config.getString("currency-symbol", "$").concat("$").substring(0, 1).replaceAll("[0-9]", "$");
+    }
+
+    @Override
+    public boolean isCurrencySymbolSuffixed() {
+        return config.getBoolean("currency-symbol-suffix", false);
     }
 
     // #easteregg
@@ -632,6 +643,17 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public String getAfkListName() {
         return afkListName;
+    }
+
+    private boolean broadcastAfkMessage;
+
+    @Override
+    public boolean broadcastAfkMessage() {
+        return broadcastAfkMessage;
+    }
+
+    private boolean _broadcastAfkMessage() {
+        return config.getBoolean("broadcast-afk-message", true);
     }
 
     @Override
@@ -1044,7 +1066,6 @@ public class Settings implements net.ess3.api.ISettings {
                 newSigns.add(Signs.valueOf(signName).getSign());
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, tl("unknownItemInList", signName, "unprotected-sign-names"));
-                continue;
             }
         }
         return newSigns;
@@ -1070,6 +1091,16 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("allow-direct-hat", true);
     }
 
+    @Override
+    public boolean isWorldChangeFlyResetEnabled() {
+        return config.getBoolean("world-change-fly-reset", true);
+    }
+
+    @Override
+    public boolean isWorldChangeSpeedResetEnabled() {
+        return config.getBoolean("world-change-speed-reset", true);
+    }
+
     private List<String> defaultEnabledConfirmCommands;
 
     private List<String> _getDefaultEnabledConfirmCommands() {
@@ -1084,7 +1115,7 @@ public class Settings implements net.ess3.api.ISettings {
     public List<String> getDefaultEnabledConfirmCommands() {
         return defaultEnabledConfirmCommands;
     }
-    
+
     @Override
     public boolean isConfirmCommandEnabledByDefault(String commandName) {
         return getDefaultEnabledConfirmCommands().contains(commandName.toLowerCase());
@@ -1169,7 +1200,7 @@ public class Settings implements net.ess3.api.ISettings {
     public boolean isWaterSafe() {
         return isWaterSafe;
     }
-    
+
     private boolean isSafeUsermap;
 
     private boolean _isSafeUsermap() {

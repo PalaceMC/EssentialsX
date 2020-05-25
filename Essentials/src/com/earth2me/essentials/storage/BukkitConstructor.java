@@ -20,8 +20,7 @@ import java.lang.reflect.Method;
 
 
 public class BukkitConstructor extends CustomClassLoaderConstructor {
-
-    public BukkitConstructor(final Class clazz, final Plugin plugin) {
+    public BukkitConstructor(final Class<?> clazz, final Plugin plugin) {
         super(clazz, plugin.getClass().getClassLoader());
         yamlClassConstructors.put(NodeId.scalar, new ConstructBukkitScalar());
         yamlClassConstructors.put(NodeId.mapping, new ConstructBukkitMapping());
@@ -165,7 +164,7 @@ public class BukkitConstructor extends CustomClassLoaderConstructor {
     }
 
     private class ConstructBukkitMapping extends ConstructMapping {
-        
+
         @Override
         public Object construct(final Node node) {
             if (node.getType().equals(Location.class)) {

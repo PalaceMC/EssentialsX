@@ -17,8 +17,6 @@ import java.util.Map;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
-@SuppressWarnings({"deprecation","unused"})
 public class Commandrecipe extends EssentialsCommand {
 
     private static final Material FIREWORK_ROCKET = EnumUtil.getMaterial("FIREWORK_ROCKET", "FIREWORK");
@@ -28,7 +26,7 @@ public class Commandrecipe extends EssentialsCommand {
     public Commandrecipe() {
         super("recipe");
     }
-    
+
     private void disableCommandForVersion1_12() throws Exception {
         VersionUtil.BukkitVersion version = VersionUtil.getServerBukkitVersion();
         if (version.isHigherThanOrEqualTo(VersionUtil.v1_12_0_R01)

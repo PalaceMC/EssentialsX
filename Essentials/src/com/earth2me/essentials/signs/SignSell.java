@@ -6,7 +6,6 @@ import com.earth2me.essentials.Trade.OverflowType;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
-
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;

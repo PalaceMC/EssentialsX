@@ -1,15 +1,14 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
-
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Locale;
+
+import static com.earth2me.essentials.I18n.tl;
 
 @SuppressWarnings({"deprecation","unused"})
 public class Commanditemname extends EssentialsCommand {

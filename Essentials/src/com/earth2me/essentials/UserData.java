@@ -450,26 +450,42 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         config.save();
     }
 
-    private List<UUID> ignoredUUIDs;
+    private List<UUID> ignoredPlayers;
 
     public List<UUID> _getIgnoredPlayers() {
-        List<String> uuidStrings = config.getStringList("ignore");
-        List<UUID> uuidList = new ArrayList<>();
-        for (String s : uuidStrings)
-            uuidList.add(UUID.fromString(s));
-        return Collections.synchronizedList(uuidList);
+        List<UUID> players = new ArrayList<>();
+        for (String uuid : config.getStringList("ignore")) {
+            try {
+                players.add(UUID.fromString(uuid));
+            } catch (IllegalArgumentException ignored) {}
+        }
+        return Collections.synchronizedList(players);
     }
 
-    public void setIgnoredPlayers(List<UUID> uuidList) {
-        if (uuidList == null || uuidList.isEmpty()) {
-            ignoredUUIDs = Collections.synchronizedList(new ArrayList<>());
+    @Deprecated
+    public void setIgnoredPlayers(List<String> players) {
+        List<UUID> uuids = new ArrayList<>();
+        for (String player : players) {
+            User user = ess.getOfflineUser(player);
+            if (user == null) {
+                return;
+            }
+            uuids.add(user.getBase().getUniqueId());
+        }
+        setIgnoredPlayerUUIDs(uuids);
+    }
+
+    public void setIgnoredPlayerUUIDs(List<UUID> players) {
+        if (players == null || players.isEmpty()) {
+            ignoredPlayers = Collections.synchronizedList(new ArrayList<>());
             config.removeProperty("ignore");
         } else {
-            ignoredUUIDs = Collections.synchronizedList(new ArrayList<>(uuidList));
-            List<String> uuidStrings = new ArrayList<>();
-            for (UUID uuid : uuidList)
-                uuidStrings.add(uuid.toString());
-            config.setProperty("ignore", uuidStrings);
+            ignoredPlayers = players;
+            List<String> uuids = new ArrayList<>();
+            for (UUID uuid : players) {
+                uuids.add(uuid.toString());
+            }
+            config.setProperty("ignore", uuids);
         }
         config.save();
     }
@@ -484,16 +500,17 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
     }
 
     public boolean isIgnoredPlayer(IUser user) {
-        return ignoredUUIDs.contains(user.getBase().getUniqueId());
+        return ignoredPlayers.contains(user.getBase().getUniqueId());
     }
 
-    public void setIgnoredPlayer(UUID uuid, boolean set) {
+    public void setIgnoredPlayer(IUser user, boolean set) {
+        UUID uuid = user.getBase().getUniqueId();
         if (set) {
-            if (!ignoredUUIDs.contains(uuid)) ignoredUUIDs.add(uuid);
+            if (!ignoredPlayers.contains(uuid)) ignoredPlayers.add(uuid);
         } else {
-            ignoredUUIDs.remove(uuid);
+            ignoredPlayers.remove(uuid);
         }
-        setIgnoredPlayers(ignoredUUIDs);
+        setIgnoredPlayerUUIDs(ignoredPlayers);
     }
 
     private boolean godmode;

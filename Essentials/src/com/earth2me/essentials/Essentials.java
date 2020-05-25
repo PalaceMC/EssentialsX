@@ -18,6 +18,7 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.*;
+import com.earth2me.essentials.craftbukkit.ServerState;
 import com.earth2me.essentials.items.AbstractItemDb;
 import com.earth2me.essentials.items.CustomItemResolver;
 import com.earth2me.essentials.items.FlatItemDb;
@@ -33,12 +34,7 @@ import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.VersionUtil;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import com.google.common.base.Throwables;
 import net.ess3.api.IEssentials;
 import net.ess3.api.ISettings;
 import net.ess3.api.*;
@@ -70,6 +66,16 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.error.YAMLException;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -196,6 +202,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             permissionsHandler = new PermissionsHandler(this);
             alternativeCommandsHandler = new AlternativeCommandsHandler(this);
 
+            // Register hat permissions
+            Commandhat.registerPermissionsIfNecessary(getServer().getPluginManager());
+
             timer = new EssentialsTimer(this);
             scheduleSyncRepeatingTask(timer, 1000, 50);
 
@@ -222,6 +231,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             handleCrash(ex);
             throw ex;
         }
+        getBackup().setPendingShutdown(false);
     }
 
     @Override
@@ -271,14 +281,31 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public void onDisable() {
+        boolean stopping = ServerState.isStopping();
+        if (!stopping) {
+            LOGGER.log(Level.SEVERE, tl("serverReloading"));
+        }
+        getBackup().setPendingShutdown(true);
         for (User user : getOnlineUsers()) {
             if (user.isVanished()) {
                 user.setVanished(false);
                 user.sendMessage(tl("unvanishedReload"));
             }
-            user.stopTransaction();
+            if (stopping) {
+                user.setLastLocation();
+                if (!user.isHidden()) {
+                    user.setLastLogout(System.currentTimeMillis());
+                }
+                user.cleanup();
+            } else {
+                user.stopTransaction();
+            }
         }
         cleanupOpenInventories();
+        if (getBackup().getTaskLock() != null && !getBackup().getTaskLock().isDone()) {
+            LOGGER.log(Level.SEVERE, tl("backupInProgress"));
+            getBackup().getTaskLock().join();
+        }
         if (i18n != null) {
             i18n.onDisable();
         }
@@ -654,20 +681,25 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public int broadcastMessage(final String message) {
-        return broadcastMessage(null, null, message, true);
+        return broadcastMessage(null, null, message, true, u -> false);
     }
 
     @Override
     public int broadcastMessage(final IUser sender, final String message) {
-        return broadcastMessage(sender, null, message, false);
+        return broadcastMessage(sender, null, message, false, u -> false);
+    }
+
+    @Override
+    public int broadcastMessage(final IUser sender, final String message, final Predicate<IUser> shouldExclude) {
+        return broadcastMessage(sender, null, message, false, shouldExclude);
     }
 
     @Override
     public int broadcastMessage(final String permission, final String message) {
-        return broadcastMessage(null, permission, message, false);
+        return broadcastMessage(null, permission, message, false, u -> false);
     }
 
-    private int broadcastMessage(final IUser sender, final String permission, final String message, final boolean keywords) {
+    private int broadcastMessage(final IUser sender, final String permission, final String message, final boolean keywords, final Predicate<IUser> shouldExclude) {
         if (sender != null && sender.isHidden()) {
             return 0;
         }
@@ -675,10 +707,12 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         IText broadcast = new SimpleTextInput(message);
 
         final Collection<Player> players = getOnlinePlayers();
-
         for (Player player : players) {
             final User user = getUser(player);
             if ((permission == null && (sender == null || !user.isIgnoredPlayer(sender))) || (permission != null && user.isAuthorized(permission))) {
+                if (shouldExclude.test(user)) {
+                    continue;
+                }
                 if (keywords) {
                     broadcast = new KeywordReplacer(broadcast, new CommandSource(player), this, false);
                 }

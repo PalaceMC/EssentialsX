@@ -123,7 +123,7 @@ public class Commandpowertool extends EssentialsCommand {
                 for (String tool : powertools) {
                     options.add("r:" + tool);
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
             return options;
         } else if (args[0].startsWith("a:")) {
             return tabCompleteCommand(user.getSource(), server, args[0].substring(2), args, 1);
@@ -152,7 +152,7 @@ public class Commandpowertool extends EssentialsCommand {
                 for (String tool : powertools) {
                     options.add("r:" + tool);
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
             return options;
         } else if (args[2].startsWith("a:")) {
             return tabCompleteCommand(sender, server, args[2].substring(2), args, 3);

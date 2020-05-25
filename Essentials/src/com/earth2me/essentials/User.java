@@ -337,8 +337,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
                 }
                 final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
                 return BigDecimal.valueOf(account.balance());
-            } catch (Exception ex) {
-                // do nothing
+            } catch (Exception ignored) {
             }
         }
         return super.getMoney();
@@ -370,8 +369,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
                 }
                 final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
                 account.set(newBalance.doubleValue());
-            } catch (Exception ex) {
-                // do nothing
+            } catch (Exception ignored) {
             }
         }
         super.setMoney(newBalance, true);
@@ -471,8 +469,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
                     } catch (Exception ex) {
                         try {
                             getTeleport().respawn(null, TeleportCause.PLUGIN);
-                        } catch (Exception ex1) {
-                            // do nothing
+                        } catch (Exception ignored) {
                         }
                     }
                 }
@@ -482,9 +479,9 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     public void checkMuteTimeout(final long currentTime) {
         if (getMuteTimeout() > 0 && getMuteTimeout() < currentTime && isMuted()) {
-            final MuteStatusChangeEvent event = new MuteStatusChangeEvent(this, null, false);
+            final MuteStatusChangeEvent event = new MuteStatusChangeEvent(this, null, false, getMuteTimeout(), getMuteReason());
             ess.getServer().getPluginManager().callEvent(event);
-            
+
             if (!event.isCancelled()) {
                 setMuteTimeout(0);
                 sendMessage(tl("canTalkAgain"));
@@ -504,8 +501,13 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             setAfk(false, cause);
             if (broadcast && !isHidden()) {
                 final String msg = tl("userIsNotAway", getDisplayName());
-                if (!msg.isEmpty()) {
-                    ess.broadcastMessage(this, msg);
+                final String selfmsg = tl("userIsNotAwaySelf", getDisplayName());
+                if (!msg.isEmpty() && ess.getSettings().broadcastAfkMessage()) {
+                    // exclude user from receiving general AFK announcement in favor of personal message
+                    ess.broadcastMessage(this, msg, u -> u == this);
+                }
+                if (!selfmsg.isEmpty()) {
+                    this.sendMessage(selfmsg);
                 }
             }
         }
@@ -525,7 +527,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     public void checkActivity() {
-        // Graceful time before the first afk check call. 
+        // Graceful time before the first afk check call.
         if (System.currentTimeMillis() - lastActivity <= 10000) {
             return;
         }
@@ -551,8 +553,13 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
             setAfk(true, AfkStatusChangeEvent.Cause.ACTIVITY);
             if (!isHidden()) {
                 final String msg = tl("userIsAway", getDisplayName());
-                if (!msg.isEmpty()) {
-                    ess.broadcastMessage(this, msg);
+                final String selfmsg = tl("userIsAwaySelf", getDisplayName());
+                if (!msg.isEmpty() && ess.getSettings().broadcastAfkMessage()) {
+                    // exclude user from receiving general AFK announcement in favor of personal message
+                    ess.broadcastMessage(this, msg, u -> u == this);
+                }
+                if (!selfmsg.isEmpty()) {
+                    this.sendMessage(selfmsg);
                 }
             }
         }
@@ -744,7 +751,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     public String getName() {
         return this.getBase().getName();
     }
-    
+
     @Override public boolean isReachable() {
         return getBase().isOnline();
     }
@@ -774,7 +781,7 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     public String getConfirmingClearCommand() {
         return confirmingClearCommand;
     }
-    
+
     public void setConfirmingClearCommand(String command) {
         this.confirmingClearCommand = command;
     }

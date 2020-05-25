@@ -24,7 +24,7 @@ public class HelpInput implements IText {
     public HelpInput(final User user, final String match, final IEssentials ess) {
         boolean reported = false;
         final List<String> newLines = new ArrayList<>();
-        String pluginName;
+        String pluginName = "";
         String pluginNameLow = "";
         if (!match.equalsIgnoreCase("")) {
             lines.add(tl("helpMatching", match));

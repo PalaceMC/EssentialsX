@@ -70,6 +70,8 @@ public interface IUser {
      * supported plugins. Use isVanished() if you want to check if a user is vanished by Essentials.
      *
      * @return If the user is hidden or not
+     *
+     * @see IUser#isVanished()
      */
     boolean isHidden();
 
@@ -95,6 +97,8 @@ public interface IUser {
      * plugin.
      *
      * @return If the user is vanished or not
+     *
+     * @see IUser#isHidden()
      */
     boolean isVanished();
 
@@ -138,13 +142,13 @@ public interface IUser {
     Map<String, Object> getConfigMap();
 
     Map<String, Object> getConfigMap(String node);
-    
+
     Map<Pattern, Long> getCommandCooldowns();
 
     Date getCommandCooldownExpiry(String label);
-    
+
     void addCommandCooldown(Pattern pattern, Date expiresAt, boolean save);
-    
+
     boolean clearCommandCooldown(Pattern pattern);
 
     /*
@@ -159,19 +163,19 @@ public interface IUser {
     String getAfkMessage();
 
     void setAfkMessage(final String message);
-    
+
     long getAfkSince();
-    
+
     boolean isAcceptingPay();
-    
+
     void setAcceptingPay(boolean acceptingPay);
-    
+
     boolean isPromptingPayConfirm();
-    
+
     void setPromptingPayConfirm(boolean prompt);
-    
+
     boolean isPromptingClearConfirm();
-    
+
     void setPromptingClearConfirm(boolean prompt);
 
     Map<User, BigDecimal> getConfirmingPayments();

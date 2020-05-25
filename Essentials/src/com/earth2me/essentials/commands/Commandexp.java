@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-@SuppressWarnings("unused")
+
 public class Commandexp extends EssentialsCommand {
     public Commandexp() {
         super("exp");
@@ -41,7 +41,7 @@ public class Commandexp extends EssentialsCommand {
                 expMatch(server, user.getSource(), args[1], "-" + args[2], true);
             } else {
                 setExp(user.getSource(), user, "-" + args[1], true);
-            }        
+            }
         } else if (args.length < 3 && args[0].equalsIgnoreCase("reset") && user.isAuthorized("essentials.exp.reset")) {
             if (args.length == 2 && user.isAuthorized("essentials.exp.reset.others")) {
                 expMatch(server, user.getSource(), args[1], "0", false);
@@ -56,13 +56,13 @@ public class Commandexp extends EssentialsCommand {
                 showExp(user.getSource(), user);
             }
         } else {
-            if (NumberUtil.isInt(args[0].toLowerCase(Locale.ENGLISH).replace("l", "")) && user.isAuthorized("essentials.exp.give")) {
+            if (args.length >= 1 && NumberUtil.isInt(args[0].toLowerCase(Locale.ENGLISH).replace("l", "")) && user.isAuthorized("essentials.exp.give")) {
                 if (args.length >= 2 && user.isAuthorized("essentials.exp.give.others")) {
                     expMatch(server, user.getSource(), args[1], args[0], true);
                 } else {
                     setExp(user.getSource(), user, args[0], true);
                 }
-            } else if (user.isAuthorized("essentials.exp.others")) {
+            } else if (args.length >= 1 && user.isAuthorized("essentials.exp.others")) {
                 String match = args[0].trim();
                 showMatch(server, user.getSource(), match);
             } else {

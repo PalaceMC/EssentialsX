@@ -404,7 +404,7 @@ public class EssentialsPlayerListener implements Listener {
         	}
             final User user = ess.getUser(player);
             //There is TeleportCause.COMMMAND but plugins have to actively pass the cause in on their teleports.
-            if (backListener && (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND)) {
+            if (user.isAuthorized("essentials.back.onteleport") && backListener && (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND)) {
                 user.setLastLocation();
             }
             if (teleportInvulnerability && (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND)) {
@@ -509,27 +509,31 @@ public class EssentialsPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChangedWorldFlyReset(final PlayerChangedWorldEvent event) {
         final User user = ess.getUser(event.getPlayer());
-        if (user.getBase().getGameMode() != GameMode.CREATIVE
-                // COMPAT: String compare for 1.7.10
-                && !user.getBase().getGameMode().name().equals("SPECTATOR")
-                && !user.isAuthorized("essentials.fly")) {
-            user.getBase().setFallDistance(0f);
-            user.getBase().setAllowFlight(false);
-        }
-        if (!user.isAuthorized("essentials.speed")) {
-            user.getBase().setFlySpeed(0.1f);
-            user.getBase().setWalkSpeed(0.2f);
-        } else {
-            if (user.getBase().getFlySpeed() > ess.getSettings().getMaxFlySpeed() && !user.isAuthorized("essentials.speed.bypass")) {
-                user.getBase().setFlySpeed((float) ess.getSettings().getMaxFlySpeed());
-            } else {
-                user.getBase().setFlySpeed(user.getBase().getFlySpeed() * 0.99999f);
-            }
 
-            if (user.getBase().getWalkSpeed() > ess.getSettings().getMaxWalkSpeed() && !user.isAuthorized("essentials.speed.bypass")) {
-                user.getBase().setWalkSpeed((float) ess.getSettings().getMaxWalkSpeed());
+        if (ess.getSettings().isWorldChangeFlyResetEnabled()) {
+            if (user.getBase().getGameMode() != GameMode.CREATIVE
+                    // COMPAT: String compare for 1.7.10
+                    && !user.getBase().getGameMode().name().equals("SPECTATOR")
+                    && !user.isAuthorized("essentials.fly")) {
+                user.getBase().setFallDistance(0f);
+                user.getBase().setAllowFlight(false);
+            }
+        }
+
+        if (ess.getSettings().isWorldChangeSpeedResetEnabled()) {
+            if (!user.isAuthorized("essentials.speed")) {
+                user.getBase().setFlySpeed(0.1f);
+                user.getBase().setWalkSpeed(0.2f);
             } else {
-                user.getBase().setWalkSpeed(user.getBase().getWalkSpeed() * 0.99999f);
+                if (user.getBase().getFlySpeed() > ess.getSettings().getMaxFlySpeed() && !user.isAuthorized("essentials.speed.bypass")) {
+                    user.getBase().setFlySpeed((float) ess.getSettings().getMaxFlySpeed());
+                } else {
+                    user.getBase().setFlySpeed(user.getBase().getFlySpeed() * 0.99999f);
+                }
+
+                if (user.getBase().getWalkSpeed() > ess.getSettings().getMaxWalkSpeed() && !user.isAuthorized("essentials.speed.bypass")) {
+                    user.getBase().setWalkSpeed((float) ess.getSettings().getMaxWalkSpeed());
+                }
             }
         }
     }
@@ -631,7 +635,8 @@ public class EssentialsPlayerListener implements Listener {
         boolean used = false;
         // We need to loop through each command and execute
         for (final String command : commandList) {
-            if (command.startsWith("c:")) {
+            if (command.contains("{player}")) {
+            } else if (command.startsWith("c:")) {
                 used = true;
                 user.getBase().chat(command.substring(2));
             } else if (!command.contains("{player}")){
@@ -754,7 +759,7 @@ public class EssentialsPlayerListener implements Listener {
     private final class ArrowPickupListener implements Listener {
         @EventHandler(priority = EventPriority.LOW)
         public void onArrowPickup(final org.bukkit.event.player.PlayerPickupArrowEvent event) {
-            if (event.getArrow().hasMetadata(Commandfireball.FIREBALL_META_KEY)) {
+            if (event.getItem().hasMetadata(Commandfireball.FIREBALL_META_KEY)) {
                 event.setCancelled(true);
             }
         }

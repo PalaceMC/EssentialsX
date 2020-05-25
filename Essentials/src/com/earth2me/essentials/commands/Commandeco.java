@@ -20,6 +20,7 @@ import static com.earth2me.essentials.I18n.tl;
 public class Commandeco extends EssentialsLoopCommand {
     Commandeco.EcoCommands cmd;
     BigDecimal amount;
+    boolean isPercent;
 
     public Commandeco() {
         super("eco");
@@ -35,7 +36,8 @@ public class Commandeco extends EssentialsLoopCommand {
 
         try {
             cmd = Commandeco.EcoCommands.valueOf(args[0].toUpperCase(Locale.ENGLISH));
-            amount = (cmd == Commandeco.EcoCommands.RESET) ? startingBalance : new BigDecimal(args[2].replaceAll("[^0-9.]", ""));
+            isPercent = args[2].endsWith("%");
+            amount = (cmd == Commandeco.EcoCommands.RESET) ? startingBalance : new BigDecimal(args[2].replaceAll("[^0-9\\.]", ""));
         } catch (Exception ex) {
             throw new NotEnoughArgumentsException(ex);
         }
@@ -52,7 +54,10 @@ public class Commandeco extends EssentialsLoopCommand {
     }
 
     @Override
-    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws ChargeException, MaxMoneyException {
+    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws NotEnoughArgumentsException, ChargeException, MaxMoneyException {
+        if (isPercent && cmd != EcoCommands.RESET) {
+            amount = player.getMoney().multiply(amount).scaleByPowerOfTen(-2);
+        }
         switch (cmd) {
             case GIVE:
                 player.giveMoney(amount, sender, UserBalanceUpdateEvent.Cause.COMMAND_ECO);
