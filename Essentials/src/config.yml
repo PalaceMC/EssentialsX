@@ -343,7 +343,7 @@ send-fly-enable-on-join: true
 
 # Set to true to enable per-world permissions for setting time for individual worlds with essentials commands.
 # This applies to /time, /day, /eday, /night, /enight, /etime.
-# Give someone permission to teleport to a world with essentials.time.world.<worldname>.
+# Give someone permission to set the time for a world with essentials.time.world.<worldname>.
 world-time-permissions: false # TODO should make this true
 
 # Specify cooldown for both Essentials commands and external commands as well.
