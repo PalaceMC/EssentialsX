@@ -30,7 +30,7 @@ public abstract class AbstractDelayedYamlFileReader<T extends StorageObject> imp
         try {
             final FileReader reader = new FileReader(file);
             try {
-                final T object = new YamlStorageReader(reader, plugin).load(clazz);
+                final T object = new YamlStorageReader<T>(reader, plugin).load(clazz);
                 onSuccess(object);
             } finally {
                 try {

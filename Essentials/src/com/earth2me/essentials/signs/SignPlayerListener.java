@@ -2,18 +2,14 @@ package com.earth2me.essentials.signs;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.util.Set;
-import java.util.logging.Level;
 
 
+@SuppressWarnings("unused")
 public class SignPlayerListener implements Listener {
-    private final transient IEssentials ess;
+    //private final transient IEssentials ess;
 
     public SignPlayerListener(final IEssentials ess) {
-        this.ess = ess;
+        //this.ess = ess;
     }
 
     //This following code below listens to cancelled events to fix a bukkit issue

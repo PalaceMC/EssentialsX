@@ -4,13 +4,11 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import com.google.common.collect.Lists;
 
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.LightningStrike;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static com.earth2me.essentials.I18n.tl;
 

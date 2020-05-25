@@ -1,19 +1,16 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 
+@SuppressWarnings("unused")
 public class SignEntityListener implements Listener {
 
-    private final transient IEssentials ess;
+    //private final transient IEssentials ess;
 
     public SignEntityListener(final IEssentials ess) {
-        this.ess = ess;
+        //this.ess = ess;
     }
 
     /*@EventHandler(priority = EventPriority.LOW)

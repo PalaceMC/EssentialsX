@@ -24,7 +24,7 @@ public class HelpInput implements IText {
     public HelpInput(final User user, final String match, final IEssentials ess) {
         boolean reported = false;
         final List<String> newLines = new ArrayList<>();
-        String pluginName = "";
+        String pluginName;
         String pluginNameLow = "";
         if (!match.equalsIgnoreCase("")) {
             lines.add(tl("helpMatching", match));
@@ -66,8 +66,10 @@ public class HelpInput implements IText {
                                 }
                                 if (isOnWhitelist || user.isAuthorized("essentials.help." + pluginNameLow + "." + k.getKey())) {
                                     pluginLines.add(tl("helpLine", k.getKey(), value.get(DESCRIPTION)));
-                                } else if (permissions instanceof List && !((List<Object>) permissions).isEmpty()) {
+                                } else //noinspection unchecked
+                                if (permissions instanceof List && !((List<Object>) permissions).isEmpty()) {
                                     boolean enabled = false;
+                                    //noinspection unchecked
                                     for (Object o : (List<Object>) permissions) {
                                         if (o instanceof String && user.isAuthorized(o.toString())) {
                                             enabled = true;

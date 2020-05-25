@@ -4,6 +4,7 @@ import com.earth2me.essentials.messaging.IMessageRecipient;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Called just before a private message is sent to its recipient
@@ -13,8 +14,8 @@ public class PrivateMessagePreSendEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
-    private IMessageRecipient sender;
-    private IMessageRecipient recipient;
+    private final IMessageRecipient sender;
+    private final IMessageRecipient recipient;
     private String message;
 
     public PrivateMessagePreSendEvent(IMessageRecipient sender, IMessageRecipient recipient, String message) {
@@ -49,6 +50,7 @@ public class PrivateMessagePreSendEvent extends Event implements Cancellable {
         this.cancelled = b;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

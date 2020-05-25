@@ -53,6 +53,7 @@ public interface Method {
      *
      * @return <code>int</code> for each decimal place
      */
+    @SuppressWarnings("SameReturnValue")
     int fractionalDigits();
 
     /**
@@ -118,6 +119,7 @@ public interface Method {
      *
      * @return <code>boolean</code>
      */
+    @SuppressWarnings("SameReturnValue")
     boolean createAccount(String name, Double balance);
 
     /**

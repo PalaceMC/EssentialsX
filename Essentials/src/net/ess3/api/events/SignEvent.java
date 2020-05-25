@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -38,6 +39,7 @@ public class SignEvent extends Event implements Cancellable {
         return user;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

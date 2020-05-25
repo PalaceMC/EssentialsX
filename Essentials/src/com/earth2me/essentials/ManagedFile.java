@@ -99,6 +99,7 @@ public class ManagedFile {
                             final MessageDigest digest = getDigest();
                             try (DigestInputStream digestStream = new DigestInputStream(bais, digest)) {
                                 final byte[] bytes = new byte[(int) file.length() - 33];
+                                //noinspection ResultOfMethodCallIgnored
                                 digestStream.read(bytes);
                                 final BigInteger correct = new BigInteger(hash, 16);
                                 final BigInteger test = new BigInteger(1, digest.digest());

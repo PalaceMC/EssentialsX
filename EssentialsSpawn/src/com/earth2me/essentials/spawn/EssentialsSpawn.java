@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
@@ -60,7 +61,7 @@ public class EssentialsSpawn extends JavaPlugin implements IEssentialsSpawn {
     }
 
     @Override
-    public boolean onCommand(final CommandSender sender, final Command command, final String commandLabel, final String[] args) {
+    public boolean onCommand(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String commandLabel, @NotNull final String[] args) {
         return ess.onCommandEssentials(sender, command, commandLabel, args, EssentialsSpawn.class.getClassLoader(), "com.earth2me.essentials.spawn.Command", "essentials.", spawns);
     }
 

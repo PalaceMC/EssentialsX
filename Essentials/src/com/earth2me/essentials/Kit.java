@@ -53,8 +53,7 @@ public class Kit {
     public void checkDelay(final User user) throws Exception {
         long nextUse = getNextUse(user);
 
-        if (nextUse == 0L) {
-        } else if (nextUse < 0L) {
+        if (nextUse < 0L) {
             user.sendMessage(tl("kitOnce"));
             throw new NoChargeException();
         } else if (nextUse != 0L) {
@@ -128,7 +127,7 @@ public class Kit {
             final List<String> itemList = new ArrayList<>();
             final Object kitItems = kit.get("items");
             if (kitItems instanceof List) {
-                for (Object item : (List) kitItems) {
+                for (Object item : (List<?>) kitItems) {
                     if (item instanceof String) {
                         itemList.add(item.toString());
                         continue;

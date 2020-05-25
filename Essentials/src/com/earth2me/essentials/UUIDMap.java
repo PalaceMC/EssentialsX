@@ -43,6 +43,7 @@ public class UUIDMap {
     public void loadAllUsers(final ConcurrentSkipListMap<String, UUID> names, final ConcurrentSkipListMap<UUID, ArrayList<String>> history) {
         try {
             if (!userList.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 userList.createNewFile();
             }
 

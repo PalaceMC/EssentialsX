@@ -22,7 +22,7 @@ public class Commandkittycannon extends EssentialsCommand {
     }
 
     @Override
-    protected void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
+    protected void run(final Server server, final User user, final String commandLabel, final String[] args) {
         final Entity ocelot = Mob.CAT.getType() == null ? spawnOcelot(user.getWorld(), server, user) : spawnCat(user.getWorld(), server, user);
 
         class KittyCannonExplodeTask implements Runnable {

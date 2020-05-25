@@ -17,15 +17,15 @@ public class EnumUtil {
      *
      * @param enumClass The class to search through
      * @param names The names of the fields to search for
-     * @param <T> The enum to search through
      * @return The first matching enum field
      */
-    public static <T extends Enum> T valueOf(Class<T> enumClass, String... names) {
+    public static <T extends Enum<T>> T valueOf(Class<T> enumClass, String... names) {
         for (String name : names) {
             try {
                 Field enumField = enumClass.getDeclaredField(name);
 
                 if (enumField.isEnumConstant()) {
+                    //noinspection unchecked
                     return (T) enumField.get(null);
                 }
             } catch (NoSuchFieldException | IllegalAccessException ignored) {}
@@ -43,7 +43,7 @@ public class EnumUtil {
      * @param <T> The enum to search through
      * @return All matching enum fields
      */
-    public static <T extends Enum> Set<T> getAllMatching(Class<T> enumClass, String... names) {
+    public static <T extends Enum<T>> Set<T> getAllMatching(Class<T> enumClass, String... names) {
         Set<T> set = new HashSet<>();
 
         for (String name : names) {
@@ -51,6 +51,7 @@ public class EnumUtil {
                 Field enumField = enumClass.getDeclaredField(name);
 
                 if (enumField.isEnumConstant()) {
+                    //noinspection unchecked
                     set.add((T) enumField.get(null));
                 }
             } catch (NoSuchFieldException | IllegalAccessException ignored) {}

@@ -6,8 +6,8 @@ import java.util.Optional;
 
 
 public class MuteStatusChangeEvent extends StatusChangeEvent {
-    private Long timestamp;
-    private String reason;
+    private final Long timestamp;
+    private final String reason;
 
     public MuteStatusChangeEvent(IUser affected, IUser controller, boolean value, Long timestamp, String reason) {
         super(affected, controller, value);

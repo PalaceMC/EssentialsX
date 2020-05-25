@@ -26,6 +26,7 @@ public abstract class AbstractDelayedYamlFileWriter implements Runnable {
             final StorageObject object = getObject();
             final File folder = file.getParentFile();
             if (!folder.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 folder.mkdirs();
             }
             pw = new PrintWriter(file);

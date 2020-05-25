@@ -5,6 +5,7 @@ import net.ess3.api.IUser;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 
 public class TPARequestEvent extends Event implements Cancellable {
@@ -43,6 +44,7 @@ public class TPARequestEvent extends Event implements Cancellable {
         this.cancelled = cancelled;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

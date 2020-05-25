@@ -56,13 +56,13 @@ public class Commandexp extends EssentialsCommand {
                 showExp(user.getSource(), user);
             }
         } else {
-            if (args.length >= 1 && NumberUtil.isInt(args[0].toLowerCase(Locale.ENGLISH).replace("l", "")) && user.isAuthorized("essentials.exp.give")) {
+            if (NumberUtil.isInt(args[0].toLowerCase(Locale.ENGLISH).replace("l", "")) && user.isAuthorized("essentials.exp.give")) {
                 if (args.length >= 2 && user.isAuthorized("essentials.exp.give.others")) {
                     expMatch(server, user.getSource(), args[1], args[0], true);
                 } else {
                     setExp(user.getSource(), user, args[0], true);
                 }
-            } else if (args.length >= 1 && user.isAuthorized("essentials.exp.others")) {
+            } else if (user.isAuthorized("essentials.exp.others")) {
                 String match = args[0].trim();
                 showMatch(server, user.getSource(), match);
             } else {

@@ -77,7 +77,7 @@ public interface IWarps extends IConf {
     /**
      * Check to see if the file is empty
      *
-     * @return
+     * @return true if empty, false otherwise
      */
     boolean isEmpty();
 }

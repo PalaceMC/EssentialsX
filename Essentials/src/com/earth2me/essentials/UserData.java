@@ -812,7 +812,7 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         final String prefix = "info.";
         node = prefix + node;
         if (object instanceof Map) {
-            config.setProperty(node, (Map) object);
+            config.setProperty(node, object);
         } else if (object instanceof List) {
             config.setProperty(node, object);
         } else if (object instanceof Location) {

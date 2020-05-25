@@ -2,14 +2,12 @@ package com.earth2me.essentials;
 
 import com.google.common.io.Files;
 import net.ess3.api.InvalidWorldException;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
 import java.io.*;
 import java.math.BigDecimal;

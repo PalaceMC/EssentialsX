@@ -38,14 +38,12 @@ public class EssentialsSign {
     private static final Set<Material> EMPTY_SET = new HashSet<>();
     protected static final BigDecimal MINTRANSACTION = new BigDecimal("0.01");
     protected transient final String signName;
-    private IEssentials ess;
 
     public EssentialsSign(final String signName) {
         this.signName = signName;
     }
 
     protected final boolean onSignCreate(final SignChangeEvent event, final IEssentials ess) {
-        this.ess = ess;
         final ISign sign = new EventSign(event);
         final User user = ess.getUser(event.getPlayer());
         if (!(user.isAuthorized("essentials.signs." + signName.toLowerCase(Locale.ENGLISH) + ".create") || user.isAuthorized("essentials.signs.create." + signName.toLowerCase(Locale.ENGLISH)))) {
@@ -281,7 +279,7 @@ public class EssentialsSign {
     }
 
     protected final BigDecimal getMoney(final String line, final IEssentials ess) throws SignException {
-        final boolean isMoney = line.matches("^[^0-9-\\.]?[\\.0-9]+[^0-9-\\.]?$");
+        final boolean isMoney = line.matches("^[^0-9-.]?[.0-9]+[^0-9-.]?$");
         return isMoney ? getBigDecimalPositive(NumberUtil.sanitizeCurrencyString(line, ess)) : null;
     }
 

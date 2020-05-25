@@ -105,6 +105,7 @@ public class KeywordReplacer implements IText {
                 }
 
                 if (keywordCache.containsKey(validKeyword)) {
+                    //noinspection unchecked
                     Map<String, String> values = (Map<String, String>) keywordCache.get(validKeyword);
                     if (values.containsKey(subKeyword)) {
                         replacer = values.get(subKeyword);
@@ -167,6 +168,7 @@ public class KeywordReplacer implements IText {
                     case PLAYERLIST:
                         final Map<String, String> outputList;
                         if (keywordCache.containsKey(validKeyword)) {
+                            //noinspection unchecked
                             outputList = (Map<String, String>) keywordCache.get(validKeyword);
                         } else {
                             final boolean showHidden;

@@ -12,7 +12,7 @@ public class Commanddepth extends EssentialsCommand {
     }
 
     @Override
-    public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception {
+    public void run(final Server server, final User user, final String commandLabel, final String[] args) {
         final int depth = user.getLocation().getBlockY() - user.getWorld().getSeaLevel();
         if (depth > 0) {
             user.sendMessage(tl("depthAboveSea", depth));

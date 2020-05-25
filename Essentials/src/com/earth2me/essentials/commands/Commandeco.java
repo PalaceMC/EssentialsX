@@ -37,7 +37,7 @@ public class Commandeco extends EssentialsLoopCommand {
         try {
             cmd = Commandeco.EcoCommands.valueOf(args[0].toUpperCase(Locale.ENGLISH));
             isPercent = args[2].endsWith("%");
-            amount = (cmd == Commandeco.EcoCommands.RESET) ? startingBalance : new BigDecimal(args[2].replaceAll("[^0-9\\.]", ""));
+            amount = (cmd == Commandeco.EcoCommands.RESET) ? startingBalance : new BigDecimal(args[2].replaceAll("[^0-9.]", ""));
         } catch (Exception ex) {
             throw new NotEnoughArgumentsException(ex);
         }
@@ -54,7 +54,7 @@ public class Commandeco extends EssentialsLoopCommand {
     }
 
     @Override
-    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws NotEnoughArgumentsException, ChargeException, MaxMoneyException {
+    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws ChargeException, MaxMoneyException {
         if (isPercent && cmd != EcoCommands.RESET) {
             amount = player.getMoney().multiply(amount).scaleByPowerOfTen(-2);
         }

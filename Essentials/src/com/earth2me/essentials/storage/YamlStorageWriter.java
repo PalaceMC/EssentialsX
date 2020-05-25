@@ -39,7 +39,7 @@ public class YamlStorageWriter implements IStorageWriter {
         }
     }
 
-    private void writeToFile(final Object object, final int depth, final Class clazz) throws IllegalAccessException {
+    private void writeToFile(final Object object, final int depth, final Class<?> clazz) throws IllegalAccessException {
         for (Field field : clazz.getDeclaredFields()) {
             final int modifier = field.getModifiers();
             if (Modifier.isPrivate(modifier) && !Modifier.isTransient(modifier) && !Modifier.isStatic(modifier)) {
@@ -53,8 +53,10 @@ public class YamlStorageWriter implements IStorageWriter {
                     writer.println();
                     writeToFile(data, depth + 1, data.getClass());
                 } else if (data instanceof Map) {
+                    //noinspection unchecked
                     writeMap((Map<Object, Object>) data, depth + 1);
                 } else if (data instanceof Collection) {
+                    //noinspection unchecked
                     writeCollection((Collection<Object>) data, depth + 1);
                 } else if (data instanceof Location) {
                     writeLocation((Location) data, depth + 1);
@@ -141,6 +143,7 @@ public class YamlStorageWriter implements IStorageWriter {
                     writer.println();
                     writeToFile(value, depth + 1, value.getClass());
                 } else if (value instanceof Collection) {
+                    //noinspection unchecked
                     writeCollection((Collection<Object>) value, depth + 1);
                 } else if (value instanceof Location) {
                     writeLocation((Location) value, depth + 1);
@@ -226,6 +229,7 @@ public class YamlStorageWriter implements IStorageWriter {
     }
 
     private void writeEnchantmentLevel(Object data) {
+        //noinspection unchecked
         final Entry<Enchantment, Integer> enchLevel = (Entry<Enchantment, Integer>) data;
         writer.print(enchLevel.getKey().getName().toLowerCase(Locale.ENGLISH));
         writer.print(':');

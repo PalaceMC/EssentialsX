@@ -71,7 +71,7 @@ public interface ISettings extends IConf {
 
     boolean getRespawnAtHome();
 
-    Set getMultipleHomes();
+    Set<String> getMultipleHomes();
 
     int getHomeLimit(String set);
 

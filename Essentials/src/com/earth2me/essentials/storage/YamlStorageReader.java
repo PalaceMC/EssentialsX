@@ -12,9 +12,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 @SuppressWarnings("deprecation")
-public class YamlStorageReader implements IStorageReader {
-    private transient static final Map<Class, Yaml> PREPARED_YAMLS = Collections.synchronizedMap(new HashMap<>());
-    private transient static final Map<Class, ReentrantLock> LOCKS = new HashMap<>();
+public class YamlStorageReader<T extends StorageObject> implements IStorageReader<T> {
+    private transient static final Map<Class<?>, Yaml> PREPARED_YAMLS = Collections.synchronizedMap(new HashMap<>());
+    private transient static final Map<Class<?>, ReentrantLock> LOCKS = new HashMap<>();
     private transient final Reader reader;
     private transient final Plugin plugin;
 
@@ -24,7 +24,7 @@ public class YamlStorageReader implements IStorageReader {
     }
 
     @Override
-    public <T extends StorageObject> T load(final Class<? extends T> clazz) throws ObjectLoadException {
+    public T load(final Class<T> clazz) throws ObjectLoadException {
         Yaml yaml = PREPARED_YAMLS.get(clazz);
         if (yaml == null) {
             yaml = new Yaml(prepareConstructor(clazz));
@@ -51,15 +51,15 @@ public class YamlStorageReader implements IStorageReader {
         }
     }
 
-    private Constructor prepareConstructor(final Class<?> clazz) {
+    private Constructor prepareConstructor(final Class<T> clazz) {
         final Constructor constructor = new BukkitConstructor(clazz, plugin);
-        final Set<Class> classes = new HashSet<>();
+        final Set<Class<?>> classes = new HashSet<>();
 
         prepareConstructor(constructor, classes, clazz);
         return constructor;
     }
 
-    private void prepareConstructor(final Constructor constructor, final Set<Class> classes, final Class clazz) {
+    private void prepareConstructor(final Constructor constructor, final Set<Class<?>> classes, final Class<?> clazz) {
         classes.add(clazz);
         final TypeDescription description = new TypeDescription(clazz);
         for (Field field : clazz.getDeclaredFields()) {
@@ -72,7 +72,7 @@ public class YamlStorageReader implements IStorageReader {
         constructor.addTypeDescription(description);
     }
 
-    private void prepareList(final Field field, final TypeDescription description, final Set<Class> classes, final Constructor constructor) {
+    private void prepareList(final Field field, final TypeDescription description, final Set<Class<?>> classes, final Constructor constructor) {
         final ListType listType = field.getAnnotation(ListType.class);
         if (listType != null) {
             description.putListPropertyType(field.getName(), listType.value());
@@ -82,7 +82,7 @@ public class YamlStorageReader implements IStorageReader {
         }
     }
 
-    private void prepareMap(final Field field, final TypeDescription description, final Set<Class> classes, final Constructor constructor) {
+    private void prepareMap(final Field field, final TypeDescription description, final Set<Class<?>> classes, final Constructor constructor) {
         final MapValueType mapType = field.getAnnotation(MapValueType.class);
         if (mapType != null) {
             final MapKeyType mapKeyType = field.getAnnotation(MapKeyType.class);

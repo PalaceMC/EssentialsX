@@ -34,7 +34,6 @@ import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.VersionUtil;
-import com.google.common.base.Throwables;
 import net.ess3.api.IEssentials;
 import net.ess3.api.ISettings;
 import net.ess3.api.*;
@@ -67,8 +66,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -101,9 +98,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient EssentialsTimer timer;
     private final transient Set<String> vanishedPlayers = new LinkedHashSet<>();
     private transient Method oldGetOnlinePlayers;
-    private transient SpawnerProvider spawnerProvider = new BlockMetaSpawnerProvider();
-    private transient SpawnEggProvider spawnEggProvider = new FlatSpawnEggProvider();
-    private transient PotionMetaProvider potionMetaProvider = new BasePotionDataProvider();
+    private final transient SpawnerProvider spawnerProvider = new BlockMetaSpawnerProvider();
+    private final transient SpawnEggProvider spawnEggProvider = new FlatSpawnEggProvider();
+    private final transient PotionMetaProvider potionMetaProvider = new BasePotionDataProvider();
     private transient Kits kits;
 
     @Override
@@ -804,6 +801,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public Collection<Player> getOnlinePlayers() {
         try {
+            //noinspection unchecked
             return (Collection<Player>) getServer().getOnlinePlayers(); // Needed for sanity here, the Bukkit API is a bit broken in the sense it only allows subclasses of Player to this list
         } catch (NoSuchMethodError ex) {
             try {

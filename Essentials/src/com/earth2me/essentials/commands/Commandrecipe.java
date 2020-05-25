@@ -8,6 +8,8 @@ import com.earth2me.essentials.utils.VersionUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.Collections;
@@ -106,8 +108,10 @@ public class Commandrecipe extends EssentialsCommand {
                     if (item == null) {
                         continue;
                     }
-                    if (item.getDurability() == Short.MAX_VALUE) {
-                        item.setDurability((short) 0);
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta != null && ((Damageable) meta).getDamage() == Short.MAX_VALUE) {
+                        ((Damageable) meta).setDamage(0);
+                        item.setItemMeta(meta);
                     }
                     view.getTopInventory().setItem(j * 3 + k + 1, item);
                 }
@@ -148,8 +152,10 @@ public class Commandrecipe extends EssentialsCommand {
             final InventoryView view = user.getBase().openWorkbench(null, true);
             for (int i = 0; i < ingredients.size(); i++) {
                 final ItemStack item = ingredients.get(i);
-                if (item.getDurability() == Short.MAX_VALUE) {
-                    item.setDurability((short) 0);
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null && ((Damageable) meta).getDamage() == Short.MAX_VALUE) {
+                    ((Damageable) meta).setDamage(0);
+                    item.setItemMeta(meta);
                 }
                 view.setItem(i + 1, item);
             }

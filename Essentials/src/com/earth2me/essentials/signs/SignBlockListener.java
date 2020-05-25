@@ -1,21 +1,15 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.I18n;
-import com.earth2me.essentials.User;
-import com.earth2me.essentials.utils.FormatUtil;
-import com.earth2me.essentials.utils.MaterialUtil;
 import net.ess3.api.IEssentials;
 import org.bukkit.event.Listener;
 
-import java.util.logging.Logger;
-
-
+@SuppressWarnings("unused")
 public class SignBlockListener implements Listener {
-    private static final Logger LOGGER = Logger.getLogger("Essentials");
-    private final transient IEssentials ess;
+    //private static final Logger LOGGER = Logger.getLogger("Essentials");
+    //private final transient IEssentials ess;
 
     public SignBlockListener(IEssentials ess) {
-        this.ess = ess;
+        //this.ess = ess;
     }
 
     /*@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

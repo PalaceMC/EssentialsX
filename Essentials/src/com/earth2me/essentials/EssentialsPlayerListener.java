@@ -635,8 +635,7 @@ public class EssentialsPlayerListener implements Listener {
         boolean used = false;
         // We need to loop through each command and execute
         for (final String command : commandList) {
-            if (command.contains("{player}")) {
-            } else if (command.startsWith("c:")) {
+            if (command.startsWith("c:")) {
                 used = true;
                 user.getBase().chat(command.substring(2));
             } else if (!command.contains("{player}")){

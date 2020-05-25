@@ -42,7 +42,7 @@ public class Commandrest extends EssentialsLoopCommand {
     }
 
     @Override
-    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) throws PlayerExemptException {
+    protected void updatePlayer(final Server server, final CommandSource sender, final User player, final String[] args) {
         restPlayer(player);
         sender.sendMessage(tl("restOther", player.getDisplayName()));
     }

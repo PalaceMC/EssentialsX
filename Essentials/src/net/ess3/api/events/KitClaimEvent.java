@@ -8,6 +8,7 @@ import org.bukkit.event.HandlerList;
 import com.earth2me.essentials.Kit;
 
 import net.ess3.api.IUser;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when the player is given a kit
@@ -16,8 +17,8 @@ public class KitClaimEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Kit kit;
-    private IUser user;
+    private final Kit kit;
+    private final IUser user;
     private boolean cancelled;
 
     public KitClaimEvent(IUser user, Kit kit) {
@@ -44,6 +45,7 @@ public class KitClaimEvent extends Event implements Cancellable {
         cancelled = cancel;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

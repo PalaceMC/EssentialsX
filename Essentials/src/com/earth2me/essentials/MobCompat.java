@@ -90,7 +90,7 @@ public class MobCompat {
     }
 
     // Older cats are Ocelots, whereas 1.14+ cats are Cats
-    private static final Class catClass = ReflUtil.getClassCached("org.bukkit.entity.Cat");
+    private static final Class<?> catClass = ReflUtil.getClassCached("org.bukkit.entity.Cat");
     private static final Class catTypeClass = ReflUtil.getClassCached("org.bukkit.entity.Cat.Type");
     private static final Method catSetTypeMethod = (catClass == null || catTypeClass == null) ? null : ReflUtil.getMethodCached(catClass, "setCatType", catTypeClass);
 
@@ -101,6 +101,7 @@ public class MobCompat {
     public static void setCatType(final Entity entity, final CatType type) {
         if (isNewCat()) {
             try {
+                //noinspection unchecked
                 catSetTypeMethod.invoke(entity, EnumUtil.valueOf(catTypeClass, type.catTypeName));
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
@@ -124,6 +125,7 @@ public class MobCompat {
         } else {
             ((Villager) entity).setProfession(profession.asEnum());
             try {
+                //noinspection unchecked
                 villagerSetCareerMethod.invoke(entity, EnumUtil.valueOf(villagerCareerClass, profession.oldCareer));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -138,6 +140,7 @@ public class MobCompat {
 
         Method villagerSetTypeMethod = ReflUtil.getMethodCached(Villager.class, "setVillagerType", typeEnum);
         try {
+            //noinspection unchecked
             villagerSetTypeMethod.invoke(entity, EnumUtil.valueOf(typeEnum, type));
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,6 +156,7 @@ public class MobCompat {
         Method setVariantMethod = ReflUtil.getMethodCached(llamaClass, "setColor");
 
         try {
+            //noinspection unchecked
             setVariantMethod.invoke(entity, EnumUtil.valueOf(colorEnum, color));
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,6 +171,7 @@ public class MobCompat {
         Class variantEnum = ReflUtil.getClassCached("org.bukkit.entity.Parrot.Variant");
         Method setVariantMethod = ReflUtil.getMethodCached(parrotClass, "setVariant");
         try {
+            //noinspection unchecked
             setVariantMethod.invoke(entity, EnumUtil.valueOf(variantEnum, variant));
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,6 +186,7 @@ public class MobCompat {
         Class patternEnum = ReflUtil.getClassCached("org.bukkit.entity.TropicalFish.Pattern");
         Method setPatternMethod = ReflUtil.getMethodCached(tropicalFishClass, "setPattern");
         try {
+            //noinspection unchecked
             setPatternMethod.invoke(entity, EnumUtil.valueOf(patternEnum, pattern));
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,6 +201,7 @@ public class MobCompat {
 
         Method setVariantMethod = ReflUtil.getMethodCached(mushroomCowClass, "setVariant");
         try {
+            //noinspection unchecked
             setVariantMethod.invoke(entity, EnumUtil.valueOf(variantEnum, variant));
         } catch (Exception e) {
             e.printStackTrace();
@@ -216,6 +223,7 @@ public class MobCompat {
         }
 
         try {
+            //noinspection unchecked
             setGeneMethod.invoke(entity, EnumUtil.valueOf(geneEnum, gene));
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Called when the player teleports
  */
@@ -45,6 +47,7 @@ public class UserTeleportEvent extends Event implements Cancellable {
         cancelled = b;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;

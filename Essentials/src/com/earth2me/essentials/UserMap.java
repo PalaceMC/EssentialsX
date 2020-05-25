@@ -11,6 +11,7 @@ import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -140,7 +141,7 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
     }
 
     @Override
-    public User load(final String stringUUID) throws Exception {
+    public User load(@NotNull final String stringUUID) throws Exception {
         UUID uuid = UUID.fromString(stringUUID);
         Player player = ess.getServer().getPlayer(uuid);
         if (player != null) {
@@ -280,7 +281,7 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
         }
     }
 
-    private void legacyMaximumSize(CacheBuilder builder, int maxCount) {
+    private void legacyMaximumSize(CacheBuilder<Object, Object> builder, int maxCount) {
         try {
             Method maxSizeLegacy = builder.getClass().getDeclaredMethod("maximumSize", Integer.TYPE);
             maxSizeLegacy.setAccessible(true);
@@ -291,7 +292,7 @@ public class UserMap extends CacheLoader<String, User> implements IConf {
     }
 
     @SuppressWarnings("unchecked")
-    private Cache<String, User> legacyBuild(CacheBuilder builder) {
+    private Cache<String, User> legacyBuild(CacheBuilder<Object, Object> builder) {
         Method build = null;
         for (Method method : builder.getClass().getDeclaredMethods()) {
             if (method.getName().equals("build")) {

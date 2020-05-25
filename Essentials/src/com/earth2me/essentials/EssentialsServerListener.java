@@ -1,15 +1,12 @@
 package com.earth2me.essentials;
 
 import net.ess3.api.IEssentials;
-import net.ess3.nms.refl.ReflUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -25,20 +22,15 @@ public class EssentialsServerListener implements Listener {
 
     private final transient IEssentials ess;
     private boolean unsupportedLogged = false;
-    private boolean npeWarned = false;
-    private final boolean isPaperSample;
-    private Method setSampleText;
-    private Method getSampleText;
 
     public EssentialsServerListener(final IEssentials ess) {
         this.ess = ess;
 
         ess.getLogger().info("ServerListPingEvent: Spigot iterator API");
-        isPaperSample = false;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onServerListPing(final ServerListPingEvent event) throws Exception {
+    public void onServerListPing(final ServerListPingEvent event) {
         try {
             Iterator<Player> iterator = event.iterator();
             while (iterator.hasNext()) {

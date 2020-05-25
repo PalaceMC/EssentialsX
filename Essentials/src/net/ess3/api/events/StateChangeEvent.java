@@ -4,6 +4,7 @@ import net.ess3.api.IUser;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -46,6 +47,7 @@ public abstract class StateChangeEvent extends Event implements Cancellable {
         return controller;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;
