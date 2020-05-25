@@ -27,16 +27,6 @@ public interface ISettings extends IConf {
 
     boolean isAlwaysRunBackup();
 
-    String getChatFormat(String group);
-
-    int getChatRadius();
-
-    int getNearRadius();
-
-    char getChatShout();
-
-    char getChatQuestion();
-
     BigDecimal getCommandCost(IEssentialsCommand cmd);
 
     BigDecimal getCommandCost(String label);

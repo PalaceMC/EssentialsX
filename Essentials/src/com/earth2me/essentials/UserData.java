@@ -106,7 +106,7 @@ public abstract class UserData extends PlayerExtension implements IConf, net.ess
         isNPC = _isNPC();
         arePowerToolsEnabled = _arePowerToolsEnabled();
         kitTimestamps = _getKitTimestamps();
-        ignoredUUIDs = _getIgnoredPlayers();
+        ignoredPlayers = _getIgnoredPlayers();
         logoutLocation = _getLogoutLocation();
         lastAccountName = _getLastAccountName();
         commandCooldowns = _getCommandCooldowns();
