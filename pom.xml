@@ -44,11 +44,9 @@
     <modules>
         <module>Essentials</module>
         <module>EssentialsSpawn</module>
-        <module>EssentialsXMPP</module>
         <module>providers/BaseProviders</module>
         <module>providers/NMSReflectionProvider</module>
         <module>providers/PaperProvider</module>
-        <module>providers/1_8Provider</module>
     </modules>
 
     <dependencies>
