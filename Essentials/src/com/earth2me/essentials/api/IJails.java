@@ -46,11 +46,9 @@ public interface IJails extends IReload {
      *
      * @param user the user to send to jail
      * @param jail the jail to send the user to
-     *
-     * @throws Exception if the user is offline or jail does not exist
      */
     @Deprecated
-    void sendToJail(IUser user, String jail) throws Exception;
+    void sendToJail(IUser user, String jail);
 
     /**
      * Attempts to send the given user to the given jail
@@ -58,10 +56,8 @@ public interface IJails extends IReload {
      * @param user            the user to send to jail
      * @param jail            the jail to send the user to
      * @param future          Future which is completed with the success status of the execution
-     *
-     * @throws Exception if the user is offline or jail does not exist
      */
-    void sendToJail(IUser user, String jail, CompletableFuture<Boolean> future) throws Exception;
+    void sendToJail(IUser user, String jail, CompletableFuture<Boolean> future);
 
     /**
      * Set a new jail with the given name and location

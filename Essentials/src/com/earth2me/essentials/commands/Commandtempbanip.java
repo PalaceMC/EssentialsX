@@ -1,7 +1,6 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
@@ -27,7 +26,7 @@ public class Commandtempbanip extends EssentialsCommand {
             throw new NotEnoughArgumentsException();
         }
 
-        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
+        final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : "Console";
 
         String ipAddress;
         if (FormatUtil.validIP(args[0])) {
