@@ -233,36 +233,22 @@ public class SpawnMob {
     private static void defaultMobData(final EntityType type, final Entity spawned) {
         if (type == EntityType.SKELETON) {
             final EntityEquipment invent = ((LivingEntity) spawned).getEquipment();
-            if (invent != null) {
-                InventoryWorkaround.setItemInMainHand(invent, new ItemStack(Material.BOW, 1));
-                InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
-
-                invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-                invent.setBootsDropChance(0.0f);
-            }
+            InventoryWorkaround.setItemInMainHand(invent, new ItemStack(Material.BOW, 1));
+            InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
         }
 
-        if (type == EntityType.PIG_ZOMBIE) {
+        if (type == MobCompat.ZOMBIFIED_PIGLIN) {
             final PigZombie zombie = ((PigZombie) spawned);
+            zombie.setVillager(false);
 
             final EntityEquipment invent = zombie.getEquipment();
-            if (invent != null) {
-                InventoryWorkaround.setItemInMainHand(invent, new ItemStack(GOLDEN_SWORD, 1));
-                InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
-
-                invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-                invent.setBootsDropChance(0.0f);
-            }
+            InventoryWorkaround.setItemInMainHand(invent, new ItemStack(GOLDEN_SWORD, 1));
+            InventoryWorkaround.setItemInMainHandDropChance(invent, 0.1f);
         }
 
         if (type == EntityType.ZOMBIE) {
             final Zombie zombie = ((Zombie) spawned);
-
-            final EntityEquipment invent = zombie.getEquipment();
-            if (invent != null) {
-                invent.setBoots(new ItemStack(GOLDEN_BOOTS, 1));
-                invent.setBootsDropChance(0.0f);
-            }
+            zombie.setVillager(false);
         }
 
         if (type == EntityType.HORSE) {

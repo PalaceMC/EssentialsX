@@ -8,6 +8,7 @@ import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -262,6 +263,39 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("skip-used-one-time-kits-from-kit-list", false);
     }
 
+    private String operatorColor = null;
+
+    @Override
+    public String getOperatorColor() {
+        return operatorColor;
+    }
+
+    private String _getOperatorColor() {
+        String colorName = config.getString("ops-name-color", null);
+
+        if (colorName == null) {
+            return ChatColor.RED.toString();
+        } else if (colorName.equalsIgnoreCase("none") || colorName.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return FormatUtil.parseHexColor(colorName);
+        } catch (NumberFormatException ignored) {
+        }
+
+        try {
+            return ChatColor.valueOf(colorName.toUpperCase(Locale.ENGLISH)).toString();
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        ChatColor lastResort = ChatColor.getByChar(colorName);
+        if (lastResort != null) {
+            return lastResort.toString();
+        }
+        return null;
+    }
+
     @Override
     public int getSpawnMobLimit() {
         return config.getInt("spawnmob-limit", 10);
@@ -384,6 +418,8 @@ public class Settings implements net.ess3.api.ISettings {
         logCommandBlockCommands = _logCommandBlockCommands();
         maxProjectileSpeed = _getMaxProjectileSpeed();
         removeEffectsOnHeal = _isRemovingEffectsOnHeal();
+        vanishingItemPolicy = _getVanishingItemsPolicy();
+        bindingItemPolicy = _getBindingItemsPolicy();
     }
 
     void _lateLoadItemSpawnBlacklist() {
@@ -661,6 +697,38 @@ public class Settings implements net.ess3.api.ISettings {
         return config.getBoolean("death-messages", true);
     }
 
+    private KeepInvPolicy vanishingItemPolicy;
+
+    public KeepInvPolicy _getVanishingItemsPolicy() {
+        String value = config.getString("vanishing-items-policy", "keep").toLowerCase(Locale.ENGLISH);
+        try {
+            return KeepInvPolicy.valueOf(value.toUpperCase(Locale.ENGLISH));
+        } catch (IllegalArgumentException e) {
+            return KeepInvPolicy.KEEP;
+        }
+    }
+
+    @Override
+    public KeepInvPolicy getVanishingItemsPolicy() {
+        return vanishingItemPolicy;
+    }
+
+    private KeepInvPolicy bindingItemPolicy;
+
+    public KeepInvPolicy _getBindingItemsPolicy() {
+        String value = config.getString("binding-items-policy", "keep").toLowerCase(Locale.ENGLISH);
+        try {
+            return KeepInvPolicy.valueOf(value.toUpperCase(Locale.ENGLISH));
+        } catch (IllegalArgumentException e) {
+            return KeepInvPolicy.KEEP;
+        }
+    }
+
+    @Override
+    public KeepInvPolicy getBindingItemsPolicy() {
+        return bindingItemPolicy;
+    }
+
     private Set<String> noGodWorlds = new HashSet<>();
 
     @Override
@@ -859,6 +927,15 @@ public class Settings implements net.ess3.api.ISettings {
     @Override public BigDecimal getMinimumPayAmount() {
         //noinspection ConstantConditions
         return new BigDecimal(config.getString("minimum-pay-amount", "0.001"));
+    }
+
+    @Override
+    public boolean isPayExcludesIgnoreList() {
+        return config.getBoolean("pay-excludes-ignore-list", false);
+    }
+
+    @Override public long getLastMessageReplyRecipientTimeout() {
+        return config.getLong("last-message-reply-recipient-timeout", 180);
     }
 
     @Override public boolean isMilkBucketEasterEggEnabled() {
@@ -1082,6 +1159,26 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     @Override
+    public boolean isAllowSellNamedItems() {
+        return config.getBoolean("allow-selling-named-items", false);
+    }
+
+    @Override
+    public boolean isAddingPrefixInPlayerlist() {
+        return config.getBoolean("add-prefix-in-playerlist", false);
+    }
+
+    @Override
+    public boolean isAddingSuffixInPlayerlist() {
+        return config.getBoolean("add-suffix-in-playerlist", false);
+    }
+
+    @Override
+    public int getNotifyPlayerOfMailCooldown() {
+        return config.getInt("notify-player-of-mail-cooldown", 0);
+    }
+
+    @Override
     public int getMotdDelay() {
         return config.getInt("delay-motd", 0);
     }
@@ -1248,5 +1345,10 @@ public class Settings implements net.ess3.api.ISettings {
     @Override
     public boolean isSpawnIfNoHome() {
         return config.getBoolean("spawn-if-no-home", true);
+    }
+
+    @Override
+    public boolean infoAfterDeath() {
+        return config.getBoolean("send-info-after-death", false);
     }
 }

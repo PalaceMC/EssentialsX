@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +40,7 @@ class EssentialsSpawnPlayerListener implements Listener {
 
         if (ess.getSettings().getRespawnAtHome()) {
             Location home;
-            final Location bed = user.getBase().getBedSpawnLocation();
+            final Location bed = user.getBase().getBedSpawnLocation(); // cannot nuke this sync load due to the event being sync so it would hand either way.
             if (bed != null) {
                 home = bed;
             } else {
@@ -121,13 +122,14 @@ class EssentialsSpawnPlayerListener implements Listener {
                 return;
             }
 
-            try {
-                final Location spawn = spawns.getSpawn(ess.getSettings().getNewbieSpawn());
-                if (spawn != null) {
-                    user.getTeleport().now(spawn, false, TeleportCause.PLUGIN);
-                }
-            } catch (Exception ex) {
-                logger.log(Level.WARNING, tl("teleportNewPlayerError"), ex);
+            final Location spawn = spawns.getSpawn(ess.getSettings().getNewbieSpawn());
+            if (spawn != null) {
+                CompletableFuture<Boolean> future = new CompletableFuture<>();
+                future.exceptionally(e -> {
+                    logger.log(Level.WARNING, tl("teleportNewPlayerError"), e);
+                    return false;
+                });
+                user.getAsyncTeleport().now(spawn, false, TeleportCause.PLUGIN, future);
             }
         }
     }

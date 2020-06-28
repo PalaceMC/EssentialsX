@@ -67,6 +67,8 @@ public interface ISettings extends IConf {
 
     String getNewbieSpawn();
 
+    String getOperatorColor() throws Exception;
+
     boolean getPerWarpPermission();
 
     boolean getRespawnAtHome();
@@ -146,6 +148,16 @@ public interface ISettings extends IConf {
 
     boolean areDeathMessagesEnabled();
 
+    KeepInvPolicy getVanishingItemsPolicy();
+
+    KeepInvPolicy getBindingItemsPolicy();
+
+    enum KeepInvPolicy {
+        KEEP,
+        DELETE,
+        DROP
+    }
+
     void setDebug(boolean debug);
 
     Set<String> getNoGodWorlds();
@@ -196,6 +208,10 @@ public interface ISettings extends IConf {
 
     BigDecimal getMinimumPayAmount();
 
+    boolean isPayExcludesIgnoreList();
+
+    long getLastMessageReplyRecipientTimeout();
+
     boolean isMilkBucketEasterEggEnabled();
 
     boolean isSendFlyEnableOnJoin();
@@ -232,6 +248,14 @@ public interface ISettings extends IConf {
 
     boolean isAllowBulkBuySell();
 
+    boolean isAllowSellNamedItems();
+
+    boolean isAddingPrefixInPlayerlist();
+
+    boolean isAddingSuffixInPlayerlist();
+
+    int getNotifyPlayerOfMailCooldown();
+
     int getMotdDelay();
 
     boolean isDirectHatAllowed();
@@ -263,5 +287,7 @@ public interface ISettings extends IConf {
     boolean isRemovingEffectsOnHeal();
 
     boolean isSpawnIfNoHome();
+
+    boolean infoAfterDeath();
 
 }

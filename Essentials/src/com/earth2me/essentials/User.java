@@ -26,7 +26,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
@@ -37,7 +44,8 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     private transient boolean teleportRequestHere;
     private transient Location teleportLocation;
     private transient boolean vanished;
-    private transient final Teleport teleport;
+    private transient final AsyncTeleport teleport;
+    private transient final Teleport legacyTeleport;
     private transient long teleportRequestTime;
     private transient long lastOnlineActivity;
     private transient long lastActivity = System.currentTimeMillis();
@@ -55,7 +63,8 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
 
     public User(final Player base, final IEssentials ess) {
         super(base, ess);
-        teleport = new Teleport(this, ess);
+        teleport = new AsyncTeleport(this, ess);
+        legacyTeleport = new Teleport(this, ess);
         if (isAfk()) {
             afkPosition = this.getLocation();
         }
@@ -299,8 +308,17 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
     }
 
     @Override
-    public Teleport getTeleport() {
+    public AsyncTeleport getAsyncTeleport() {
         return teleport;
+    }
+
+    /**
+     * @deprecated This API is not asynchronous. Use {@link User#getAsyncTeleport()}
+     */
+    @Override
+    @Deprecated
+    public Teleport getTeleport() {
+        return legacyTeleport;
     }
 
     public long getLastOnlineActivity() {
@@ -464,14 +482,12 @@ public class User extends UserData implements Comparable<User>, IMessageRecipien
                 sendMessage(tl("haveBeenReleased"));
                 setJail(null);
                 if (ess.getSettings().isTeleportBackWhenFreedFromJail()) {
-                    try {
-                        getTeleport().back();
-                    } catch (Exception ex) {
-                        try {
-                            getTeleport().respawn(null, TeleportCause.PLUGIN);
-                        } catch (Exception ignored) {
-                        }
-                    }
+                    CompletableFuture<Boolean> future = new CompletableFuture<>();
+                    getAsyncTeleport().back(future);
+                    future.exceptionally(e -> {
+                        getAsyncTeleport().respawn(null, TeleportCause.PLUGIN, new CompletableFuture<>());
+                        return false;
+                    });
                 }
             }
         }

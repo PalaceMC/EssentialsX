@@ -347,11 +347,14 @@ public class EssentialsPlayerListener implements Listener {
 
         Location loc = user.getHome(user.getLocation());
         if (loc == null) {
-            loc = user.getBase().getBedSpawnLocation();
+            PaperLib.getBedSpawnLocationAsync(user.getBase(), false).thenAccept(location -> {
+                if (location != null) {
+                    user.getBase().setCompassTarget(location);
+                }
+            });
+            return;
         }
-        if (loc != null) {
-            user.getBase().setCompassTarget(loc);
-        }
+        user.getBase().setCompassTarget(loc);
     }
 
     /**

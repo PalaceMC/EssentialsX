@@ -18,7 +18,6 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.*;
-import com.earth2me.essentials.craftbukkit.ServerState;
 import com.earth2me.essentials.items.AbstractItemDb;
 import com.earth2me.essentials.items.CustomItemResolver;
 import com.earth2me.essentials.items.FlatItemDb;
@@ -34,15 +33,18 @@ import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.VersionUtil;
+import com.google.common.base.Throwables;
+import io.papermc.lib.PaperLib;
 import net.ess3.api.IEssentials;
 import net.ess3.api.ISettings;
 import net.ess3.api.*;
-import net.ess3.nms.PotionMetaProvider;
-import net.ess3.nms.SpawnEggProvider;
-import net.ess3.nms.SpawnerProvider;
-import net.ess3.nms.flattened.FlatSpawnEggProvider;
-import net.ess3.nms.updatedmeta.BasePotionDataProvider;
-import net.ess3.nms.updatedmeta.BlockMetaSpawnerProvider;
+import net.ess3.nms.refl.providers.ReflServerStateProvider;
+import net.ess3.nms.refl.providers.ReflSpawnEggProvider;
+import net.ess3.provider.PotionMetaProvider;
+import net.ess3.provider.ServerStateProvider;
+import net.ess3.provider.SpawnEggProvider;
+import net.ess3.provider.SpawnerProvider;
+import net.ess3.provider.providers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -59,13 +61,16 @@ import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.error.YAMLException;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -98,9 +103,10 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     private transient EssentialsTimer timer;
     private final transient Set<String> vanishedPlayers = new LinkedHashSet<>();
     private transient Method oldGetOnlinePlayers;
-    private final transient SpawnerProvider spawnerProvider = new BlockMetaSpawnerProvider();
-    private final transient SpawnEggProvider spawnEggProvider = new FlatSpawnEggProvider();
-    private final transient PotionMetaProvider potionMetaProvider = new BasePotionDataProvider();
+    private transient SpawnerProvider spawnerProvider;
+    private transient SpawnEggProvider spawnEggProvider;
+    private transient PotionMetaProvider potionMetaProvider;
+    private transient ServerStateProvider serverStateProvider;
     private transient Kits kits;
 
     @Override
@@ -278,7 +284,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
 
     @Override
     public void onDisable() {
-        boolean stopping = ServerState.isStopping();
+        boolean stopping = getServerStateProvider().isStopping();
         if (!stopping) {
             LOGGER.log(Level.SEVERE, tl("serverReloading"));
         }
@@ -309,6 +315,9 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         if (backup != null) {
             backup.stopTask();
         }
+
+        this.getPermissionsHandler().unregisterContexts();
+
         Economy.setEss(null);
         Trade.closeLog();
         getUserMap().getUUIDMap().shutdown();
@@ -326,6 +335,13 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
         }
 
         i18n.updateLocale(settings.getLocale());
+        for (String commandName : this.getDescription().getCommands().keySet()) {
+            Command command = this.getCommand(commandName);
+            if (command != null) {
+                command.setDescription(tl(commandName + "CommandDescription"));
+                command.setUsage(tl(commandName + "CommandUsage"));
+            }
+        }
 
         final PluginManager pm = getServer().getPluginManager();
         registerListeners(pm);
@@ -835,6 +851,11 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public CustomItemResolver getCustomItemResolver() {
         return customItemResolver;
+    }
+
+    @Override
+    public ServerStateProvider getServerStateProvider() {
+        return serverStateProvider;
     }
 
     private static void addDefaultBackPermissionsToWorld(World w) {
