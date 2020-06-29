@@ -33,13 +33,9 @@ import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.VersionUtil;
-import com.google.common.base.Throwables;
-import io.papermc.lib.PaperLib;
 import net.ess3.api.IEssentials;
 import net.ess3.api.ISettings;
 import net.ess3.api.*;
-import net.ess3.nms.refl.providers.ReflServerStateProvider;
-import net.ess3.nms.refl.providers.ReflSpawnEggProvider;
 import net.ess3.provider.PotionMetaProvider;
 import net.ess3.provider.ServerStateProvider;
 import net.ess3.provider.SpawnEggProvider;
@@ -187,6 +183,19 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
                 confList.add(jails);
                 execTimer.mark("Init(Jails)");
 
+                //Spawner provider only uses one but it's here for legacy...
+                spawnerProvider = new BlockMetaSpawnerProvider();
+
+                //Spawn Egg Providers
+                spawnEggProvider = new FlatSpawnEggProvider();
+
+                //Potion Meta Provider
+                potionMetaProvider = new BasePotionDataProvider();
+
+                //Server State Provider
+                serverStateProvider = new PaperServerStateProvider();
+
+                execTimer.mark("Init(Providers)");
                 reload();
 
                 // The item spawn blacklist is loaded with all other settings, before the item
