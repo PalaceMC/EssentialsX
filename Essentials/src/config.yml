@@ -228,7 +228,7 @@ list:
     #Players: '*'
 
 # More output to the console.
-debug: true
+debug: false
 
 # Set the locale for all messages.
 # If you don't set this, the default locale of the server will be used.
